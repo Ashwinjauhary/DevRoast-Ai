@@ -297,6 +297,79 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+        {/* Lead Architect Spotlight */}
+        <section className="px-6 max-w-7xl mx-auto mt-64 mb-32">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative group rounded-[3rem] overflow-hidden border border-white/10 bg-[#050505] shadow-2xl"
+          >
+            {/* Dynamic Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 opacity-50" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] -translate-y-1/2 translate-x-1/2" />
+            
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 p-12 md:p-20 items-center">
+              <div className="space-y-8">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">
+                  <Shield className="w-4 h-4 text-primary" /> Lead Architect Spotlight
+                </div>
+                
+                <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-none">
+                  ASHWIN <br /> <span className="text-gradient-primary">JAUHARY.</span>
+                </h2>
+                
+                <p className="text-xl text-zinc-400 font-medium leading-relaxed max-w-lg">
+                  The visionary mind behind DevRoast AI. Specialized in high-performance frontend architectures and brutalist code analysis.
+                </p>
+
+                <div className="flex flex-wrap gap-8 pt-4">
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Specialization</div>
+                    <div className="text-sm font-bold text-white uppercase italic">Full Stack Architecture</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Location</div>
+                    <div className="text-sm font-bold text-white uppercase italic">UP, India</div>
+                  </div>
+                </div>
+
+                <Link href="/developer" className="inline-flex items-center gap-4 px-10 py-5 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 active:scale-95 transition-all shadow-2xl group/btn overflow-hidden relative">
+                  <span className="relative z-10 flex items-center gap-3">
+                    View Dossier <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                </Link>
+              </div>
+
+              <div className="relative flex justify-center lg:justify-end">
+                <div className="relative w-full max-w-[400px] aspect-square rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl transform rotate-3 group-hover:rotate-0 transition-transform duration-700">
+                   <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center">
+                      <TerminalSquare className="w-32 h-32 text-white opacity-5 animate-pulse" />
+                   </div>
+                   {/* Gradient Overlay */}
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                   
+                   <div className="absolute bottom-10 left-10 right-10">
+                      <div className="text-[10px] font-black text-primary uppercase tracking-[0.5em] mb-2">Primary_Developer</div>
+                      <div className="h-1 w-20 bg-primary" />
+                   </div>
+                </div>
+                
+                {/* Floating Elements */}
+                <motion.div 
+                  animate={{ y: [0, -20, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-10 -right-10 p-6 rounded-3xl bg-black/80 border border-white/10 backdrop-blur-xl shadow-2xl hidden md:block"
+                >
+                  <pre className="text-[10px] text-zinc-500 font-mono tracking-tighter">
+                    {`identity: "ASHWIN" \nrole: "ARCHITECT" \nstatus: "ACTIVE"`}
+                  </pre>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </section>
 
       </main>
 

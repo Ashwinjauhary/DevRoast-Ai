@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { GitBranch, Play, Loader2, AlertCircle, Download, TerminalSquare, Wand2, Sparkles, Code2 } from "lucide-react";
@@ -15,10 +16,8 @@ export default function RepoAnalysisPage() {
     const { data: session } = useSession();
     const [repoUrl, setRepoUrl] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<any>(null);
     const [isPending, startTransition] = useTransition();
-    const [fixSuccess, setFixSuccess] = useState<string | null>(null);
     const [isEli5, setIsEli5] = useState(false);
 
     const handleAnalyze = async (e: React.FormEvent) => {
@@ -26,7 +25,6 @@ export default function RepoAnalysisPage() {
         if (!repoUrl) return;
 
         setLoading(true);
-        setError(null);
         setResult(null);
 
         try {
@@ -48,7 +46,7 @@ export default function RepoAnalysisPage() {
             setResult(data);
 
         } catch (err: any) {
-            setError(err.message);
+            toast.error(err.message);
         } finally {
             setLoading(false);
         }
@@ -58,14 +56,12 @@ export default function RepoAnalysisPage() {
 
     const handleAutoFix = () => {
         if (!result) return;
-        setFixSuccess(null);
-        setError(null);
         startTransition(async () => {
             const res = await autoFixRepositoryCode(result.owner, result.repo, result);
             if (res.success) {
-                setFixSuccess("Fixes generated! Check the new Issues in your GitHub repository.");
+                toast.success("Fixes generated! Check the new Issues in your GitHub repository.");
             } else {
-                setError(res.error || "Failed to generate fix issues.");
+                toast.error(res.error || "Failed to generate fix issues.");
             }
         });
     };
@@ -76,8 +72,7 @@ export default function RepoAnalysisPage() {
         const badgeUrl = `${origin}/api/badge/${result.owner}/${result.repo}`;
         const markdown = `[![DevRoast](${badgeUrl})](${origin})`;
         navigator.clipboard.writeText(markdown);
-        setFixSuccess("Dynamic README badge copied to clipboard!");
-        setTimeout(() => setFixSuccess(null), 3000);
+        toast.success("Dynamic README badge copied to clipboard!");
     };
 
     return (
@@ -123,23 +118,6 @@ export default function RepoAnalysisPage() {
                             {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <div className="flex items-center gap-2"><Play className="w-5 h-5" /> PROBE</div>}
                         </Button>
                     </form>
-
-                    <AnimatePresence>
-                        {(error || fixSuccess) && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className={`p-4 border rounded-xl flex items-center gap-3 text-sm font-bold ${fixSuccess
-                                    ? "bg-primary/10 border-primary/20 text-primary"
-                                    : "bg-red-500/10 border-red-500/20 text-red-400"
-                                    }`}
-                            >
-                                {fixSuccess ? <Wand2 className="w-5 h-5 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 flex-shrink-0" />}
-                                {fixSuccess || error}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
                 </div>
             </PremiumCard>
 

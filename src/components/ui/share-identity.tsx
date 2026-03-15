@@ -1,5 +1,4 @@
-"use client";
-
+import { toast } from "react-hot-toast";
 import { Twitter } from "lucide-react";
 
 interface ShareIdentityProps {
@@ -12,7 +11,7 @@ export function ShareIdentity({ username, template }: ShareIdentityProps) {
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shareUrl);
-        alert('Link copied to clipboard!');
+        toast.success('Link copied to clipboard!');
     };
 
     return (

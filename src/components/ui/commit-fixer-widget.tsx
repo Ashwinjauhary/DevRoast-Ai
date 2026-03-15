@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { GitCommit, Settings2, RefreshCcw, Check, Copy, Wand2, AlertCircle } from "lucide-react";
 import { fetchRecentCommits, suggestCommitFixes, applyCommitFix } from "@/app/dashboard/commits/actions";
 import { AnimatePresence, motion } from "framer-motion";
@@ -35,7 +36,7 @@ export function CommitFixerWidget() {
 
     const handleApplyCommitFix = async (commit: any, newMessage: string) => {
         if (!commit.branch) {
-            alert("Branch information is missing for this commit. Please try refreshing or identifying the branch manually.");
+            toast.error("Branch information is missing for this commit.");
             return;
         }
         
@@ -43,10 +44,10 @@ export function CommitFixerWidget() {
         const res = await applyCommitFix(commit.repo, commit.branch, commit.sha, newMessage);
         
         if (res.success) {
-            alert("Commit message updated on GitHub! (Force-pushed)");
+            toast.success("Commit message updated on GitHub!");
             loadCommits(); // Refresh list
         } else {
-            alert(`Error: ${res.error}`);
+            toast.error(`Error: ${res.error}`);
         }
         setApplyingSha(null);
     };

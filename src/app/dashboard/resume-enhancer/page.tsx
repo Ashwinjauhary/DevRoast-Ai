@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { generateResumeLatex, fetchResumeContext } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
@@ -16,7 +17,6 @@ export default function ResumeEnhancerPage() {
     const [latex, setLatex] = useState("");
     const [loading, setLoading] = useState(false);
     const [contextLoading, setContextLoading] = useState(true);
-    const [error, setError] = useState("");
     const [view, setView] = useState<"edit" | "preview">("preview");
     const [template, setTemplate] = useState("modern");
     const [copied, setCopied] = useState(false);
@@ -36,21 +36,19 @@ export default function ResumeEnhancerPage() {
 
     async function handleGenerate() {
         setLoading(true);
-        setError("");
         const res = await generateResumeLatex(prompt, template);
         setLoading(false);
         if (res.success && res.latex) {
             setLatex(res.latex);
             setView("edit");
         } else {
-            setError(res.error || "Failed to generate resume.");
+            toast.error(res.error || "Failed to generate resume.");
         }
     }
 
     const handleCopy = () => {
         navigator.clipboard.writeText(latex);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        toast.success("LaTeX code copied to clipboard!");
     };
 
     const handleDownload = () => {
@@ -139,8 +137,6 @@ export default function ResumeEnhancerPage() {
                                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
                                 {loading ? "Synthesizing..." : "Generate 10/10 Resume"}
                             </Button>
-
-                            {error && <p className="text-xs text-red-400 font-bold">{error}</p>}
                         </div>
                     </PremiumCard>
 

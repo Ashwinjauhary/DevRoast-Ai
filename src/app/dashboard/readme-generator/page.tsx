@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { generateReadmeAction } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { FileText, Copy, Download, Loader2, CheckCircle } from "lucide-react";
@@ -9,24 +10,21 @@ export default function ReadmeGeneratorPage() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [readme, setReadme] = useState("");
-    const [error, setError] = useState("");
-    const [copied, setCopied] = useState(false);
 
     async function handleGenerate() {
         const parts = input.trim().replace(/^https?:\/\/github\.com\//, "").split("/");
-        if (parts.length < 2) { setError("Enter a valid GitHub URL or owner/repo format"); return; }
+        if (parts.length < 2) { toast.error("Enter a valid GitHub URL or owner/repo format"); return; }
         const [owner, repo] = parts;
-        setLoading(true); setError(""); setReadme("");
+        setLoading(true); setReadme("");
         const result = await generateReadmeAction(owner, repo);
         setLoading(false);
-        if (result.error) setError(result.error);
+        if (result.error) toast.error(result.error);
         else setReadme(result.readme || "");
     }
 
     function handleCopy() {
         navigator.clipboard.writeText(readme);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        toast.success("README copied to clipboard!");
     }
 
     function handleDownload() {
@@ -56,7 +54,6 @@ export default function ReadmeGeneratorPage() {
                         placeholder="github.com/owner/repo  or  owner/repo"
                         className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-primary/50 transition-colors"
                     />
-                    {error && <p className="text-sm text-red-400 font-medium">{error}</p>}
                     <button
                         onClick={handleGenerate}
                         disabled={loading || !input.trim()}
@@ -74,7 +71,7 @@ export default function ReadmeGeneratorPage() {
                             <h3 className="text-lg font-black tracking-tight text-white">Generated README</h3>
                             <div className="flex gap-3">
                                 <button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black uppercase tracking-wider text-zinc-300 hover:bg-white/10 transition-all">
-                                    {copied ? <><CheckCircle className="w-4 h-4 text-emerald-500" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
+                                    <Copy className="w-4 h-4" /> Copy
                                 </button>
                                 <button onClick={handleDownload} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-wider hover:bg-primary/90 transition-all">
                                     <Download className="w-4 h-4" /> Download .md

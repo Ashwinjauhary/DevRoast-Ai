@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { 
     Code2, Loader2, AlertTriangle, Info, XCircle, Save, 
@@ -26,7 +27,6 @@ export default function CodeReviewPage() {
     const [code, setCode] = useState("");
     const [language, setLanguage] = useState("JavaScript");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
     
     // Streaming state
     const [roast, setRoast] = useState<string[]>([]);
@@ -34,10 +34,9 @@ export default function CodeReviewPage() {
     const [fix, setFix] = useState("");
 
     async function handleReview() {
-        if (!code.trim()) { setError("Paste some code first!"); return; }
+        if (!code.trim()) { toast.error("Paste some code first!"); return; }
         
         setLoading(true);
-        setError("");
         setRoast([]);
         setIssues([]);
         setFix("");
@@ -78,7 +77,7 @@ export default function CodeReviewPage() {
                 }
             }
         } catch (err: any) {
-            setError(err.message || "Something went wrong.");
+            toast.error(err.message || "Something went wrong.");
         } finally {
             setLoading(false);
         }
@@ -184,7 +183,6 @@ export default function CodeReviewPage() {
                                     </>
                                 )}
                             </button>
-                            {error && <p className="text-sm text-red-500 font-bold bg-red-500/10 p-4 rounded-xl border border-red-500/20">{error}</p>}
                         </div>
                     </PremiumCard>
                 </div>
@@ -278,7 +276,10 @@ export default function CodeReviewPage() {
                                         <h3 className="font-black tracking-tight text-lg text-white font-mono uppercase italic">Corrected Source</h3>
                                     </div>
                                     <button 
-                                        onClick={() => navigator.clipboard.writeText(fix)}
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(fix);
+                                            toast.success("Corrected source copied!");
+                                        }}
                                         className="text-[10px] font-black text-zinc-500 uppercase tracking-widest hover:text-white transition-colors"
                                     >
                                         Copy Fix

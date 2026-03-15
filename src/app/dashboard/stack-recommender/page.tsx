@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { recommendStack } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { Cpu, Loader2, ArrowRight } from "lucide-react";
@@ -11,14 +12,13 @@ export default function StackRecommenderPage() {
     const [currentStack, setCurrentStack] = useState("");
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
-    const [error, setError] = useState("");
 
     async function handleRecommend() {
-        if (!goal.trim() || !currentStack.trim()) { setError("Fill in both fields."); return; }
-        setLoading(true); setError(""); setResult(null);
+        if (!goal.trim() || !currentStack.trim()) { toast.error("Fill in both fields."); return; }
+        setLoading(true); setResult(null);
         const data = await recommendStack(goal, currentStack);
         setLoading(false);
-        if (data.error) setError(data.error);
+        if (data.error) toast.error(data.error);
         else setResult(data.result);
     }
 
@@ -58,7 +58,6 @@ export default function StackRecommenderPage() {
                             />
                         </div>
                     </div>
-                    {error && <p className="text-sm text-red-400">{error}</p>}
                     <button
                         onClick={handleRecommend}
                         disabled={loading}

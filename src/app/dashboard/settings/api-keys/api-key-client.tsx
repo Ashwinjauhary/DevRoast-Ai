@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "react-hot-toast";
 import { createApiKey, deleteApiKey } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
@@ -25,20 +26,19 @@ export default function ApiKeyClient({ keys: initialKeys }: ApiKeyClientProps) {
     const [newKeyName, setNewKeyName] = useState("");
     const [createdToken, setCreatedToken] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const handleCreate = () => {
         if (!newKeyName.trim()) return;
-        setError(null);
         startTransition(async () => {
             const res = await createApiKey(newKeyName);
             if (res.error) {
-                setError(res.error);
+                toast.error(res.error);
             } else if (res.token) {
                 setCreatedToken(res.token);
                 setNewKeyName("");
+                toast.success("API Key generated successfully");
                 // Add new key to local list
                 setKeys(prev => [...prev, {
                     id: crypto.randomUUID(),
@@ -56,8 +56,9 @@ export default function ApiKeyClient({ keys: initialKeys }: ApiKeyClientProps) {
             const res = await deleteApiKey(id);
             if (res.success) {
                 setKeys(prev => prev.filter(k => k.id !== id));
+                toast.success("API Key deleted");
             } else {
-                setError(res.error || "Failed to delete key.");
+                toast.error(res.error || "Failed to delete key.");
             }
             setDeletingId(null);
         });
@@ -134,11 +135,6 @@ export default function ApiKeyClient({ keys: initialKeys }: ApiKeyClientProps) {
                             {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Generate"}
                         </Button>
                     </div>
-                    {error && (
-                        <div className="flex items-center gap-2 text-sm text-red-400 font-bold">
-                            <AlertCircle className="w-4 h-4" /> {error}
-                        </div>
-                    )}
                 </div>
             </PremiumCard>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Loader2, Wand2, ArrowRight, Briefcase, ExternalLink, Code, Sparkles, Wand, Copy, Check, Activity, Edit3, Save, X, Plus, Trash2, FileCode, Monitor, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,7 +34,6 @@ export default function PortfolioGeneratorPage() {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
     const [template, setTemplate] = useState("crucible");
     const [copied, setCopied] = useState(false);
@@ -79,7 +79,6 @@ export default function PortfolioGeneratorPage() {
 
     const handleGenerate = async () => {
         setLoading(true);
-        setError(null);
         try {
             const res = await generatePortfolioData(template);
             if (res.success && res.portfolio) {
@@ -90,10 +89,10 @@ export default function PortfolioGeneratorPage() {
                 setIsEditing(false);
                 setIsCodeMode(false);
             } else {
-                setError(res.error || "Failed to generate portfolio.");
+                toast.error(res.error || "Failed to generate portfolio.");
             }
         } catch (err: any) {
-            setError(err.message);
+            toast.error(err.message);
         } finally {
             setLoading(false);
         }
@@ -101,7 +100,6 @@ export default function PortfolioGeneratorPage() {
 
     const handleSave = async () => {
         setSaving(true);
-        setError(null);
         try {
             let dataToSave = editData;
             
@@ -121,12 +119,12 @@ export default function PortfolioGeneratorPage() {
                 setJsonEdit(JSON.stringify(data, null, 2));
                 setIsEditing(false);
                 setIsCodeMode(false);
-                alert("Portfolio details evolved successfully!");
+                toast.success("Portfolio details evolved successfully!");
             } else {
-                setError(res.error || "Failed to save portfolio.");
+                toast.error(res.error || "Failed to save portfolio.");
             }
         } catch (err: any) {
-            setError(err.message);
+            toast.error(err.message);
         } finally {
             setSaving(false);
         }
@@ -153,7 +151,7 @@ export default function PortfolioGeneratorPage() {
             pdf.save(`${portfolio?.username || 'developer'}-portfolio-roast.pdf`);
         } catch (err) {
             console.error("PDF Export error:", err);
-            setError("Failed to generate PDF. The matrix is unstable.");
+            toast.error("Failed to generate PDF. The matrix is unstable.");
         } finally {
             setExporting(false);
         }
@@ -168,9 +166,8 @@ export default function PortfolioGeneratorPage() {
             try {
                 const parsed = JSON.parse(jsonEdit);
                 setEditData(parsed);
-                setError(null);
             } catch (e) {
-                setError("Invalid JSON detected. Fix it before switching back to visual mode.");
+                toast.error("Invalid JSON detected. Fix it before switching back to visual mode.");
                 return; // Prevent switching if invalid
             }
         }
@@ -302,19 +299,7 @@ export default function PortfolioGeneratorPage() {
                         )}
                     </div>
 
-                    <AnimatePresence>
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="p-4 bg-red-950/30 border border-red-900/50 text-red-200 text-sm font-mono"
-                            >
-                                {error}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+                    </div>
             </PremiumCard>
 
             <AnimatePresence>

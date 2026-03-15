@@ -1,6 +1,5 @@
-"use client";
-
 import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
 import { Info, Target, Zap, ShieldCheck, Activity } from "lucide-react";
 
 export function JobCompatibilityChart({ data }: { data: any }) {
@@ -39,7 +38,16 @@ export function JobCompatibilityChart({ data }: { data: any }) {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.1 }}
                                 className="space-y-3 relative group/item cursor-help"
-                                onClick={() => alert(`AI Analysis for ${archetype.name}: ${archetype.reasoning}\n\nConclusion: Pretty much what we expected from a classic ${archetype.name.toLowerCase()}...`)}
+                                onClick={() => toast(
+                                    (t) => (
+                                        <div className="space-y-2">
+                                            <p className="font-black text-[10px] uppercase tracking-widest text-primary">Deep Intel: {archetype.name}</p>
+                                            <p className="text-xs text-zinc-300 leading-relaxed">{archetype.reasoning}</p>
+                                            <p className="text-[10px] text-zinc-500 italic">Conclusion: Classic {archetype.name.toLowerCase()} behavioral patterns detected.</p>
+                                        </div>
+                                    ),
+                                    { duration: 6000 }
+                                )}
                             >
                                 <div className="flex justify-between items-end">
                                     <div className="space-y-1">

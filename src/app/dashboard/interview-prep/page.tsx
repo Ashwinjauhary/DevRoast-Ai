@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { getInterviewQuestions } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { Brain, Loader2, ChevronDown, ChevronUp } from "lucide-react";
@@ -16,18 +17,17 @@ export default function InterviewPrepPage() {
     const [loading, setLoading] = useState(false);
     const [questions, setQuestions] = useState<any[]>([]);
     const [openIdx, setOpenIdx] = useState<number | null>(null);
-    const [error, setError] = useState("");
 
     function toggle(arr: string[], item: string, set: (v: string[]) => void) {
         set(arr.includes(item) ? arr.filter(x => x !== item) : [...arr, item]);
     }
 
     async function handleGenerate() {
-        if (weaknesses.length === 0 || techStack.length === 0) { setError("Select at least 1 weakness and 1 tech."); return; }
-        setLoading(true); setError(""); setQuestions([]);
+        if (weaknesses.length === 0 || techStack.length === 0) { toast.error("Select at least 1 weakness and 1 tech."); return; }
+        setLoading(true); setQuestions([]);
         const data = await getInterviewQuestions(weaknesses, techStack);
         setLoading(false);
-        if (data.error) setError(data.error);
+        if (data.error) toast.error(data.error);
         else setQuestions(Array.isArray(data.questions) ? data.questions : []);
     }
 
@@ -72,8 +72,6 @@ export default function InterviewPrepPage() {
                             ))}
                         </div>
                     </div>
-
-                    {error && <p className="text-sm text-red-400">{error}</p>}
                     <button
                         onClick={handleGenerate}
                         disabled={loading}

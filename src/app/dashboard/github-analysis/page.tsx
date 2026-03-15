@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Github, Play, Loader2, AlertCircle, Download, TerminalSquare, Wand2, Zap } from "lucide-react";
@@ -40,10 +41,8 @@ interface SessionUser {
 export default function GithubAnalysisPage() {
     const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<GithubAnalysis | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [fixSuccess, setFixSuccess] = useState<string | null>(null);
     const [revealed, setRevealed] = useState(true);
     const { data: session } = useSession();
 
@@ -55,7 +54,6 @@ export default function GithubAnalysisPage() {
         if (!username) return;
 
         setLoading(true);
-        setError(null);
         setResult(null);
         setRevealed(false);
 
@@ -74,7 +72,7 @@ export default function GithubAnalysisPage() {
 
             setResult({ metrics, analysis });
         } catch (err: any) {
-            setError(err.message);
+            toast.error(err.message);
         } finally {
             setLoading(false);
         }
@@ -84,14 +82,12 @@ export default function GithubAnalysisPage() {
 
     const handleAutoFix = () => {
         if (!result) return;
-        setFixSuccess(null);
-        setError(null);
         startTransition(async () => {
             const res = await autoFixProfile(username, result.analysis);
             if (res.success) {
-                setFixSuccess("Profile completely overhauled! Check your GitHub.");
+                toast.success("Profile completely overhauled! Check your GitHub.");
             } else {
-                setError(res.error || "Failed to fix profile.");
+                toast.error(res.error || "Failed to fix profile.");
             }
         });
     };
@@ -139,23 +135,6 @@ export default function GithubAnalysisPage() {
                             {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <div className="flex items-center gap-2"><Play className="w-5 h-5" /> EXAMINE</div>}
                         </Button>
                     </form>
-
-                    <AnimatePresence>
-                        {(error || fixSuccess) && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className={`p-4 border rounded-xl flex items-center gap-3 text-sm font-bold ${fixSuccess
-                                    ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                                    : "bg-red-500/10 border-red-500/20 text-red-400"
-                                    }`}
-                            >
-                                {fixSuccess ? <Wand2 className="w-5 h-5 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 flex-shrink-0" />}
-                                {fixSuccess || error}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
                 </div>
             </PremiumCard>
 

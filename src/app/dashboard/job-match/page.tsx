@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { calculateJobMatch } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
@@ -33,15 +34,13 @@ export default function JobMatchPage() {
     const [jd, setJd] = useState("");
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<JobMatchResult | null>(null);
-    const [error, setError] = useState("");
 
     async function handleAnalyze() {
         if (!jd || jd.length < 50) {
-            setError("Job Description is too short for a neural match.");
+            toast.error("Job Description is too short for a neural match.");
             return;
         }
         setLoading(true);
-        setError("");
         setResult(null);
 
         const res = await calculateJobMatch(jd);
@@ -50,7 +49,7 @@ export default function JobMatchPage() {
         if (res.success) {
             setResult(res.result as JobMatchResult);
         } else {
-            setError(res.error || "Neural link failed. Try again.");
+            toast.error(res.error || "Neural link failed. Try again.");
         }
     }
 
@@ -92,11 +91,9 @@ export default function JobMatchPage() {
                                 className="w-full h-12 bg-white text-black hover:bg-zinc-200 transition-all font-black uppercase tracking-widest text-xs rounded-xl"
                             >
                                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Zap className="w-4 h-4 mr-2" />}
-                                {loading ? "Analyzing Compatibility..." : "Process Neural Match"}
                             </Button>
                         </div>
                     </PremiumCard>
-                    {error && <p className="text-red-400 text-[10px] font-black uppercase tracking-widest px-2">{error}</p>}
                 </div>
 
                 {/* Info / Tips Area */}

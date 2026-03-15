@@ -107,6 +107,14 @@ export default function LandingPage() {
                   <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                 </Link>
                 <Link 
+                  href="/developer" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="hover:text-primary transition-colors flex items-center justify-between group"
+                >
+                  Developer
+                  <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                </Link>
+                <Link 
                   href="/auth/signin" 
                   onClick={() => setIsMenuOpen(false)}
                   className="mt-2 w-full py-4 bg-white text-black text-center rounded-xl flex items-center justify-center gap-2 group"
@@ -304,6 +312,7 @@ export default function LandingPage() {
           <div className="flex flex-wrap justify-center gap-12 text-xs font-black uppercase tracking-[0.3em]">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/developer" className="hover:text-white transition-colors">Developer</Link>
             <Link href="https://github.com/Ashwinjauhary/DevRoast-Ai#readme" className="hover:text-white transition-colors">Documentation</Link>
             <Link href="https://github.com/Ashwinjauhary/DevRoast-Ai" className="hover:text-white transition-colors">GitHub</Link>
           </div>

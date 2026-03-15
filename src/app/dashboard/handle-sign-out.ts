@@ -6,7 +6,7 @@ export async function handleSignOut() {
     console.log("Server Action: handleSignOut triggered");
     try {
         await signOut({ 
-            redirectTo: "/auth/signin",
+            redirectTo: "/",
             redirect: true 
         });
     } catch (error) {

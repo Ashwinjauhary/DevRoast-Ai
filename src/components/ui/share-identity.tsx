@@ -36,7 +36,9 @@ export function ShareIdentity({ username, template, roast, score }: ShareIdentit
                 toast.success('AI Caption copied! Open LinkedIn to post.');
                 setIsCaptionReady(true);
                 setTimeout(() => {
-                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+                    const text = `${res.caption}\n\n${shareUrl}`;
+                    const linkedInUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
+                    window.open(linkedInUrl, '_blank');
                     setIsCaptionReady(false);
                 }, 1500);
             } else {

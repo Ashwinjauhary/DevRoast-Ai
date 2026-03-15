@@ -165,6 +165,6 @@ src/
 ---
 
 <div align="center">
-  <p>Engineered with 🔥 by <a href="https://github.com/Ashwinjauhary">Ashwin Jauhary</a></p>
+  <p>Engineered by <a href="https://github.com/Ashwinjauhary">Ashwin Jauhary</a></p>
   <p><strong>DevRoast AI © 2026</strong></p>
 </div>

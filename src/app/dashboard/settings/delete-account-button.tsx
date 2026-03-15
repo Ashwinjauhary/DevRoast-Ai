@@ -3,17 +3,39 @@
 import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { deleteAccount } from "./actions";
+import { toast } from "react-hot-toast";
 
 export function DeleteAccountButton() {
     const [isPending, startTransition] = useTransition();
 
     const handleDelete = () => {
-        if (!confirm("Are you sure? This will permanently delete your account and ALL data. This cannot be undone.")) {
-            return;
-        }
-        startTransition(async () => {
-            await deleteAccount();
-        });
+        toast((t) => (
+            <div className="flex flex-col gap-4">
+                <p className="text-xs font-black text-white uppercase tracking-tighter">
+                    TERMINATE ACCOUNT? <br/>
+                    <span className="text-red-400 opacity-80 lowercase font-medium italic">All data will be purged. This is final.</span>
+                </p>
+                <div className="flex gap-2 justify-end">
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all"
+                    >
+                        Abort
+                    </button>
+                    <button 
+                        onClick={() => {
+                            toast.dismiss(t.id);
+                            startTransition(async () => {
+                                await deleteAccount();
+                            });
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-red-500/20 transition-all font-bold"
+                    >
+                        PURGE DATA
+                    </button>
+                </div>
+            </div>
+        ), { duration: 8000, position: "top-center" });
     };
 
     return (

@@ -110,56 +110,118 @@ export function RepositoryManager({ initialRepos }: { initialRepos: GitHubReposi
     };
 
     const handleDelete = async (repo: GitHubRepository) => {
-        const confirmDelete = window.confirm(`Are you absolutely sure you want to delete ${repo.name}? This cannot be undone.`);
-        if (!confirmDelete) return;
+        toast((t) => (
+            <div className="flex flex-col gap-4">
+                <p className="text-xs font-black text-white uppercase tracking-tighter">
+                    Destroy {repo.name}? <br/>
+                    <span className="text-red-400 opacity-80 lowercase font-medium italic">This action is irreversible.</span>
+                </p>
+                <div className="flex gap-2 justify-end">
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all"
+                    >
+                        Abort
+                    </button>
+                    <button 
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            setLoadingAction(`delete_${repo.id}`);
+                            const toastId = toast.loading(`Deleting ${repo.name}...`);
+                            const res = await deleteRepository(repo.owner.login, repo.name);
 
-        setLoadingAction(`delete_${repo.id}`);
-        const toastId = toast.loading(`Deleting ${repo.name}...`);
-        const res = await deleteRepository(repo.owner.login, repo.name);
-
-        if (res.success) {
-            setRepos(repos.filter(r => r.id !== repo.id));
-            toast.success(`${repo.name} deleted successfully!`, { id: toastId });
-        } else {
-            toast.error(res.error || "Failed to delete repository (Make sure you re-authenticated to grant delete_repo scope).", { id: toastId });
-        }
-        setLoadingAction(null);
+                            if (res.success) {
+                                setRepos(repos.filter(r => r.id !== repo.id));
+                                toast.success(`${repo.name} deleted successfully!`, { id: toastId });
+                            } else {
+                                toast.error(res.error || "Failed to delete repository", { id: toastId });
+                            }
+                            setLoadingAction(null);
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-red-500/20 transition-all"
+                    >
+                        Execute Deletion
+                    </button>
+                </div>
+            </div>
+        ), { duration: 6000, position: "top-center" });
     };
 
     const handleAutoImproveDesc = async (repo: GitHubRepository) => {
-        const confirmImprove = window.confirm(`Do you want AI to automatically generate a Description for ${repo.name}?`);
-        if (!confirmImprove) return;
+        toast((t) => (
+            <div className="flex flex-col gap-4">
+                <p className="text-xs font-black text-white uppercase tracking-tighter">
+                    Neural Enhancement for {repo.name}? <br/>
+                    <span className="text-primary opacity-80 lowercase font-medium italic">AI will architect a premium description.</span>
+                </p>
+                <div className="flex gap-2 justify-end">
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            setLoadingAction(`improve_desc_${repo.id}`);
+                            const toastId = toast.loading("Generating AI description...");
+                            const res = await autoImproveDescription(repo.owner.login, repo.name);
 
-        setLoadingAction(`improve_desc_${repo.id}`);
-        const toastId = toast.loading("Generating AI description...");
-        const res = await autoImproveDescription(repo.owner.login, repo.name);
-
-        if (res.success) {
-            toast.success("Description updated!", { id: toastId });
-            router.refresh();
-            // Sync local state if possible without reload, but refresh() is safer for server data
-            if (res.data) setRepos(repos.map(r => r.id === (res.data as GitHubRepository).id ? (res.data as GitHubRepository) : r));
-        } else {
-            toast.error(res.error || "Failed to auto-improve description.", { id: toastId });
-        }
-        setLoadingAction(null);
+                            if (res.success) {
+                                toast.success("Description updated!", { id: toastId });
+                                router.refresh();
+                                if (res.data) setRepos(repos.map(r => r.id === (res.data as GitHubRepository).id ? (res.data as GitHubRepository) : r));
+                            } else {
+                                toast.error(res.error || "Failed to auto-improve description.", { id: toastId });
+                            }
+                            setLoadingAction(null);
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all"
+                    >
+                        Generate
+                    </button>
+                </div>
+            </div>
+        ), { duration: 5000, position: "top-center" });
     };
 
     const handleAutoImproveReadme = async (repo: GitHubRepository) => {
-        const confirmImprove = window.confirm(`Do you want AI to automatically generate a README for ${repo.name}?`);
-        if (!confirmImprove) return;
+        toast((t) => (
+            <div className="flex flex-col gap-4">
+                <p className="text-xs font-black text-white uppercase tracking-tighter">
+                    Generate Architect README for {repo.name}? <br/>
+                    <span className="text-primary opacity-80 lowercase font-medium italic">Our AI will deploy a professional README to main.</span>
+                </p>
+                <div className="flex gap-2 justify-end">
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all"
+                    >
+                        Skip
+                    </button>
+                    <button 
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            setLoadingAction(`improve_readme_${repo.id}`);
+                            const toastId = toast.loading("Generating AI README...", { id: `readme_${repo.id}` });
+                            const result = await autoImproveReadme(repo.owner.login, repo.name);
+                            setLoadingAction(null);
 
-        setLoadingAction(`improve_readme_${repo.id}`);
-        const toastId = toast.loading("Generating AI README...", { id: `readme_${repo.id}` });
-        const result = await autoImproveReadme(repo.owner.login, repo.name);
-        setLoadingAction(null);
-
-        if (result.success) {
-            toast.success("README upgraded and committed!", { id: toastId });
-            router.refresh();
-        } else {
-            toast.error(result.error || "Failed to upgrade README", { id: toastId });
-        }
+                            if (result.success) {
+                                toast.success("README upgraded and committed!", { id: toastId });
+                                router.refresh();
+                            } else {
+                                toast.error(result.error || "Failed to upgrade README", { id: toastId });
+                            }
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all"
+                    >
+                        Deploy
+                    </button>
+                </div>
+            </div>
+        ), { duration: 5000, position: "top-center" });
     };
 
     const handleAutoFixCode = async (repo: GitHubRepository) => {

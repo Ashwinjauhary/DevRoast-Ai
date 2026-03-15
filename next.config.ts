@@ -17,9 +17,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {},
   // @ts-ignore
-  turbopack: {
-    root: 'C:\\Users\\ashwi\\.gemini\\antigravity\\scratch\\devroast-ai',
-  },
+  turbopack: {},
 };
 
 export default nextConfig;

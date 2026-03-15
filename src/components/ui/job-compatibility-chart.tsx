@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import { Info, Target, Zap, ShieldCheck, Activity } from "lucide-react";

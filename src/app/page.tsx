@@ -240,10 +240,10 @@ export default function LandingPage() {
             Engineered to destroy egos and elevate codebases. Proceed at your own risk.
           </p>
           <div className="flex flex-wrap justify-center gap-12 text-xs font-black uppercase tracking-[0.3em]">
-            <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="#" className="hover:text-white transition-colors">Documentation</Link>
-            <Link href="https://github.com" className="hover:text-white transition-colors">GitHub</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="https://github.com/Ashwinjauhary/DevRoast-Ai#readme" className="hover:text-white transition-colors">Documentation</Link>
+            <Link href="https://github.com/Ashwinjauhary/DevRoast-Ai" className="hover:text-white transition-colors">GitHub</Link>
           </div>
         </div>
       </footer>

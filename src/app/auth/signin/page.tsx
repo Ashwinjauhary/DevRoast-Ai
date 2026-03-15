@@ -176,7 +176,7 @@ export default function SignInPage() {
                     </Suspense>
 
                     <div className="pt-8 text-center text-xs text-zinc-500 max-w-[280px]">
-                        By proceeding, you agree to our <Link href="#" className="text-zinc-300 hover:text-white underline underline-offset-4 pointer-events-auto">Terms of Service</Link> and <Link href="#" className="text-zinc-300 hover:text-white underline underline-offset-4 pointer-events-auto">Privacy Policy</Link>.
+                        By proceeding, you agree to our <Link href="/terms" className="text-zinc-300 hover:text-white underline underline-offset-4 pointer-events-auto">Terms of Service</Link> and <Link href="/privacy" className="text-zinc-300 hover:text-white underline underline-offset-4 pointer-events-auto">Privacy Policy</Link>.
                     </div>
                 </div>
             </div>

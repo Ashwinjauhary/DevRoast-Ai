@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Code2, TerminalSquare, ArrowRight, Shield, GitBranch, Cpu, Star, Sparkles } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { Github, Code2, TerminalSquare, ArrowRight, Shield, GitBranch, Cpu, Star, Sparkles, Menu, X } from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { NeuralBg } from "@/components/ui/neural-bg";
-import React from "react";
+import React, { useState } from "react";
 
 export default function LandingPage() {
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-primary/30">
@@ -57,11 +58,66 @@ export default function LandingPage() {
             </Link>
           </nav>
 
-          {/* Mobile Entry */}
-          <Link href="/auth/signin" className="md:hidden px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
-            AUTHENTICATE
-          </Link>
+          {/* Mobile Toggle */}
+          <div className="flex items-center gap-4 md:hidden">
+            <Link href="/auth/signin" className="px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
+              AUTH
+            </Link>
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-zinc-400 hover:text-white transition-colors"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-white/5 bg-black/90 backdrop-blur-3xl overflow-hidden"
+            >
+              <nav className="flex flex-col p-6 gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
+                <Link 
+                  href="#how-it-works" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="hover:text-primary transition-colors flex items-center justify-between group"
+                >
+                  Architecture
+                  <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                </Link>
+                <Link 
+                  href="#features" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="hover:text-primary transition-colors flex items-center justify-between group"
+                >
+                  Diagnostics
+                  <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                </Link>
+                <Link 
+                  href="/auth/signin" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="hover:text-primary transition-colors flex items-center justify-between group"
+                >
+                  Authenticate
+                  <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                </Link>
+                <Link 
+                  href="/auth/signin" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="mt-2 w-full py-4 bg-white text-black text-center rounded-xl flex items-center justify-center gap-2 group"
+                >
+                  INITIALIZE SYSTEM
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main className="relative z-10 pt-40 md:pt-52 pb-24">

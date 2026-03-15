@@ -13,117 +13,154 @@
 
 ---
 
-## 🌪️ Overview
-**DevRoast AI** is a premium, high-tech ecosystem designed to audit and roast your technical history. Built on a foundation of **"Cyber-Industrial"** aesthetics, it transforms standard GitHub analytics into an aggressive, AI-powered interrogation experience.
+## 🌪️ Overview: The Cyber-Industrial Audit
+**DevRoast AI** is not just an analytics platform—it's a brutal, AI-powered interrogation terminal designed to tear down and rebuild your technical identity. Using a high-stakes **Cyber-Brutalist** aesthetic, we audit your GitHub history, quantify your architectural value, and synthesize elite professional assets.
 
-> *"Your code isn't just bad; it's a liability. We're here to help you fix it."*
-
----
-
-## 🕹️ The Full Neural Ecosystem (V3.0)
-
-DevRoast AI is structured into specialized command sectors, each targeting a critical aspect of the developer lifecycle.
-
-### 🏛️ 1. Overview & Identity
-The entry point to your technical soul.
-- **Unified Dashboard**: Real-time visualization of your GitHub standing.
-- **Developer Profile**: A premium, public-facing identity card showcasing your AI-audited stats.
-
-### 🚀 2. MVP Feature Suite
-The core tools that define the "Roast" experience.
-- **GitHub Analysis**: High-stakes audit of your entire account history.
-- **Repo Analysis**: Deep architectural interrogation of individual codebases.
-- **AI Portfolio Architect**: Automated synthesis of your work into a 10/10 portfolio.
-- **Resume DNA Synthesizer**: Generates elite LaTeX resumes by analyzing your technical contributions.
-- **Code Review Bot**: A brutal, real-time feedback engine for code snippets.
-
-### ⚡ 3. Core Engagement & Gamification
-- **Repositories**: Native command center for managing GitHub projects.
-- **Dev Duels**: Compare technical metrics against global peers (Experimental).
-- **Achievements**: Unlock industrial-grade badges based on coding habits.
-- **Advanced Analysis**: Multi-dimensional scoring for complex architectures.
-
-### 📊 4. Org Dashboard & Intel
-High-level telemetry for professional tracking.
-- **Developer Score**: A proprietary neural score (1-10) of your technical value.
-- **Global Leaderboard**: See where you stand in the hierarchy of modern developers.
-- **Score History**: Temporal tracking of your technical evolution.
-- **Language Map**: Geospatial-style visualization of your technology stack.
-
-### 🤖 5. AI Developer Suite
-Force-multipliers for your daily workflow.
-- **AI Mentor Chat**: Real-time consultation with our neural architecture expert.
-- **README Generator**: Automates elite documentation for your projects.
-- **Commit Auditor**: Scans commit history for quality and security leaks.
-- **Diff Explainer**: Simplifies complex changes into actionable intelligence.
-- **Branch Namer**: Generates perfectly semantic branch names for any feature.
-- **Stack Recommender**: Validates project goals against modern tech stacks.
-
-### 📈 6. Career & Growth Engine
-- **Job Match Engine**: Analyzes your data against JDs to identify technical gaps.
-- **Interview Prep**: Generates high-stakes questions based on your specific weaknesses.
-- **OSS Recommender**: Targets Open Source projects perfectly aligned with your DNA.
-
-### 🛡️ 7. Security & Quality Control
-- **License Checker**: Ensures your repos follow industrial legal standards.
-- **Dependency Monitor**: Scans for liability in your package ecosystem.
-
-### 📚 8. System & Library
-- **Neural Library**: Persistent storage for all your AI-generated assets (PDFs, Portfolios).
-- **History**: Full audit log of every interrogation session.
-- **Account Settings**: Management of your GitHub Auth and identity.
+### 🧠 Design Philosophy
+- **Industrial Precision**: Saffron-Black and Emerald status highlights.
+- **Unapologetic Feedback**: We don't sugarcoat; we optimize.
+- **Edge Intelligence**: Real-time AI processing with zero-downtime rotation.
 
 ---
 
-## 🏗️ Technical Architecture
+## 🕹️ Full Neural Ecosystem: Sector Mapping
+DevRoast AI features 30+ specialized modules across 8 strategic command sectors.
 
-DevRoast AI operates on a **Non-Blocking Distributed AI Architecture**.
+### 🏛️ Sector 1: Intelligence Overview
+- **Dashboard**: Central telemetry for your GitHub standing.
+- **Developer Profile**: Your public-facing identity card with AI-audited DNA.
+- **Score History**: Temporal tracking of your technical evolution over time.
+- **Leaderboard**: Global ranking of interrogation scores.
 
-```mermaid
-graph TD
-    User((Developer)) -->|Auth v5| App[Next.js 16 Edge]
-    App -->|Requests| API[API Mesh]
-    
-    subgraph "AI Interrogation Layer"
-        API -->|Primary| Groq[Groq Llama-3.1 70B]
-        Groq -->|Rate Limit / Fail| SN[SambaNova Multi-Key Pool]
-    end
-    
-    subgraph "Data & Persistence"
-        API -->|ORM| Prisma[Prisma v6]
-        Prisma -->|Storage| Neon[(PostgreSQL Serverless)]
-        API -->|Assets| CD[Cloudinary CDN]
-    end
-    
-    subgraph "Integrations"
-        API <-->|OAuth/Rest| GH[(GitHub API v3)]
-    end
-```
+### 🚀 Sector 2: MVP Feature Suite
+- **GitHub Analysis**: The flagship audit. A deep scan of your entire account reputation.
+- **Repo Analysis**: Deep-probes individual repositories for architectural liability.
+- **AI Portfolio Architect**: Automatically deploys a 10/10 custom portfolio site.
+- **Resume Enhancer**: Synthesizes ATS-friendly LaTeX resumes from your actual code history.
+- **Code Review Bot**: Real-time snippet roasting and optimization.
+
+### ⚡ Sector 3: Core Engagement & Data
+- **Repositories**: Native command center to Sync, Edit, or Destroy projects.
+- **Commit Auditor**: High-stakes scan of your commit messages for quality and security.
+- **Diff Explainer**: Neural translation of complex pull requests into plain English.
+- **History**: Full audit logs of every previous interrogation session.
+- **Library (Neural Library)**: Your secure vault for all generated PDFs, Portfolios, and Assets.
+
+### 📊 Sector 4: Org & Professional Intel
+- **Org Dashboard**: Multi-repository telemetry for organizational oversight.
+- **Developer Score**: Our proprietary neural metric (1-10) of your technical worth.
+- **Language Map**: Geospatial-style heat mapping of your total tech stack.
+- **Snippet Vault**: Securely store and audit your most used code blocks.
+
+### 🤖 Sector 5: AI Developer Suite
+- **AI Mentor Chat**: 24/7 access to our neural architecture expert.
+- **README Generator**: High-speed, professional documentation deployment.
+- **Branch Namer**: Generates semantic, industrial-standard branch IDs.
+- **Stack Recommender**: Validates your project goals against the world's most robust tech choices.
+
+### 📈 Sector 6: Career & Growth Engine
+- **Job Match Engine**: Real-time identification of technical gaps between you and your target JD.
+- **Interview Prep**: High-pressure question generation based on your personal weaknesses.
+- **OSS Recommender**: Targets Open Source contributions perfectly aligned with your DNA.
+
+### 🛡️ Sector 7: Quality & Security
+- **License Checker**: Scans repositories for industrial legal compliance.
+- **Dependency Monitor**: Real-time audit of your package ecosystem for technical debt.
 
 ---
 
-## 🛠️ Installation & Setup
+## 🧩 Premium UI Components (The Industrial Block)
+Our custom component library is built for visual impact and technical performance.
+- **`PremiumCard`**: High-contrast, glass-darker container with dynamic glow states.
+- **`AnimatedText`**: Smooth, cinematic text entry for interrogation headers.
+- **`StackVisualizer`**: 3D and bento-style visualizations of complex tech chains.
+- **`CommitFixerWidget`**: Interactive UI for applying AI fixes directly to branches.
+- **`NeuralBg`**: Low-poly, floating node background for immersive auditing.
+- **`ScoreHistoryChart`**: High-precision line telemetry using **Recharts**.
 
+---
+
+## 🧪 Technical DNA (The Stack)
+### Core Frameworks
+- **Next.js 16.1.6**: Leveraging App Router and Edge Runtime.
+- **React 19.2.3**: Utilizing the latest in concurrent rendering and server components.
+- **Tailwind CSS 4**: Modern utility-first styling with hybrid PostCSS integration.
+
+### AI & Data Layers
+- **Prisma 5.22**: Type-safe ORM for mission-critical persistence.
+- **Neon (PostgreSQL)**: Serverless, distributed database architecture.
+- **Hybrid AI Engine**: 
+  - **Groq**: Primary engine for low-latency Llama-3.1 70B inference.
+  - **SambaNova**: Industrial-grade fallback for high-throughput interrogation.
+  - **Google Gemini**: Exploratory vision and multimodal analysis.
+
+### Interactive Utilities
+- **Framer Motion 12.3**: For high-fidelity micro-animations.
+- **Three.js**: Powering the 3D neural visualizations and repo graphs.
+- **HTML-to-Image / JSPDF**: For instant generation of portfolios and resume assets.
+
+---
+
+## ⚙️ AI Engine Logic: Sector Rotation
+To ensure 100% uptime, DevRoast AI implements a **Recursive Fallback Loop**:
+1. **Primary Request**: Dispatched to the `GROQ_API_KEYS` rotation pool.
+2. **Rate Limit / Error Detected**: System automatically pivots to the `SAMBANOVA_API_KEY`.
+3. **JSON Guard**: Every response is piped through `parseAIJson` to filter out hallucinated markdown and ensure structural integrity.
+
+---
+
+## 🛠️ Local Command & Control
+### 1. Requirements
+- Node.js 20+ (LTS)
+- PostgreSQL Instance (Neon.tech Recommended)
+- GitHub Developer App (OAuth) credentials.
+
+### 2. Setup Protocols
 ```bash
-# Clone and Install
+# Clone the encrypted-style repo
 git clone https://github.com/Ashwinjauhary/DevRoast-Ai.git
-cd devroast-ai
+
+# Install Industrial Dependencies
 npm install
 
-# Database Synchronization
+# Sync Neural Schema
 npx prisma db push
 
-# Launch Terminal
+# Start Interrogation Terminal
 npm run dev
 ```
 
-### Required Environment Variables
-| Key | Purpose |
-| :--- | :--- |
-| `DATABASE_URL` | Neon.tech PostgreSQL connection |
-| `AUTH_GITHUB_ID` | GitHub OAuth Client ID |
-| `GROQ_API_KEYS` | Comma-separated rotation pool |
-| `SAMBANOVA_API_KEY` | Secondary intelligence fallback |
+### 3. Environment Variables (.env)
+| Key | Example Value | Purpose |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | `postgresql://user:pass@host/db` | Core data persistence |
+| `AUTH_GITHUB_ID` | `Iv1.xxxxxxxxxxxx` | OAuth Authentication |
+| `GROQ_API_KEYS` | `gsk_key1, gsk_key2` | Primary AI Rotation Pool |
+| `SAMBANOVA_API_KEY` | `sbx_xxxxxxxx` | Industrial Fallback Engine |
+| `CLOUDINARY_URL` | `cloudinary://...` | Asset Storage & CDN |
+
+---
+
+## 📂 Project Organization
+```text
+src/
+├── app/              # Next.js App Router (Dashboard & Logic)
+├── components/       
+│   ├── ui/           # Premium custom components (Industrial-Focus)
+│   ├── dashboard/    # Specific views and interaction widgets
+│   └── layout/       # Sidebar, Header, and Navigation
+├── lib/              # Core Intelligence (AI Rotation, Prisma, Utils)
+├── types/            # Global TypeScript definitions
+└── styles/           # Tailwind 4 configuration and global CSS
+```
+
+---
+
+## 👨‍💻 Developer Profile
+**Ashwin Jauhary** — *Full Stack Architect*
+- **Role**: Specialized in modern JavaScript ecosystems and high-performance Web Apps.
+- **Specialty**: Cloud-based deployments and real-time AI integration.
+- **Portfolio**: Included natively within DevRoast AI.
 
 ---
 

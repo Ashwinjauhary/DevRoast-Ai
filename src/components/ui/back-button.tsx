@@ -19,10 +19,10 @@ export function BackButton() {
     }, []);
 
     const isLanding = pathname === "/";
-    const isAuth = pathname?.startsWith("/auth");
+    const isAuthPage = pathname?.includes("/auth/") || pathname === "/auth";
     
     // Hide completely on auth pages, show on landing only when scrolled, show elsewhere always
-    const isVisible = !isAuth && (!isLanding || scrolled);
+    const isVisible = !isAuthPage && (!isLanding || scrolled);
 
     const handleClick = () => {
         if (isLanding) {

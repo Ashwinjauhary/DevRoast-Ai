@@ -175,8 +175,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         onClick={async () => {
                             try {
                                 await handleSignOut();
-                            } catch {
-                                window.location.href = "/auth/signin";
+                            } catch (err) {
+                                // Next.js redirects throw an error that should not be caught for redirection to work,
+                                // but we provide a hard fallback to landing just in case.
+                                window.location.href = "/";
                             }
                         }}
                     >

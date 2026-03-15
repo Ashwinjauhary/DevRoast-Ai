@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import fs from "fs";
-import path from "path";
 
 const GITHUB_API_BASE = "https://api.github.com";
-const LOG_FILE = "./api-debug.log";
 
 function logDebug(message: string) {
-    const timestamp = new Date().toISOString();
-    fs.appendFileSync(LOG_FILE, `[${timestamp}] ${message}\n`);
+    console.log(`[DEBUG][github-profile] ${message}`);
 }
 
 export async function GET(request: Request) {
@@ -23,30 +19,31 @@ export async function GET(request: Request) {
 
     try {
         logDebug(`Analyzing profile for: ${username}`);
-        logDebug(`Session User ID: ${session?.user?.id}`);
 
         let githubToken = (session?.user as any)?.accessToken;
         let tokenSource = "session";
 
-        // If no token in session, check if there's a linked GitHub account in DB
         if (!githubToken && session?.user?.id) {
-            const account = await prisma.account.findFirst({
-                where: {
-                    userId: session.user.id,
-                    provider: "github"
-                }
-            });
-            githubToken = account?.access_token;
-            tokenSource = "database";
+            try {
+                const account = await prisma.account.findFirst({
+                    where: {
+                        userId: session.user.id,
+                        provider: "github"
+                    }
+                });
+                githubToken = account?.access_token;
+                tokenSource = "database";
+            } catch (dbError) {
+                logDebug(`Database error fetching token: ${dbError}`);
+            }
         }
 
         if (!githubToken) {
-            if (process.env.GITHUB_TOKEN) tokenSource = "env.GITHUB_TOKEN";
-            else if (process.env.AUTH_GITHUB_TOKEN) tokenSource = "env.AUTH_GITHUB_TOKEN";
-            else tokenSource = "none";
+            githubToken = process.env.GITHUB_TOKEN || process.env.AUTH_GITHUB_TOKEN;
+            tokenSource = githubToken ? "environment" : "none";
         }
 
-        logDebug(`Using GitHub token from: ${tokenSource} (exists: ${!!githubToken || !!process.env.GITHUB_TOKEN || !!process.env.AUTH_GITHUB_TOKEN})`);
+        logDebug(`Using token from ${tokenSource}`);
 
         const headers: any = {
             "Accept": "application/vnd.github.v3+json",
@@ -55,40 +52,58 @@ export async function GET(request: Request) {
 
         if (githubToken) {
             headers["Authorization"] = `Bearer ${githubToken}`;
-        } else if (process.env.GITHUB_TOKEN) {
-            headers["Authorization"] = `Bearer ${process.env.GITHUB_TOKEN}`;
-        } else if (process.env.AUTH_GITHUB_TOKEN) {
-            headers["Authorization"] = `Bearer ${process.env.AUTH_GITHUB_TOKEN}`;
         }
 
-        // 1. Determine the correct endpoint for repos
-        // If the username we are analyzing is the same as the authenticated user, we can fetch all repos (including private)
-        const isSelfAnalysis = session?.user?.name?.toLowerCase() === username.toLowerCase() || (session?.user as any)?.github_username?.toLowerCase() === username.toLowerCase();
+        const isSelfAnalysis = (session?.user as any)?.github_username?.toLowerCase() === username.toLowerCase() ||
+            session?.user?.name?.toLowerCase() === username.toLowerCase();
+
         const reposUrl = (isSelfAnalysis && githubToken)
             ? `${GITHUB_API_BASE}/user/repos?type=all&per_page=100&sort=updated`
             : `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=updated`;
 
-        // Parallel fetching for performance
-        const [userRes, reposRes, eventsRes] = await Promise.all([
-            fetch(`${GITHUB_API_BASE}/users/${username}`, { headers }),
-            fetch(reposUrl, { headers }),
-            fetch(`${GITHUB_API_BASE}/users/${username}/events/public?per_page=30`, { headers })
-        ]);
-
+        logDebug(`Fetching data from GitHub...`);
+        
+        const userRes = await fetch(`${GITHUB_API_BASE}/users/${username}`, { headers });
+        
         if (!userRes.ok) {
-            return NextResponse.json({ error: "GitHub user not found or rate limited." }, { status: userRes.status });
+            const status = userRes.status || 500;
+            logDebug(`GitHub User API failed: ${status}`);
+            return NextResponse.json({
+                error: "GitHub user not found or rate limited.",
+                details: `User API returned ${status}`
+            }, { status });
         }
 
         const userData = await userRes.json();
-        const reposData = reposRes.ok ? await reposRes.json() : [];
-        const eventsData = eventsRes.ok ? await eventsRes.json() : [];
 
-        // Compute derived metrics
-        const totalStars = reposData.reduce((acc: number, repo: any) => acc + (repo.stargazers_count || 0), 0);
-        const totalForks = reposData.reduce((acc: number, repo: any) => acc + (repo.forks_count || 0), 0);
-        const totalWatchers = reposData.reduce((acc: number, repo: any) => acc + (repo.watchers_count || 0), 0);
-        
-        const languages = reposData
+        // Fetch repos and events in parallel
+        const [reposRes, eventsRes] = await Promise.all([
+            fetch(reposUrl, { headers }).catch(e => {
+                logDebug(`Repos fetch failed: ${e.message}`);
+                return null;
+            }),
+            fetch(`${GITHUB_API_BASE}/users/${username}/events/public?per_page=30`, { headers }).catch(e => {
+                logDebug(`Events fetch failed: ${e.message}`);
+                return null;
+            })
+        ]);
+
+        const reposData = (reposRes && reposRes.ok) ? await reposRes.json() : [];
+        const eventsData = (eventsRes && eventsRes.ok) ? await eventsRes.json() : [];
+
+        const safeRepos = Array.isArray(reposData) ? reposData : [];
+        const safeEvents = Array.isArray(eventsData) ? eventsData : [];
+
+        if (!Array.isArray(reposData)) {
+            logDebug(`reposData is not an array: ${typeof reposData}`);
+        }
+
+        // Compute derived metrics safely
+        const totalStars = safeRepos.reduce((acc: number, repo: any) => acc + (repo.stargazers_count || 0), 0);
+        const totalForks = safeRepos.reduce((acc: number, repo: any) => acc + (repo.forks_count || 0), 0);
+        const totalWatchers = safeRepos.reduce((acc: number, repo: any) => acc + (repo.watchers_count || 0), 0);
+
+        const languages = safeRepos
             .map((r: any) => r.language)
             .filter(Boolean)
             .reduce((acc: Record<string, number>, lang: string) => {
@@ -101,35 +116,40 @@ export async function GET(request: Request) {
             .slice(0, 5)
             .map(([lang]) => lang);
 
-        const repositoriesWithNoDescription = reposData.filter((r: any) => !r.description).length;
-        const hasReadme = reposData.some((r: any) => r.name.toLowerCase() === username.toLowerCase());
+        const repositoriesWithNoDescription = safeRepos.filter((r: any) => !r.description).length;
+        const hasReadme = safeRepos.some((r: any) => r.name && r.name.toLowerCase() === username.toLowerCase());
 
-        const totalRepos = reposData.length;
-        const accountAgeDays = Math.floor((new Date().getTime() - new Date(userData.created_at).getTime()) / (1000 * 60 * 60 * 24));
+        const totalRepos = safeRepos.length;
+        const createdAt = userData.created_at ? new Date(userData.created_at) : new Date();
+        const accountAgeDays = Math.max(0, Math.floor((new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)));
 
         const rawMetrics = {
             total_repos: totalRepos,
-            public_repos: userData.public_repos,
-            private_repos: userData.total_private_repos || (totalRepos - userData.public_repos),
-            followers: userData.followers,
-            following: userData.following,
-            account_age_days: accountAgeDays,
+            public_repos: userData.public_repos || 0,
+            private_repos: userData.total_private_repos || Math.max(0, totalRepos - (userData.public_repos || 0)),
+            followers: userData.followers || 0,
+            following: userData.following || 0,
+            account_age_days: accountAgeDays || 0,
             total_stars: totalStars,
             total_forks: totalForks,
             total_watchers: totalWatchers,
             top_languages: topLanguages,
-            recent_events_count: eventsData.length,
+            recent_events_count: safeEvents.length,
             repositories_missing_description: repositoriesWithNoDescription,
             has_profile_readme: hasReadme,
             bio: userData.bio || "No bio provided.",
             location: userData.location || "Ghost Town",
-            company: userData.company || "Self-Employed (Probably Unemployment)",
+            company: userData.company || "Self-Employed",
         };
 
         return NextResponse.json(rawMetrics);
 
-    } catch (error) {
-        console.error("GitHub Fetch Error:", error);
-        return NextResponse.json({ error: "Failed to fetch GitHub data" }, { status: 500 });
+    } catch (error: any) {
+        logDebug(`Critical Error: ${error.message}`);
+        console.error("Critical GitHub Fetch Error:", error);
+        return NextResponse.json({
+            error: "Failed to fetch GitHub data",
+            details: error.message
+        }, { status: 500 });
     }
 }

@@ -9,7 +9,6 @@ import { toPng } from "html-to-image";
 import { motion, AnimatePresence } from "framer-motion";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
-import { autoFixProfile } from "./actions";
 import { ShareRoast } from "@/components/dashboard/share-roast";
 
 interface GitHubMetrics {
@@ -80,17 +79,6 @@ export default function GithubAnalysisPage() {
 
 
 
-    const handleAutoFix = () => {
-        if (!result) return;
-        startTransition(async () => {
-            const res = await autoFixProfile(username, result.analysis);
-            if (res.success) {
-                toast.success("Profile completely overhauled! Check your GitHub.");
-            } else {
-                toast.error(res.error || "Failed to fix profile.");
-            }
-        });
-    };
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-zinc-100 max-w-5xl mx-auto pb-24">
@@ -178,13 +166,35 @@ export default function GithubAnalysisPage() {
                             <div className="flex gap-2 w-full sm:w-auto">
                                 {isOwnAccount && (
                                     <Button
-                                        onClick={handleAutoFix}
-                                        disabled={isPending}
+                                        onClick={() => {
+                                            toast((t) => (
+                                                <div className="flex flex-col gap-4 max-w-md">
+                                                    <p className="text-xs font-black text-white uppercase tracking-tighter">
+                                                        Manual Redemption Path 🌪️ <br/>
+                                                        <span className="text-primary opacity-80 lowercase font-medium italic">Follow these protocols to repair your reputation.</span>
+                                                    </p>
+                                                    <ul className="space-y-2 text-[10px] text-zinc-400 font-mono list-disc pl-4">
+                                                        <li>Craft an elite <span className="text-white">Bio</span> (max 160 chars) focusing on architect-level impact.</li>
+                                                        <li>Update your <span className="text-white">Profile README</span> with modern tech stack badges.</li>
+                                                        <li>Ensure your <span className="text-white">Location</span> and <span className="text-white">Company</span> fields are industrial-certified.</li>
+                                                        <li>Pin your most high-integrity repositories to the top.</li>
+                                                    </ul>
+                                                    <div className="flex justify-end">
+                                                        <button 
+                                                            onClick={() => toast.dismiss(t.id)}
+                                                            className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all font-bold"
+                                                        >
+                                                            Understood
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ), { duration: 10000, position: "top-center" });
+                                        }}
                                         variant="outline"
-                                        className="gap-2 bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/20 hover:text-emerald-400 flex-1 sm:flex-none"
+                                        className="gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 hover:text-primary flex-1 sm:flex-none font-bold"
                                     >
-                                        {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
-                                        Auto-Fix Profile
+                                        <Zap className="w-4 h-4" />
+                                        Improve Profile
                                     </Button>
                                 )}
                                     <ShareRoast 

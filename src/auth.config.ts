@@ -1,0 +1,39 @@
+import type { NextAuthConfig } from "next-auth";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+
+export const authConfig = {
+    providers: [
+        GitHub({
+            clientId: process.env.AUTH_GITHUB_ID,
+            clientSecret: process.env.AUTH_GITHUB_SECRET,
+            allowDangerousEmailAccountLinking: true,
+            authorization: { params: { scope: "read:user user:email repo delete_repo" } }
+        }),
+        Google({
+            clientId: process.env.AUTH_GOOGLE_ID,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET,
+            allowDangerousEmailAccountLinking: true,
+        }),
+    ],
+    pages: {
+        signIn: "/auth/signin",
+    },
+    callbacks: {
+        authorized({ auth, request: { nextUrl } }) {
+            const isLoggedIn = !!auth?.user;
+            const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+            const isAuthRoute = nextUrl.pathname.startsWith("/auth");
+            const isRoot = nextUrl.pathname === "/";
+
+            if (isOnDashboard) {
+                if (isLoggedIn) return true;
+                return false; // Redirect to unauthenticated
+            } else if (isLoggedIn && (isAuthRoute || isRoot)) {
+                return Response.redirect(new URL("/dashboard", nextUrl));
+            }
+            
+            return true;
+        },
+    },
+} satisfies NextAuthConfig;

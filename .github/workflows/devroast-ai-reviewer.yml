@@ -1,0 +1,45 @@
+name: DevRoast AI Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  roast-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Trigger DevRoast API
+        id: devroast
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Triggering DevRoast for PR $PR_NUMBER..."
+          
+          # Hit the public/cloud version of DevRoast AI engine
+          RESPONSE=$(curl -s -X POST "https://devroast.ai/api/analyze/engine-repo" \
+            -H "Content-Type: application/json" \
+            -d "{\"owner\": \"${REPO%/*}\", \"repo\": \"${REPO#*/}\"}")
+            
+          SCORE=$(echo $RESPONSE | jq -r '.score')
+          ROAST=$(echo $RESPONSE | jq -r '.roastLines[0]')
+          
+          echo "ROAST_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "🔥 **DevRoast Architectural Integrity: $SCORE/10**" >> $GITHUB_ENV
+          echo "> _$ROAST_" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.ROAST_OUTPUT
+            })

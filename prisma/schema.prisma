@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(cuid())
+  name            String?
+  email           String         @unique
+  github_username String?
+  image           String?
+  created_at      DateTime       @default(now())
+  emailVerified   DateTime?
+  password        String?
+  notifications   Json?          @default("{}")
+  accounts        Account[]
+  analyses        Analysis[]
+  apiKeys         ApiKey[]
+  chats           Chat[]
+  libraryAssets   LibraryAsset[]
+  portfolios      Portfolio[]
+  scoreHistory    ScoreHistory[]
+  sessions        Session[]
+  snippets        Snippet[]
+  badges          UserBadge[]
+}
+
+model LibraryAsset {
+  id         String   @id @default(cuid())
+  user_id    String
+  type       String
+  title      String
+  content    String?
+  file_url   String?
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Analysis {
+  id            String   @id @default(cuid())
+  user_id       String
+  analysis_type String
+  target        String
+  score         Float
+  result_json   Json
+  created_at    DateTime @default(now())
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Chat {
+  id         String   @id @default(cuid())
+  user_id    String
+  message    String
+  response   String
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Portfolio {
+  id           String   @id @default(cuid())
+  user_id      String
+  username     String   @unique
+  hero         Json
+  projects     Json
+  skills       Json?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  template     String   @default("crucible")
+  certificates Json?    @default("[]")
+  experience   Json?
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Snippet {
+  id         String   @id @default(cuid())
+  user_id    String
+  title      String
+  code       String
+  language   String
+  notes      String?
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  user_id   String
+  badge_id  String
+  earned_at DateTime @default(now())
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, badge_id])
+}
+
+model ScoreHistory {
+  id            String   @id @default(cuid())
+  user_id       String
+  label         String
+  score         Float
+  analysis_type String
+  created_at    DateTime @default(now())
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id         String   @id @default(cuid())
+  user_id    String
+  name       String
+  key_hash   String
+  prefix     String
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}

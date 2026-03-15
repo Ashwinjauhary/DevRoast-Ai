@@ -5,11 +5,12 @@ import { signOut } from "@/auth";
 export async function handleSignOut() {
     console.log("Server Action: handleSignOut triggered");
     try {
-        await signOut({ redirectTo: "/auth/signin" });
+        await signOut({ 
+            redirectTo: "/auth/signin",
+            redirect: true 
+        });
     } catch (error) {
-        // NextAuth redirects by throwing a special error, so we should re-throw it
-        // but we can log that we are here.
-        console.log("Sign out redirecting...");
+        console.log("Sign out in progress or encountered redirect error...");
         throw error;
     }
 }

@@ -91,7 +91,7 @@ export function StackBento({ data }: StackBentoProps) {
         <motion.div 
           variants={item}
           whileHover={{ scale: 1.01, rotateX: 2, rotateY: -2 }}
-          className="md:col-span-2 p-8 pb-16 rounded-[2.5rem] bg-indigo-950/20 backdrop-blur-xl border border-indigo-500/10 relative overflow-hidden group shadow-2xl min-h-[240px]"
+          className="md:col-span-2 p-6 sm:p-8 pb-12 sm:pb-16 rounded-3xl sm:rounded-[2.5rem] bg-indigo-950/20 backdrop-blur-xl border border-indigo-500/10 relative overflow-hidden group shadow-2xl min-h-[240px]"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] group-hover:bg-indigo-500/20 transition-all duration-700" />
           <div className="relative z-10">
@@ -127,7 +127,7 @@ export function StackBento({ data }: StackBentoProps) {
         <motion.div 
           variants={item}
           whileHover={{ scale: 1.01, rotateX: -2, rotateY: 2 }}
-          className="md:col-span-2 p-8 pb-16 rounded-[2.5rem] bg-emerald-950/20 backdrop-blur-xl border border-emerald-500/10 relative overflow-hidden group shadow-2xl min-h-[240px]"
+          className="md:col-span-2 p-6 sm:p-8 pb-12 sm:pb-16 rounded-3xl sm:rounded-[2.5rem] bg-emerald-950/20 backdrop-blur-xl border border-emerald-500/10 relative overflow-hidden group shadow-2xl min-h-[240px]"
         >
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 blur-[80px] group-hover:bg-emerald-500/20 transition-all duration-700" />
           <div className="relative z-10">
@@ -156,7 +156,7 @@ export function StackBento({ data }: StackBentoProps) {
         <motion.div 
           variants={item}
           whileHover={{ scale: 1.02 }}
-          className="md:col-span-1 p-8 pb-16 rounded-[2.5rem] bg-rose-950/20 backdrop-blur-xl border border-rose-500/10 relative overflow-hidden group shadow-2xl min-h-[300px]"
+          className="md:col-span-1 p-6 sm:p-8 pb-12 sm:pb-16 rounded-3xl sm:rounded-[2.5rem] bg-rose-950/20 backdrop-blur-xl border border-rose-500/10 relative overflow-hidden group shadow-2xl min-h-[300px]"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 to-transparent opacity-30" />
           <div className="relative z-10 flex flex-col h-full">
@@ -199,7 +199,7 @@ export function StackBento({ data }: StackBentoProps) {
         <motion.div 
           variants={item}
           whileHover={{ scale: 1.01 }}
-          className="md:col-span-3 p-8 pb-16 rounded-[2.5rem] bg-amber-950/20 backdrop-blur-xl border border-amber-500/10 relative overflow-hidden group shadow-2xl min-h-[300px]"
+          className="md:col-span-3 p-6 sm:p-8 pb-12 sm:pb-16 rounded-3xl sm:rounded-[2.5rem] bg-amber-950/20 backdrop-blur-xl border border-amber-500/10 relative overflow-hidden group shadow-2xl min-h-[300px]"
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-32 bg-amber-500/5 blur-[100px]" />
           <div className="relative z-10">
@@ -209,7 +209,7 @@ export function StackBento({ data }: StackBentoProps) {
               </div>
               <h4 className="text-sm font-black uppercase tracking-widest text-zinc-400">Systems_Analysis</h4>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {others.slice(0, 16).length > 0 ? others.slice(0, 16).map((n, idx) => (
                 <div key={n.id} className="relative group/item p-4 rounded-3xl bg-white/[0.01] border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/[0.02] transition-all duration-500 overflow-hidden flex flex-col justify-between h-[100px] shadow-sm">
                   {/* Background Neural Glow */}

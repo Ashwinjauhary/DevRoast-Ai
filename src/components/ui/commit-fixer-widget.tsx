@@ -71,7 +71,7 @@ export function CommitFixerWidget() {
 
 
     return (
-        <div className="bg-[#050505] border border-white/5 rounded-[2rem] p-5 lg:p-6 relative overflow-hidden group h-full flex flex-col shadow-2xl">
+        <div className="bg-[#050505] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-5 lg:p-6 relative overflow-hidden group h-full flex flex-col shadow-2xl">
             {/* Animated background glow */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-[60px] pointer-events-none" />
             

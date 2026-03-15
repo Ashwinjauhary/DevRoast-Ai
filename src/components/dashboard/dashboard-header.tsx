@@ -18,14 +18,14 @@ export function DashboardHeader() {
 
             <AnimatedText
                 text="Command Center"
-                className="text-4xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                className="text-3xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
             />
 
             <motion.p
                 initial={{ opacity: 0, y: 10, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ delay: 0.8, duration: 0.8 }}
-                className="text-xl md:text-2xl text-zinc-400 font-medium max-w-2xl"
+                className="text-lg md:text-2xl text-zinc-400 font-medium max-w-2xl"
             >
                 Welcome back, Commander. Your <span className="text-white font-bold tracking-tight">code architecture</span> is currently under critical evaluation.
             </motion.p>

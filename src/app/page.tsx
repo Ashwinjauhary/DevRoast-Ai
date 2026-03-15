@@ -86,12 +86,12 @@ export default function LandingPage() {
 
             <AnimatedText
               text="ARCHITECTURAL DESTRUCTION."
-              className="text-[14vw] md:text-[8rem] lg:text-[9rem] font-black tracking-tighter leading-[0.85] text-white mix-blend-overlay opacity-90 block"
+              className="text-[11vw] md:text-[8rem] lg:text-[9rem] font-black tracking-tighter leading-[0.85] text-white mix-blend-overlay opacity-90 block"
             />
             <AnimatedText
               delay={0.4}
               text="ELEVATED INTELLIGENCE."
-              className="text-[10vw] md:text-[5rem] lg:text-[6rem] font-black tracking-tighter leading-[0.9] text-gradient-primary block mt-4"
+              className="text-[9vw] md:text-[5rem] lg:text-[6rem] font-black tracking-tighter leading-[0.9] text-gradient-primary block mt-4"
             />
 
             <motion.p

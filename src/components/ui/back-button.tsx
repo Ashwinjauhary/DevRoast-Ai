@@ -20,9 +20,10 @@ export function BackButton() {
 
     const isLanding = pathname === "/";
     const isAuthPage = pathname?.includes("/auth/") || pathname === "/auth";
+    const isPortfolioPage = pathname?.includes("/portfolio/");
     
-    // Hide completely on auth pages, show on landing only when scrolled, show elsewhere always
-    const isVisible = !isAuthPage && (!isLanding || scrolled);
+    // Hide on auth and portfolio pages, show on landing only when scrolled, show elsewhere always
+    const isVisible = !isAuthPage && !isPortfolioPage && (!isLanding || scrolled);
 
     const handleClick = () => {
         if (isLanding) {

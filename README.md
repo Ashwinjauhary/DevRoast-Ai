@@ -1,138 +1,157 @@
 <div align="center">
   <img src="public/logo.png" width="160" height="160" alt="DevRoast AI Logo">
   <h1>DevRoast AI</h1>
-  <p><strong>Brutally Honest • AI-Powered • Developer Analysis Ecosystem</strong></p>
+  <p><strong>The Ultimate "Interrogation Terminal" for Your Code History</strong></p>
 
   [![Vercel Deployment](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://dev-roast-ai-sand.vercel.app)
   [![Next.js 16](https://img.shields.io/badge/Next.js-16-blue?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
   [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+  [![PWA Ready](https://img.shields.io/badge/PWA-Ready-hotpink?style=for-the-badge&logo=pwa)](https://web.dev/progressive-web-apps/)
 </div>
 
 ---
 
 ## 🌪️ Overview
-**DevRoast AI** is not just another GitHub analyzer—it's a high-tech "Interrogation Terminal" for your code. It combines advanced AI reasoning (Groq & SambaNova) with deep repository analytics to give you the most savage, insightful, and actionable feedback you've ever received. 
+**DevRoast AI** is a premium, high-stakes developer analysis ecosystem. It doesn't just "analyze"—it **interrogates**. By leveraging state-of-the-art LLMs (Llama 3 70B via Groq & SambaNova) and deep repository analytics, DevRoast AI provides a brutally honest, 360-degree view of your technical identity.
 
-Whether you're looking to laugh at your "coding sins" or seriously prep for a FAANG interview, DevRoast AI is your ultimate developer companion.
-
----
-
-## 🚀 Key Feature Pillar
-
-### 🛠️ MVP Feature Set
-*   **Deep GitHub Analysis**: Full-scale interrogation of your profile, contributions, and repositories.
-*   **Repository Interrogation**: Paste any GitHub URL for a brutal architectural critique.
-*   **AI Portfolio Generator**: Create stunning, personalized portfolios based on your Git history.
-*   **Resume Enhancer**: Transform your boring list of tasks into high-impact, AI-optimized achievements.
-*   **Code Review Bot**: Instant PR-style feedback on your latest commits.
-
-### 🧠 AI Developer Suite
-*   **AI Mentor Chat**: A contextual assistant that knows your code history and helps you refactor.
-*   **Automated README Generator**: Generate world-class documentation for your projects automatically.
-*   **Commit Auditor**: Analyzes your commit messages for clarity, impact, and "laziness".
-*   **Diff Explainer**: Simplifies complex code changes into plain, understandable English.
-*   **Stack Recommender**: Suggests the best modern stack (Next.js, Tailwind, etc.) for your specific project goals.
-
-### 🏆 Core Engagement & Gamification
-*   **Dev Duels**: Compete against other developers' profiles in a high-stakes AI-judged battle.
-*   **Achievements (Badges)**: Earn unique badges like "The Midnight Submitter" or "Dependency Hoarder."
-*   **Global Leaderboard**: See where you rank among the elite (or the unoptimized) developers globally.
-*   **Neural Library**: A high-tech repository of all your past roasts and generated assets.
-
-### 📊 Advanced Analysis
-*   **Org Dashboard**: Analyze entire GitHub organizations for health and contribution patterns.
-*   **Developer Score (Star Rating)**: A comprehensive 1-100 score based on code quality, consistency, and impact.
-*   **Language Map**: Visual representation of your technological footprint.
+> *"Your code is a museum of deprecated dependencies. We're just here to give you the tour."*
 
 ---
 
-## 🎨 Branding & Aesthetics
-DevRoast AI features a **"Cyber-Industrial"** aesthetic with aggressive glassmorphism and thermal-inspired gradients.
+## 🏗️ System Architecture
 
-### The Cyber Octocat Logo
-Our primary brand mark features a 3D glassmorphism silhouette of the GitHub Octocat, enveloped in a radiant thermal AI aura. 
-
-**Branding Suite Includes:**
-- **Molten Git-Coin**: Symbolic of forging high-quality code.
-- **Code Phoenix**: Represents the growth that comes from roasting old code.
-- **Thermal Git-Web**: Visualizes the heat of complex repository networks.
-
----
-
-## 💻 Technical Excellence
-
-### The Stack
-- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/) with Turbopack.
-- **Frontend**: [React 19](https://react.dev/), [Tailwind CSS 4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/).
-- **Authentication**: [Auth.js v5](https://authjs.dev/) (GitHub & Google OAuth).
-- **Database**: [PostgreSQL (Neon.tech)](https://neon.tech/) with [Prisma ORM](https://www.prisma.io/).
-- **AI Engines**: Hybrid Multi-Key Rotation (**Groq** as primary, **SambaNova** as fallback).
-- **Asset Management**: [Cloudinary](https://cloudinary.com/) for signature-authenticated uploads.
-- **PWA**: Fully functional Progressive Web App with service workers and manifest support.
-
-### AI Fallback Logic
-We've implemented a robust "Exhaustion Strategy":
-1.  **Groq Tier**: Rotates through 5+ API keys to maximize rate limits.
-2.  **SambaNova Tier**: If Groq is exhausted, the system automatically falls back to a multi-key SambaNova pool.
+```mermaid
+graph TD
+    User((Developer)) -->|Auth/Login| Auth[Auth.js v5]
+    Auth -->|OAuth| GitHub[(GitHub API)]
+    Auth -->|OAuth| Google[(Google API)]
+    
+    User -->|Interaction| FE[Next.js 16 UI]
+    FE -->|Data Fetch| API[API Routes]
+    
+    API -->|Profile Data| GH[GitHub Integration Service]
+    GH -->|Metadata| AI_Engine[AI Logic Manager]
+    
+    AI_Engine -->|Primary| Groq[Groq Llama-3 70B]
+    AI_Engine -->|Fallback| SambaNova[SambaNova Multi-Key Pool]
+    
+    API -->|Storage| DB[(PostgreSQL / Neon)]
+    DB <-->|ORM| Prisma[Prisma ORM]
+    
+    API -->|Asset Generation| Img[html2canvas / Portfolio Gen]
+    Img -->|Upload| CD[Cloudinary CDN]
+```
 
 ---
 
-## 🛠️ Local Installation
+## 🚀 The Feature Universe
 
-1.  **Clone & Install**
-    ```bash
-    git clone https://github.com/Ashwinjauhary/DevRoast-Ai.git
-    cd devroast-ai
-    npm install
-    ```
+### 🛠️ Strategic Analysis
+*   **Deep GitHub Intelligence**: Analyzes commit frequency, language diversity, and contribution impact.
+*   **Architectural Interrogation**: Deep-dives into specific repositories to find technical debt and design flaws.
+*   **Org Health Dashboard**: High-level metrics for entire GitHub organizations.
+*   **Developer Star Rating**: A dynamic 1-100 score that evolves with your coding consistency.
 
-2.  **Environment Setup**
-    Create a `.env` file with the following essentials:
-    ```env
-    # Auth
-    AUTH_SECRET="..."
-    AUTH_GITHUB_ID="..."
-    AUTH_GITHUB_SECRET="..."
-    NEXTAUTH_URL="http://localhost:3000"
+### 🧠 The AI Developer Suite
+*   **Neural AI Mentor**: A chat interface that remembers your specific project roasts to offer targeted refactoring advice.
+*   **Automated Documentation**: High-quality `README.md` generation that doesn't look like a template.
+*   **Commit Auditor**: Scores your commit history for clarity and professional impact.
+*   **Diff Explainer**: Breakthrough logic to explain cryptic code changes to non-technical stakeholders.
 
-    # Database (Neon.tech Recommended)
-    DATABASE_URL="postgresql://..."
+### 💼 Career & Growth
+*   **AI Portfolio Generator**: Generates high-conversion developer portfolios automatically.
+*   **Resume Enhancer**: Analyzes your projects to generate "High-Impact" bullet points for your CV.
+*   **Job Match Engine**: Recommends the best-fit roles based on your actual tech stack.
+*   **Interview Prep**: Generates custom interview questions based on the repos you've built.
 
-    # AI
-    GROQ_API_KEYS="key1,key2,..."
-    SAMBANOVA_API_KEYS="key1,key2,..."
-
-    # Cloudinary
-    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="..."
-    CLOUDINARY_API_KEY="..."
-    CLOUDINARY_API_SECRET="..."
-    ```
-
-3.  **Database Sync**
-    ```bash
-    npx prisma generate
-    npx prisma db push
-    ```
-
-4.  **Launch**
-    ```bash
-    npm run dev
-    ```
+### 🎮 Gamification & Social
+*   **Dev Duels**: Pit your GitHub 1v1 against friends or competitors in an AI-judged arena.
+*   **Neural Library**: A permanent vault for all your roasts, portfolios, and badges.
+*   **Leaderboards**: Compete for the title of the most optimized (or roasted) developer.
 
 ---
 
-## 🚀 Deployment (Vercel)
+## 🎨 Design System & Branding
+DevRoast AI uses a signature **"Cyber-Brutalism"** aesthetic. It's dark, fast, and high-contrast, built on a foundation of **Glassmorphism** and **Thermal Color Theory**.
 
-1.  Push your code to GitHub.
-2.  Import the repository into Vercel.
-3.  Add all the `.env` variables in the Vercel dashboard.
-4.  *Crucial*: Set `AUTH_URL` and `NEXTAUTH_URL` to your Vercel production deployment URL.
-5.  Deploy—The build script `prisma generate && next build` ensures your database client is always in sync.
+### The Premium Logo Suite
+*   **Primary Logo**: The "Cyber Octocat"—A 3D glassmorphism silhouette with a thermal AI aura.
+*   **Variant: Molten Git-Coin**: Symbolic of forging high-value architectural decisions.
+*   **Variant: Code Phoenix**: Represents the growth that comes from acknowledging coding sins.
+*   **Variant: Thermal Git-Web**: Visualizes the "heat" and complexity of modern repository networks.
+
+---
+
+## 💻 Technical Specification
+
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 16 (Turbopack) / React 19 |
+| **Styling** | Tailwind CSS 4 / Shadcn UI |
+| **Real-time AI** | Hybrid Groq + SambaNova (Llama-3.1-70B) |
+| **Database** | PostgreSQL / Neon.tech |
+| **Auth** | Auth.js v5 (Edge Compatible) |
+| **PWA** | Custom Service Worker / Web App Manifest |
+| **Storage** | Cloudinary Unified Asset Pipeline |
+
+---
+
+## 📂 Project Structure
+
+```text
+devroast-ai/
+├── src/
+│   ├── app/                # Next.js App Router (Routes & APIs)
+│   │   ├── api/            # Serverless functions for AI & Integrations
+│   │   └── dashboard/      # Core application pages
+│   ├── components/         # Atomic UI components & layout
+│   ├── lib/                # Shared utilities (AI Engine, Prisma, Auth)
+│   └── styles/             # Global CSS & Design Tokens
+├── public/                 # Premium Branding Assets & Variants
+├── prisma/                 # Database Schema & Migrations
+└── types/                  # Type-safe TypeScript definitions
+```
+
+---
+
+## 🛠️ Environment Variables Configuration
+
+To run DevRoast AI, you need to configure the following in your `.env`:
+
+```env
+# CRITICAL URLS
+NEXTAUTH_URL="https://your-domain.com"
+AUTH_URL="https://your-domain.com"
+
+# AUTHENTICATION
+AUTH_SECRET="your_openssl_32bit_hash"
+AUTH_GITHUB_ID="github_client_id"
+AUTH_GITHUB_SECRET="github_client_secret"
+
+# AI ACCESS (Separated by commas)
+GROQ_API_KEYS="key1,key2,key3"
+SAMBANOVA_API_KEYS="key1,key2,key3"
+
+# DATABASE
+DATABASE_URL="postgresql://user:pass@host:5432/db"
+
+# CLOUDINARY
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="..."
+CLOUDINARY_API_KEY="..."
+CLOUDINARY_API_SECRET="..."
+```
+
+---
+
+## 🗺️ Future Roadmap
+- [ ] **Real-world Benchmarking**: Compare your code against open-source repo benchmarks.
+- [ ] **Team Roasts**: Analyze team collaboration patterns and "blame" distribution.
+- [ ] **IDE Plugin**: Get real-time roasts directly in VS Code while you type.
+- [ ] **Video Reel Generation**: Share a high-speed video montage of your repo analysis.
 
 ---
 
 <div align="center">
-  <p>Built with 🔥 by <a href="https://github.com/Ashwinjauhary">Ashwin Jauhary</a></p>
-  <p><em>"Your code is a museum of deprecated dependencies." - DevRoast AI</em></p>
+  <p>Engineered for the elite by <a href="https://github.com/Ashwinjauhary">Ashwin Jauhary</a></p>
+  <p><strong>DevRoast AI © 2026</strong></p>
 </div>

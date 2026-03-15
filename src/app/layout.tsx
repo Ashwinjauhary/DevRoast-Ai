@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
+import { BackButton } from "@/components/ui/back-button";
 
 const outfit = Outfit({
   variable: "--font-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({
         <div className="fixed inset-0 z-[-2] bg-background pointer-events-none" />
         <Providers>
           {children}
+          <BackButton />
         </Providers>
       </body>
     </html>

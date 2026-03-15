@@ -21,6 +21,7 @@ export async function getSambaNovaResponse(prompt: string, attempt: number = 0):
                         { role: "user", content: prompt }
                     ],
                     temperature: 0.2,
+                    max_tokens: 4000,
                 }),
             });
 
@@ -54,6 +55,8 @@ export async function getSambaNovaResponse(prompt: string, attempt: number = 0):
             body: JSON.stringify({
                 model: "Meta-Llama-3.3-70B-Instruct",
                 messages: [{ role: "system", content: "Expert dev." }, { role: "user", content: prompt }],
+                max_tokens: 4000,
+                temperature: 0.1,
             }),
         });
 

@@ -195,7 +195,7 @@ export default function PortfolioGeneratorPage() {
                     <Sparkles className="w-3 h-3" />
                     Neural Synthesis v1.0
                 </div>
-                <AnimatedText text="AI Portfolio Generator" className="text-6xl font-black tracking-tighter text-gradient" />
+                <AnimatedText text="AI Portfolio Generator" className="text-4xl md:text-6xl font-black tracking-tighter text-gradient" />
                 <motion.p
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -235,23 +235,23 @@ export default function PortfolioGeneratorPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
                         {templates.map((t) => (
                             <button
                                 key={t.id}
                                 onClick={() => setTemplate(t.id)}
-                                className={`flex flex-col text-left p-3 border transition-all relative overflow-hidden group ${
+                                className={`flex flex-col text-left p-2 border transition-all relative overflow-hidden group ${
                                     template === t.id
                                         ? "bg-white/[0.05] border-white/40 ring-1 ring-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                                         : "bg-black/20 border-white/5 hover:border-white/20"
                                 }`}
                             >
                                 {template === t.id && (
-                                    <div className={`absolute top-0 right-0 p-1 bg-${t.color === 'white' ? 'white' : t.color}`}>
-                                        <ArrowRight className={`w-2.5 h-2.5 ${t.color === 'white' ? 'text-black' : 'text-white'}`} />
+                                    <div className={`absolute top-0 right-0 p-1 bg-${t.color === 'white' ? 'white' : (t.color.startsWith('text-') ? t.color.replace('text-', '') : t.color)}`}>
+                                        <ArrowRight className={`w-2 h-2 ${t.color === 'white' ? 'text-black' : 'text-white'}`} />
                                     </div>
                                 )}
-                                <span className={`text-[9px] font-black uppercase tracking-tight mb-1 truncate ${
+                                <span className={`text-[8px] font-black uppercase tracking-tight mb-1 truncate ${
                                     template === t.id ? (t.id === 'cyberpunk' ? 'text-amber-400' : t.id === 'crucible' ? 'text-white' : 'text-primary') : 'text-zinc-600'
                                 }`}>
                                     {t.name}

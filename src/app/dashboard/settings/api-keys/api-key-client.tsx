@@ -185,6 +185,47 @@ export default function ApiKeyClient({ keys: initialKeys }: ApiKeyClientProps) {
                         <p className="text-sm text-zinc-500 font-medium">Pass your key as a <span className="font-mono bg-white/5 px-1.5 py-0.5 rounded-md border border-white/10 text-zinc-300">Authorization</span> header in any API call.</p>
                     </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2 border-t border-white/5">
+                        <div className="space-y-3">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">Why to Use</h3>
+                            <ul className="space-y-2">
+                                <li className="flex items-start gap-2 text-xs text-zinc-400">
+                                    <div className="w-1 h-1 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                                    <span>Automate code quality analysis in your delivery pipeline.</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-xs text-zinc-400">
+                                    <div className="w-1 h-1 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                                    <span>Integrate DevRoast metrics into custom internal tools.</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-xs text-zinc-400">
+                                    <div className="w-1 h-1 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                                    <span>Secure machine-to-machine communication without a browser.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="space-y-3">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">Where to Use</h3>
+                            <ul className="space-y-2">
+                                <li className="flex items-start gap-2 text-xs text-zinc-400">
+                                    <div className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                                    <span>CI/CD Pipelines (GitHub Actions, GitLab CI, Jenkins).</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-xs text-zinc-400">
+                                    <div className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                                    <span>Local Git hooks and automated developer scripts.</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-xs text-zinc-400">
+                                    <div className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                                    <span>External reporting dashboards and quality portals.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/5">
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4">Implementation Examples</p>
+                    </div>
+
                     <div className="space-y-3">
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Roast a Repository</p>
                         <pre className="bg-black/60 border border-white/5 rounded-2xl p-5 text-xs font-mono text-zinc-400 overflow-x-auto leading-relaxed">

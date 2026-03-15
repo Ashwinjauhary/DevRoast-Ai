@@ -333,3 +333,31 @@ export async function saveManualPortfolio(portfolioData: any) {
         return { success: false, error: error.message };
     }
 }
+
+export async function generateLinkedInCaption(username: string, roast: string, score: number) {
+    try {
+        const prompt = `You are a viral social media ghostwriter for top-tier developers.
+Create a LinkedIn post caption for a developer who just got "roasted" by DevRoast AI.
+
+Developer: @${username}
+AI Roast Summary: "${roast}"
+Dev Score: ${score.toFixed(1)}/10
+
+Instructions:
+1. Tone: Bold, slightly arrogant, yet professional enough for LinkedIn.
+2. Structure: 
+   - A hook line about the brutal truth of the roast.
+   - Mention the Dev Score.
+   - A call to action for other developers to get roasted.
+   - Include hashtags: #DevRoast #GitHubAudit #DeveloperDNA #TechLife
+3. Keep it under 400 characters.
+
+Generate ONLY the caption text.`;
+
+        const caption = await getSambaNovaResponse(prompt);
+        return { success: true, caption: caption.trim() };
+    } catch (error: any) {
+        console.error("LinkedIn Caption Error:", error);
+        return { success: false, error: error.message };
+    }
+}

@@ -1,19 +1,52 @@
 "use client";
 
 import { toast } from "react-hot-toast";
-import { Github } from "lucide-react";
+import { Github, Loader2, Linkedin, Check, Copy } from "lucide-react";
+import { useState } from "react";
+import { generateLinkedInCaption } from "@/app/dashboard/portfolio/actions";
 
 interface ShareIdentityProps {
     username: string;
     template: string;
+    roast?: string;
+    score?: number;
 }
 
-export function ShareIdentity({ username, template }: ShareIdentityProps) {
+export function ShareIdentity({ username, template, roast, score }: ShareIdentityProps) {
+    const [isGeneratingCaption, setIsGeneratingCaption] = useState(false);
+    const [isCaptionReady, setIsCaptionReady] = useState(false);
     const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shareUrl);
         toast.success('Link copied to clipboard!');
+    };
+
+    const handleLinkedInShare = async () => {
+        if (!roast || !score) {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+            return;
+        }
+
+        setIsGeneratingCaption(true);
+        try {
+            const res = await generateLinkedInCaption(username, roast, score);
+            if (res.success && res.caption) {
+                await navigator.clipboard.writeText(res.caption);
+                toast.success('AI Caption copied! Open LinkedIn to post.');
+                setIsCaptionReady(true);
+                setTimeout(() => {
+                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+                    setIsCaptionReady(false);
+                }, 1500);
+            } else {
+                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+            }
+        } catch (err) {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+        } finally {
+            setIsGeneratingCaption(false);
+        }
     };
 
     return (
@@ -41,12 +74,13 @@ export function ShareIdentity({ username, template }: ShareIdentityProps) {
                     <div className="flex flex-wrap items-center justify-center gap-4">
                         <button 
                             onClick={handleCopy}
-                            className={`px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${
+                            className={`flex items-center gap-2 px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${
                                 template === 'hacker' ? 'bg-emerald-500 text-black' : 
                                 template === 'blueprint' ? 'bg-blue-500 text-white' : 
                                 template === 'minimalist' ? 'bg-zinc-900 text-white' : 'bg-white text-black'
                             }`}
                         >
+                            <Copy className="w-4 h-4" />
                             Copy Portfolio Link
                         </button>
                         <div className="flex gap-4">
@@ -57,21 +91,33 @@ export function ShareIdentity({ username, template }: ShareIdentityProps) {
                                 className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
                                     template === 'minimalist' ? 'border-zinc-200 hover:bg-zinc-50' : 'border-white/10 hover:bg-white/5'
                                 }`}
+                                title="View GitHub Profile"
                             >
                                 <Github className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
                             </a>
-                            <a 
-                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://devroast.ai/portfolio/' + username)}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
+                            <button 
+                                onClick={handleLinkedInShare}
+                                disabled={isGeneratingCaption}
+                                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-50 ${
                                     template === 'minimalist' ? 'border-zinc-200 hover:bg-zinc-50' : 'border-white/10 hover:bg-white/5'
                                 }`}
+                                title="Share Roast to LinkedIn"
                             >
-                                <div className={`font-bold text-lg ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`}>In</div>
-                            </a>
+                                {isGeneratingCaption ? (
+                                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                ) : isCaptionReady ? (
+                                    <Check className="w-5 h-5 text-emerald-400" />
+                                ) : (
+                                    <Linkedin className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
+                                )}
+                            </button>
                         </div>
                     </div>
+                    {roast && (
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 opacity-50">
+                            * Clicking LinkedIn will generate an AI caption and copy it to your clipboard
+                        </p>
+                    )}
                 </div>
                 <div className={`absolute top-0 left-0 w-full h-1 opacity-20 ${
                     template === 'hacker' ? 'bg-emerald-500' : 

@@ -108,6 +108,14 @@ export function ShareRoast({ data }: ShareRoastProps) {
                         </span>
                         <span className="text-[10px] font-black text-primary uppercase tracking-widest">devroast-ai.vercel.app</span>
                     </div>
+
+                    {/* Watermark Logo */}
+                    <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none transform -rotate-12 translate-y-4">
+                        <span className="text-[120px] font-black tracking-tighter">DEVR<span className="text-secondary">OAST</span></span>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none">
+                        <div className="w-[400px] h-[400px] border border-white/5 rounded-full" />
+                    </div>
                 </div>
             </div>
 

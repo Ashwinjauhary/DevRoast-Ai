@@ -684,7 +684,12 @@ export default async function PublicPortfolioPage({ params }: Props) {
                             </div>
                          </section>
 
-                        <ShareIdentity username={username} template={template} />
+                        <ShareIdentity 
+                            username={username} 
+                            template={template} 
+                            roast={roast}
+                            score={achievements[0]?.value ? parseFloat(achievements[0].value) : 0}
+                        />
 
                         <footer className={`pt-24 pb-12 text-center text-[10px] text-zinc-600 font-mono uppercase tracking-[0.3em]`}>
                             <p>DNA ANALYSIS: COMPLETE // {username} CORE_ENG READY</p>

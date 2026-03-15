@@ -1,7 +1,9 @@
 "use client";
 
 import { toast } from "react-hot-toast";
-import { Github, Linkedin, Copy } from "lucide-react";
+import { Github, Loader2, Linkedin, Check, Copy } from "lucide-react";
+import { useState } from "react";
+import { generateLinkedInCaption } from "@/app/dashboard/portfolio/actions";
 
 interface ShareIdentityProps {
     username: string;
@@ -11,11 +13,40 @@ interface ShareIdentityProps {
 }
 
 export function ShareIdentity({ username, template, roast, score }: ShareIdentityProps) {
+    const [isGeneratingCaption, setIsGeneratingCaption] = useState(false);
+    const [isCaptionReady, setIsCaptionReady] = useState(false);
     const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shareUrl);
         toast.success('Link copied to clipboard!');
+    };
+
+    const handleLinkedInShare = async () => {
+        if (!roast || !score) {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+            return;
+        }
+
+        setIsGeneratingCaption(true);
+        try {
+            const res = await generateLinkedInCaption(username, roast, score);
+            if (res.success && res.caption) {
+                await navigator.clipboard.writeText(res.caption);
+                toast.success('AI Caption copied! Open LinkedIn to post.');
+                setIsCaptionReady(true);
+                setTimeout(() => {
+                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+                    setIsCaptionReady(false);
+                }, 1500);
+            } else {
+                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+            }
+        } catch (err) {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+        } finally {
+            setIsGeneratingCaption(false);
+        }
     };
 
     return (
@@ -64,17 +95,22 @@ export function ShareIdentity({ username, template, roast, score }: ShareIdentit
                             >
                                 <Github className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
                             </a>
-                            <a 
-                                href={`https://linkedin.com/in/${username}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
+                            <button 
+                                onClick={handleLinkedInShare}
+                                disabled={isGeneratingCaption}
+                                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors disabled:opacity-50 ${
                                     template === 'minimalist' ? 'border-zinc-200 hover:bg-zinc-50' : 'border-white/10 hover:bg-white/5'
                                 }`}
-                                title="View LinkedIn Profile"
+                                title="Share Roast to LinkedIn"
                             >
-                                <Linkedin className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
-                            </a>
+                                {isGeneratingCaption ? (
+                                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                ) : isCaptionReady ? (
+                                    <Check className="w-5 h-5 text-emerald-400" />
+                                ) : (
+                                    <Linkedin className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
+                                )}
+                            </button>
                         </div>
                     </div>
                     {roast && (

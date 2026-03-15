@@ -46,6 +46,7 @@ export default function LandingPage() {
             </div>
           </motion.div>
 
+          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-xs font-black uppercase tracking-[0.2em] text-zinc-500">
             <Link href="#how-it-works" className="hover:text-white transition-colors">Architecture</Link>
             <Link href="#features" className="hover:text-white transition-colors">Diagnostics</Link>
@@ -55,6 +56,11 @@ export default function LandingPage() {
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           </nav>
+
+          {/* Mobile Entry */}
+          <Link href="/auth/signin" className="md:hidden px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
+            AUTHENTICATE
+          </Link>
         </div>
       </header>
 
@@ -80,12 +86,12 @@ export default function LandingPage() {
 
             <AnimatedText
               text="ARCHITECTURAL DESTRUCTION."
-              className="text-[12vw] md:text-[8rem] lg:text-[9rem] font-black tracking-tighter leading-[0.85] text-white mix-blend-overlay opacity-90 block"
+              className="text-[14vw] md:text-[8rem] lg:text-[9rem] font-black tracking-tighter leading-[0.85] text-white mix-blend-overlay opacity-90 block"
             />
             <AnimatedText
               delay={0.4}
               text="ELEVATED INTELLIGENCE."
-              className="text-[8vw] md:text-[5rem] lg:text-[6rem] font-black tracking-tighter leading-[0.9] text-gradient-primary block mt-4"
+              className="text-[10vw] md:text-[5rem] lg:text-[6rem] font-black tracking-tighter leading-[0.9] text-gradient-primary block mt-4"
             />
 
             <motion.p

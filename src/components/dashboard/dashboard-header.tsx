@@ -18,7 +18,7 @@ export function DashboardHeader() {
 
             <AnimatedText
                 text="Command Center"
-                className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                className="text-4xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
             />
 
             <motion.p

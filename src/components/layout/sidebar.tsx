@@ -92,80 +92,100 @@ const ROUTE_GROUPS = [
     },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+    isOpen?: boolean;
+    setIsOpen?: (open: boolean) => void;
+}
+
+export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <div className="relative flex flex-col h-full bg-black/40 backdrop-blur-2xl border-r border-white/5 w-72 text-zinc-400 transition-all duration-300 font-sans z-20">
-            {/* Logo */}
-            <div className="p-8 pb-4 shrink-0">
-                <div className="flex items-center gap-3">
-                    <div className="relative w-10 h-10 overflow-hidden rounded-xl border border-white/10 shadow-2xl shadow-primary/20">
-                        <Image
-                            src="/logo.png"
-                            alt="DevRoast Logo"
-                            fill
-                            className="object-cover"
-                        />
+        <>
+            {/* Mobile Overlay */}
+            <div 
+                className={cn(
+                    "fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300",
+                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                )}
+                onClick={() => setIsOpen?.(false)}
+            />
+
+            <div className={cn(
+                "fixed inset-y-0 left-0 z-50 w-72 bg-[#050505] border-r border-white/5 flex flex-col text-zinc-400 transform transition-transform duration-300 lg:relative lg:translate-x-0 font-sans",
+                isOpen ? "translate-x-0" : "-translate-x-full"
+            )}>
+                {/* Logo */}
+                <div className="p-8 pb-4 shrink-0 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="relative w-10 h-10 overflow-hidden rounded-xl border border-white/10 shadow-2xl shadow-primary/20">
+                            <Image
+                                src="/logo.png"
+                                alt="DevRoast Logo"
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                        <span className="font-black text-2xl tracking-tighter text-white">DevRoast<span className="text-secondary">.ai</span></span>
                     </div>
-                    <span className="font-black text-2xl tracking-tighter text-white">DevRoast<span className="text-secondary">.ai</span></span>
+                </div>
+
+                {/* Scrollable nav */}
+                <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-6 scrollbar-hide">
+                    {ROUTE_GROUPS.map((group) => (
+                        <div key={group.label}>
+                            <p className="px-4 mb-2 text-[9px] font-black text-zinc-700 uppercase tracking-widest">{group.label}</p>
+                            <nav className="flex flex-col gap-0.5">
+                                {group.routes.map((route) => {
+                                    const Icon = route.icon;
+                                    const isActive = pathname === route.href;
+                                    return (
+                                        <Link
+                                            key={route.href}
+                                            href={route.href}
+                                            onClick={() => setIsOpen?.(false)}
+                                            className={cn(
+                                                "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group relative overflow-hidden",
+                                                isActive
+                                                    ? "text-white bg-white/5 border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                                                    : "hover:text-white hover:bg-white/[0.02]"
+                                            )}
+                                        >
+                                            {isActive && (
+                                                <motion.div
+                                                    layoutId="active-pill"
+                                                    className="absolute left-0 w-1 h-5 bg-primary rounded-r-full"
+                                                />
+                                            )}
+                                            <Icon className={cn("w-4 h-4 transition-colors duration-300 shrink-0", isActive ? "text-primary" : "text-zinc-600 group-hover:text-primary")} />
+                                            <span className="truncate">{route.label}</span>
+                                        </Link>
+                                    );
+                                })}
+                            </nav>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Sign out */}
+                <div className="shrink-0 p-6 pt-4 border-t border-white/5">
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start text-zinc-500 hover:text-white hover:bg-white/[0.03] px-4 py-5 rounded-xl transition-all"
+                        onClick={async () => {
+                            try {
+                                await handleSignOut();
+                            } catch {
+                                window.location.href = "/auth/signin";
+                            }
+                        }}
+                    >
+                        <LogOut className="w-4 h-4 mr-3 text-accent shrink-0" />
+                        <span className="font-bold">Sign Out</span>
+                    </Button>
                 </div>
             </div>
-
-            {/* Scrollable nav */}
-            <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-6 scrollbar-hide">
-                {ROUTE_GROUPS.map((group) => (
-                    <div key={group.label}>
-                        <p className="px-4 mb-2 text-[9px] font-black text-zinc-700 uppercase tracking-widest">{group.label}</p>
-                        <nav className="flex flex-col gap-0.5">
-                            {group.routes.map((route) => {
-                                const Icon = route.icon;
-                                const isActive = pathname === route.href;
-                                return (
-                                    <Link
-                                        key={route.href}
-                                        href={route.href}
-                                        className={cn(
-                                            "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group relative overflow-hidden",
-                                            isActive
-                                                ? "text-white bg-white/5 border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                                                : "hover:text-white hover:bg-white/[0.02]"
-                                        )}
-                                    >
-                                        {isActive && (
-                                            <motion.div
-                                                layoutId="active-pill"
-                                                className="absolute left-0 w-1 h-5 bg-primary rounded-r-full"
-                                            />
-                                        )}
-                                        <Icon className={cn("w-4 h-4 transition-colors duration-300 shrink-0", isActive ? "text-primary" : "text-zinc-600 group-hover:text-primary")} />
-                                        <span className="truncate">{route.label}</span>
-                                    </Link>
-                                );
-                            })}
-                        </nav>
-                    </div>
-                ))}
-            </div>
-
-            {/* Sign out */}
-            <div className="shrink-0 p-6 pt-4 border-t border-white/5">
-                <Button
-                    variant="ghost"
-                    className="w-full justify-start text-zinc-500 hover:text-white hover:bg-white/[0.03] px-4 py-5 rounded-xl transition-all"
-                    onClick={async () => {
-                        try {
-                            await handleSignOut();
-                        } catch {
-                            window.location.href = "/auth/signin";
-                        }
-                    }}
-                >
-                    <LogOut className="w-4 h-4 mr-3 text-accent shrink-0" />
-                    <span className="font-bold">Sign Out</span>
-                </Button>
-            </div>
-        </div>
+        </>
     );
 }
 

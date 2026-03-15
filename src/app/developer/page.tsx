@@ -25,6 +25,7 @@ import Link from "next/link";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { NeuralBg } from "@/components/ui/neural-bg";
+import Image from "next/image";
 
 const skills = [
     { category: "Programming", items: ["JavaScript (ES6+)", "TypeScript", "Python", "C", "C++"], icon: <TerminalSquare className="w-5 h-5 text-primary" /> },
@@ -139,6 +140,27 @@ export default function DeveloperProfilePage() {
                     </motion.div>
 
                     <div className="lg:col-span-4 space-y-8">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="relative group rounded-[2.5rem] overflow-hidden border border-white/10 shadow-3xl transform -rotate-2 hover:rotate-0 transition-transform duration-700"
+                        >
+                            <div className="aspect-[4/5] relative">
+                                <Image 
+                                    src="/Developer.png" 
+                                    alt="Ashwin Jauhary" 
+                                    fill 
+                                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                            </div>
+                            <div className="absolute bottom-10 left-10 right-10">
+                                <div className="text-[10px] font-black text-primary uppercase tracking-[0.5em] mb-2">Subject_Profile</div>
+                                <div className="h-1 w-20 bg-primary" />
+                            </div>
+                        </motion.div>
+
                         <PremiumCard glowColor="accent" className="p-8">
                             <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 mb-6 flex items-center gap-2">
                                 <Zap className="w-3 h-3 text-accent" /> Statistics

@@ -7,6 +7,7 @@ import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { NeuralBg } from "@/components/ui/neural-bg";
 import React, { useState } from "react";
+import Image from "next/image";
 
 export default function LandingPage() {
   const { scrollYProgress } = useScroll();
@@ -344,9 +345,12 @@ export default function LandingPage() {
 
               <div className="relative flex justify-center lg:justify-end">
                 <div className="relative w-full max-w-[400px] aspect-square rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl transform rotate-3 group-hover:rotate-0 transition-transform duration-700">
-                   <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center">
-                      <TerminalSquare className="w-32 h-32 text-white opacity-5 animate-pulse" />
-                   </div>
+                   <Image 
+                      src="/Developer.png" 
+                      alt="Ashwin Jauhary" 
+                      fill 
+                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                   />
                    {/* Gradient Overlay */}
                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                    

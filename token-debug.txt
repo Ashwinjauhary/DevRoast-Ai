@@ -1,7 +1,0 @@
-DB Check Results:
-User: ashwin2431333@gmail.com (cmmkcib1h0000qnyk6rgmqfns)
-  GitHub Username: Ashwinjauhary
-  Account: github
-    Token Exists: true
-    Token Length: 40
-    Token Start: gho_pUEY...

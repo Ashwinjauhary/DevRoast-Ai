@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "react-hot-toast";
-import { Twitter } from "lucide-react";
+import { Github } from "lucide-react";
 
 interface ShareIdentityProps {
     username: string;
@@ -51,14 +51,14 @@ export function ShareIdentity({ username, template }: ShareIdentityProps) {
                         </button>
                         <div className="flex gap-4">
                             <a 
-                                href={`https://twitter.com/intent/tweet?text=Check out my AI-generated developer portfolio on DevRoast!&url=${encodeURIComponent('https://devroast.ai/portfolio/' + username)}`}
+                                href={`https://github.com/${username}`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
                                     template === 'minimalist' ? 'border-zinc-200 hover:bg-zinc-50' : 'border-white/10 hover:bg-white/5'
                                 }`}
                             >
-                                <Twitter className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
+                                <Github className={`w-5 h-5 ${template === 'minimalist' ? 'text-zinc-900' : 'text-white'}`} />
                             </a>
                             <a 
                                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://devroast.ai/portfolio/' + username)}`}

@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description: "Roast your code. Improve your GitHub.",
   manifest: "/manifest.json",
   themeColor: "#6366f1",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/icon.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

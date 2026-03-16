@@ -87,18 +87,18 @@ export default async function PublicPortfolioPage({ params }: Props) {
             )}
             {template === 'cyberpunk' && (
                 <div className="fixed inset-0 pointer-events-none">
-                    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.05)_0px,rgba(0,0,0,0.05)_1px,transparent_1px,transparent_2px)] bg-[size:100%_4px]" />
+                    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.05)_0px,rgba(0,0,0,0.05)_1px,transparent_1px,transparent_2px)] bg-size-[100%_4px]" />
                 </div>
             )}
             {template === 'blueprint' && (
                 <div className="fixed inset-0 pointer-events-none opacity-20">
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]" />
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.05)_2px,transparent_2px)] bg-[size:100px_100px]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-size-[20px_20px]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.05)_2px,transparent_2px)] bg-size-[100px_100px]" />
                 </div>
             )}
             {template === 'hacker' && (
                 <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-10">
-                    <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,185,129,0.1)_50%,transparent_50%)] bg-[size:100%_4px]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,185,129,0.1)_50%,transparent_50%)] bg-size-[100%_4px]" />
                 </div>
             )}
             {template === 'prism' && (
@@ -161,7 +161,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
 
                 <div className={`
                     ${template === 'hacker' ? 'w-full max-w-5xl h-[85vh] bg-[#050505] border border-emerald-500/40 rounded-sm shadow-[0_0_50px_rgba(16,185,129,0.1)] flex flex-col relative' : 
-                      template === 'blueprint' ? 'flex-1 overflow-auto relative bg-[radial-gradient(circle_at_2px_2px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-[size:40px_40px]' : 
+                      template === 'blueprint' ? 'flex-1 overflow-auto relative bg-[radial-gradient(circle_at_2px_2px,rgba(255,255,255,0.05)_1px,transparent_0)] bg-size-[40px_40px]' : 
                       'max-w-4xl mx-auto px-6 py-24 space-y-32'
                     }
                 `}>
@@ -228,7 +228,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                     template === 'cyberpunk' ? 'text-4xl md:text-7xl text-black bg-white px-4 py-2 uppercase italic shadow-[10px_10px_0px_rgba(0,0,0,1)] -rotate-1 inline-block mb-4' : 
                                     template === 'blueprint' ? 'text-5xl md:text-8xl text-white border-b-4 border-white/30 pb-4' : 
                                     template === 'hacker' ? 'text-4xl md:text-6xl text-emerald-500 mb-8 font-bold' : 
-                                    template === 'prism' ? 'text-5xl md:text-8xl bg-gradient-to-r from-fuchsia-300 via-blue-300 to-emerald-300 bg-clip-text text-transparent' : 
+                                    template === 'prism' ? 'text-5xl md:text-8xl bg-linear-to-r from-fuchsia-300 via-blue-300 to-emerald-300 bg-clip-text text-transparent' : 
                                     template === 'aura' ? 'text-5xl md:text-8xl text-white drop-shadow-[0_0_20px_rgba(139,92,246,0.5)]' : 'text-5xl md:text-8xl'
                                 }`}>
                                     {template === 'hacker' ? (
@@ -245,7 +245,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                                 <div className="flex items-center gap-2 shrink-0">
                                                     <span className="opacity-30">root@</span><span className="text-white">{username}</span><span className="opacity-30">:~$</span> 
                                                 </div>
-                                                <span className="border-r-4 border-emerald-500 pr-2 break-words">
+                                                <span className="border-r-4 border-emerald-500 pr-2 wrap-break-word">
                                                     <TypingText text={hero?.tagline} speed={40} />
                                                 </span>
                                             </div>
@@ -305,7 +305,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                     <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
                                         {achievements.map((item: any, i: number) => (
                                             <div key={i} className={`p-4 rounded-2xl border ${
-                                                template === 'neon' ? 'bg-white/[0.02] border-white/5' :
+                                                template === 'neon' ? 'bg-white/2 border-white/5' :
                                                 template === 'minimalist' ? 'bg-zinc-50 border-zinc-100' :
                                                 template === 'cyberpunk' ? 'bg-white border-4 border-black rounded-none shadow-[6px_6px_0px_rgba(0,0,0,1)]' :
                                                 'bg-white/5 border-white/10'
@@ -366,7 +366,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="bg-white p-3 border-4 border-black font-black text-center text-sm md:text-base uppercase tracking-tighter hover:bg-[#facc15] transition-colors cursor-crosshair shadow-[6px_6px_0px_rgba(0,0,0,1)] rotate-1 hover:rotate-0 transition-transform active:translate-x-1 active:translate-y-1 active:shadow-none overflow-hidden whitespace-nowrap">
+                                    <div className="bg-white p-3 border-4 border-black font-black text-center text-sm md:text-base uppercase tracking-tighter hover:bg-[#facc15] cursor-crosshair shadow-[6px_6px_0px_rgba(0,0,0,1)] rotate-1 hover:rotate-0 transition active:translate-x-1 active:translate-y-1 active:shadow-none overflow-hidden whitespace-nowrap">
                                         Hire_Me.exe
                                     </div>
                                 </aside>
@@ -400,8 +400,8 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                             {Object.entries(techStack).map(([category, items]: [string, any]) => (
                                                 <div key={category} className={`p-6 border flex flex-col gap-4 group transition-all ${
-                                                    template === 'neon' ? 'bg-white/[0.02] border-white/5 rounded-[2rem]' :
-                                                    template === 'hacker' ? 'border-emerald-500/10 rounded-sm bg-emerald-500/[0.02]' :
+                                                    template === 'neon' ? 'bg-white/2 border-white/5 rounded-[2rem]' :
+                                                    template === 'hacker' ? 'border-emerald-500/10 rounded-sm bg-emerald-500/2' :
                                                     template === 'cyberpunk' ? 'bg-white border-4 border-black rounded-none shadow-[8px_8px_0px_rgba(0,0,0,1)]' :
                                                     'bg-white/5 border-white/10 rounded-2xl'
                                                 }`}>
@@ -482,14 +482,14 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                 {template === 'cyberpunk' ? 'LEVEL_EXP' : 'Professional Synopsis'}
                             </h2>
                             <div className={`p-8 md:p-12 border relative overflow-hidden group transition-all duration-700 ${
-                                template === 'neon' ? 'bg-white/[0.01] border-white/5 hover:border-primary/30 rounded-[2.5rem]' : 
+                                template === 'neon' ? 'bg-white/1 border-white/5 hover:border-primary/30 rounded-[2.5rem]' : 
                                 template === 'minimalist' ? 'bg-white border-zinc-200 shadow-sm rounded-none' : 
                                 template === 'cyberpunk' ? 'bg-white border-8 border-black text-black rounded-none shadow-[20px_20px_0px_rgba(0,0,0,1)] scale-y-105' :
                                 template === 'blueprint' ? 'bg-blue-900/30 border-2 border-white/30 rounded-none' :
                                 template === 'hacker' ? 'bg-transparent border border-emerald-500/10 p-4' :
-                                template === 'prism' ? 'bg-white/[0.03] border-white/10 backdrop-blur-2xl rounded-[3rem] hover:bg-white/[0.05] hover:border-white/20' :
+                                template === 'prism' ? 'bg-white/3 border-white/10 backdrop-blur-2xl rounded-[3rem] hover:bg-white/5 hover:border-white/20' :
                                 template === 'aura' ? 'bg-violet-950/40 border border-violet-500/20 rounded-[2rem] hover:border-violet-500/40' :
-                                'bg-white/[0.02] border-white/10 rounded-2xl'
+                                'bg-white/2 border-white/10 rounded-2xl'
                             }`}>
                                 <p className={`text-xl md:text-2xl leading-relaxed relative z-10 ${
                                     template === 'minimalist' ? 'text-zinc-700 font-medium' : 
@@ -571,8 +571,8 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                                 template === 'minimalist' ? 'bg-transparent border-none p-0 max-w-2xl' : 
                                                 template === 'cyberpunk' ? 'bg-white text-black border-4 border-black rounded-none shadow-[15px_15px_0px_rgba(0,0,0,1)] group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:shadow-[25px_25px_0px_rgba(0,0,0,1)]' :
                                                 template === 'blueprint' ? 'bg-blue-900/10 border-2 border-dashed border-white/10 rounded-none group-hover:bg-blue-500/5 group-hover:border-white/30' :
-                                                template === 'hacker' ? 'bg-[#050505] border-none p-6 group-hover:bg-emerald-500/[0.02]' :
-                                                template === 'prism' ? 'bg-white/[0.02] border-white/10 backdrop-blur-3xl rounded-[3rem] group-hover:bg-white/[0.05]' :
+                                                template === 'hacker' ? 'bg-[#050505] border-none p-6 group-hover:bg-emerald-500/2' :
+                                                template === 'prism' ? 'bg-white/2 border-white/10 backdrop-blur-3xl rounded-[3rem] group-hover:bg-white/5' :
                                                 'bg-[#0a0a0a] border border-white/10'
                                             }`}>
                                                 <div className="space-y-6">

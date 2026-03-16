@@ -70,7 +70,7 @@ export default async function LeaderboardPage() {
                     { title: "Total Contenders", value: userBestScores.size, icon: UserCircle2, color: "text-emerald-400" },
                     { title: "Average Score", value: (Array.from(userBestScores.values()).reduce((acc, curr) => acc + (curr.score || 0), 0) / userBestScores.size || 0).toFixed(1), icon: Star, color: "text-purple-400" }
                 ].map((stat, i) => (
-                    <div key={i} className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:bg-white/[0.04] transition-colors">
+                    <div key={i} className="p-6 rounded-[2rem] bg-white/2 border border-white/5 flex items-center justify-between group hover:bg-white/4 transition-colors">
                         <div className="space-y-1">
                             <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest">{stat.title}</p>
                             <p className="text-4xl font-black text-white">{stat.value}</p>

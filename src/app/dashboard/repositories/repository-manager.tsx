@@ -411,13 +411,13 @@ export function RepositoryManager({ initialRepos }: { initialRepos: GitHubReposi
                     {(isCreating || editingRepo) && (
                         <motion.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                            className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
                         >
                             <motion.div
                                 initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
                                 className="bg-zinc-950 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl glass-darker"
                             >
-                                <div className="p-6 border-b border-white/5 bg-white/[0.02]">
+                                <div className="p-6 border-b border-white/5 bg-white/2">
                                     <h2 className="text-xl font-black text-white">
                                         {isCreating ? "Create New Repository" : `Edit ${editingRepo?.name}`}
                                     </h2>
@@ -447,7 +447,7 @@ export function RepositoryManager({ initialRepos }: { initialRepos: GitHubReposi
                                             placeholder="What is this repository about?"
                                         />
                                     </div>
-                                    <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-xl cursor-pointer" onClick={() => setFormData({ ...formData, private: !formData.private })}>
+                                    <div className="flex items-center gap-3 p-4 bg-white/2 border border-white/5 rounded-xl cursor-pointer" onClick={() => setFormData({ ...formData, private: !formData.private })}>
                                         <div className={`w-5 h-5 rounded-md flex items-center justify-center border transition-colors ${formData.private ? 'bg-primary border-primary' : 'border-zinc-600'}`}>
                                             {formData.private && <Lock className="w-3 h-3 text-black font-bold" />}
                                         </div>

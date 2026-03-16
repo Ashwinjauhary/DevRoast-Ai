@@ -102,7 +102,7 @@ export function CommitFixerWidget() {
                 <button
                     onClick={handleFixCommits}
                     disabled={loading || fixing || commits.length === 0}
-                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-zinc-300 hover:text-white font-black text-[10px] uppercase tracking-[0.2em] transition-all disabled:opacity-50 group/fixbtn"
+                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white/3 border border-white/5 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-zinc-300 hover:text-white font-black text-[10px] uppercase tracking-[0.2em] transition-all disabled:opacity-50 group/fixbtn"
                 >
                     {fixing ? (
                         <RefreshCcw className="w-3.5 h-3.5 animate-spin" />
@@ -137,11 +137,11 @@ export function CommitFixerWidget() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.05 }}
-                                    className="p-4 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-white/10 transition-all relative group/commit"
+                                    className="p-4 rounded-2xl bg-white/1 border border-white/5 hover:border-white/10 transition-all relative group/commit"
                                 >
                                     <div className="flex justify-between items-center mb-2.5">
                                         <div className="flex items-center gap-2 overflow-hidden">
-                                            <div className="text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/10 flex-shrink-0">
+                                            <div className="text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/10 shrink-0">
                                                 {commit.repo.split('/')[1] || commit.repo}
                                             </div>
                                             <span className="text-[8px] font-mono text-zinc-600 truncate">{commit.sha.substring(0, 7)}</span>
@@ -161,7 +161,7 @@ export function CommitFixerWidget() {
                                             animate={{ opacity: 1, scale: 1 }}
                                             className="p-3 rounded-xl bg-indigo-950/20 border border-indigo-500/20 flex flex-col gap-3"
                                         >
-                                            <p className="text-[11px] font-bold text-indigo-200 font-mono leading-tight break-words pr-12 relative">
+                                            <p className="text-[11px] font-bold text-indigo-200 font-mono leading-tight wrap-break-word pr-12 relative">
                                                 {fix.suggested}
                                                 <span className="absolute -top-4 -left-1 text-[8px] font-black text-indigo-500/50 uppercase">Suggested Patch</span>
                                             </p>
@@ -197,7 +197,7 @@ export function CommitFixerWidget() {
                     )}
                 </AnimatePresence>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black to-transparent pointer-events-none z-20" />
+            <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black to-transparent pointer-events-none z-20" />
         </div>
     );
 }

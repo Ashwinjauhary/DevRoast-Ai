@@ -51,7 +51,7 @@ export default function CommitAuditorPage() {
                         value={input}
                         onChange={e => setInput(e.target.value)}
                         placeholder="github.com/owner/repo  or  owner/repo"
-                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-accent/50 transition-colors"
+                        className="w-full bg-white/3 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-accent/50 transition-colors"
                     />
                     {error && <p className="text-sm text-red-400">{error}</p>}
                     <button
@@ -106,7 +106,7 @@ export default function CommitAuditorPage() {
                         {result.commits?.map((commit: any, i: number) => {
                             const style = RATING_STYLES[commit.rating as keyof typeof RATING_STYLES] || RATING_STYLES.acceptable;
                             return (
-                                <div key={i} className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div key={i} className="p-5 bg-white/2 border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div className="flex items-start gap-4">
                                         <code className="text-[10px] font-mono text-zinc-600 shrink-0 mt-0.5">{commit.sha}</code>
                                         <div>

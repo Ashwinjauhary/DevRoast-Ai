@@ -158,7 +158,7 @@ export function StackBento({ data }: StackBentoProps) {
           whileHover={{ scale: 1.02 }}
           className="md:col-span-1 p-6 sm:p-8 pb-12 sm:pb-16 rounded-3xl sm:rounded-[2.5rem] bg-rose-950/20 backdrop-blur-xl border border-rose-500/10 relative overflow-hidden group shadow-2xl min-h-[300px]"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 to-transparent opacity-30" />
+          <div className="absolute inset-0 bg-linear-to-b from-rose-500/10 to-transparent opacity-30" />
           <div className="relative z-10 flex flex-col h-full">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-3 bg-rose-500/10 rounded-2xl border border-rose-500/20">
@@ -181,7 +181,7 @@ export function StackBento({ data }: StackBentoProps) {
                 </div>
               )) : (
                 <div className="space-y-4 w-full">
-                    <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 opacity-40">
+                    <div className="p-4 rounded-2xl bg-white/2 border border-white/5 opacity-40">
                         <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                             <motion.div animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity }} className="w-1/2 h-full bg-rose-500/20" />
                         </div>
@@ -211,7 +211,7 @@ export function StackBento({ data }: StackBentoProps) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {others.slice(0, 16).length > 0 ? others.slice(0, 16).map((n, idx) => (
-                <div key={n.id} className="relative group/item p-4 rounded-3xl bg-white/[0.01] border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/[0.02] transition-all duration-500 overflow-hidden flex flex-col justify-between h-[100px] shadow-sm">
+                <div key={n.id} className="relative group/item p-4 rounded-3xl bg-white/1 border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/2 transition-all duration-500 overflow-hidden flex flex-col justify-between h-[100px] shadow-sm">
                   {/* Background Neural Glow */}
                   <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 blur-[30px] group-hover/item:bg-amber-500/10 transition-all opacity-0 group-hover/item:opacity-100" />
                   
@@ -251,7 +251,7 @@ export function StackBento({ data }: StackBentoProps) {
                   </div>
                 </div>
               )) : (
-                <div className="col-span-4 flex flex-col items-center justify-center h-32 border border-dashed border-white/5 rounded-[2.5rem] bg-white/[0.02] gap-4">
+                <div className="col-span-4 flex flex-col items-center justify-center h-32 border border-dashed border-white/5 rounded-[2.5rem] bg-white/2 gap-4">
                      <div className="flex gap-3">
                          <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/5 opacity-50 animate-pulse">
                             <span className="text-lg font-black text-zinc-700 uppercase italic">AWAITING_NEURAL_EXPANSION...</span>

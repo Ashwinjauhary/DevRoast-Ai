@@ -61,7 +61,7 @@ export default async function SettingsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {settingsOptions.map((opt, i) => (
                     <Link key={i} href={opt.href} className="group block">
-                        <PremiumCard glowColor="none" className="h-full group-hover:bg-white/[0.04] transition-colors">
+                        <PremiumCard glowColor="none" className="h-full group-hover:bg-white/4 transition-colors">
                             <div className="space-y-6 flex flex-col h-full">
                                 <div className={`p-4 rounded-2xl border w-fit ${opt.classNames}`}>
                                     <opt.icon className="w-8 h-8" />
@@ -88,28 +88,28 @@ export default async function SettingsPage() {
                 <div className="space-y-6">
                     <h2 className="text-xl font-black tracking-tight text-white">Account Overview</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+                        <div className="flex items-center gap-3 p-4 bg-white/2 border border-white/5 rounded-2xl">
                             <Mail className="w-4 h-4 text-zinc-500 shrink-0" />
                             <div className="min-w-0">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Email</p>
                                 <p className="text-sm font-bold text-zinc-300 truncate">{user?.email ?? "—"}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+                        <div className="flex items-center gap-3 p-4 bg-white/2 border border-white/5 rounded-2xl">
                             <Github className="w-4 h-4 text-zinc-500 shrink-0" />
                             <div className="min-w-0">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Auth Provider</p>
                                 <p className="text-sm font-bold text-zinc-300 capitalize">{providers.length > 0 ? providers.join(", ") : "Credentials"}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+                        <div className="flex items-center gap-3 p-4 bg-white/2 border border-white/5 rounded-2xl">
                             <Calendar className="w-4 h-4 text-zinc-500 shrink-0" />
                             <div className="min-w-0">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Member Since</p>
                                 <p className="text-sm font-bold text-zinc-300">{joinDate}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+                        <div className="flex items-center gap-3 p-4 bg-white/2 border border-white/5 rounded-2xl">
                             <BarChart2 className="w-4 h-4 text-zinc-500 shrink-0" />
                             <div className="min-w-0">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Analyses Run</p>
@@ -121,7 +121,7 @@ export default async function SettingsPage() {
             </PremiumCard>
 
             {/* Danger Zone */}
-            <div className="rounded-3xl border border-red-500/20 bg-red-500/[0.03] p-8 space-y-6">
+            <div className="rounded-3xl border border-red-500/20 bg-red-500/3 p-8 space-y-6">
                 <div className="flex items-center gap-3">
                     <AlertTriangle className="w-5 h-5 text-red-500" />
                     <h2 className="text-xl font-black tracking-tight text-red-400">Danger Zone</h2>

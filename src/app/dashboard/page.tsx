@@ -266,7 +266,7 @@ export default async function DashboardPage() {
                         <Link href="/dashboard/github-analysis" className="group block">
                             <PremiumCard
                                 glowColor="secondary"
-                                className="h-full hover:bg-white/[0.04] transition-colors overflow-hidden"
+                                className="h-full hover:bg-white/4 transition-colors overflow-hidden"
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="space-y-4">
@@ -286,7 +286,7 @@ export default async function DashboardPage() {
                         <Link href="/dashboard/repo-analysis" className="group block">
                             <PremiumCard
                                 glowColor="primary"
-                                className="h-full hover:bg-white/[0.04] transition-colors"
+                                className="h-full hover:bg-white/4 transition-colors"
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="space-y-4">
@@ -312,7 +312,7 @@ export default async function DashboardPage() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <Link href="/dashboard/code-review" className="group">
-                                <PremiumCard glowColor="primary" className="p-6 hover:bg-white/[0.02] transition-colors border-white/5 h-full">
+                                <PremiumCard glowColor="primary" className="p-6 hover:bg-white/2 transition-colors border-white/5 h-full">
                                     <div className="flex flex-col gap-4">
                                         <div className="p-2.5 bg-primary/10 rounded-lg w-fit">
                                             <Code2 className="w-5 h-5 text-primary" />
@@ -326,7 +326,7 @@ export default async function DashboardPage() {
                             </Link>
 
                             <Link href="/dashboard/resume-enhancer" className="group">
-                                <PremiumCard glowColor="secondary" className="p-6 hover:bg-white/[0.02] transition-colors border-white/5 h-full">
+                                <PremiumCard glowColor="secondary" className="p-6 hover:bg-white/2 transition-colors border-white/5 h-full">
                                     <div className="flex flex-col gap-4">
                                         <div className="p-2.5 bg-secondary/10 rounded-lg w-fit">
                                             <ScrollText className="w-5 h-5 text-secondary" />
@@ -340,7 +340,7 @@ export default async function DashboardPage() {
                             </Link>
 
                             <Link href="/dashboard/dev-duels" className="group">
-                                <PremiumCard glowColor="accent" className="p-6 hover:bg-white/[0.02] transition-colors border-white/5 h-full">
+                                <PremiumCard glowColor="accent" className="p-6 hover:bg-white/2 transition-colors border-white/5 h-full">
                                     <div className="flex flex-col gap-4">
                                         <div className="p-2.5 bg-accent/10 rounded-lg w-fit">
                                             <Swords className="w-5 h-5 text-accent" />
@@ -354,7 +354,7 @@ export default async function DashboardPage() {
                             </Link>
 
                             <Link href="/dashboard/job-match" className="group">
-                                <PremiumCard glowColor="primary" className="p-6 hover:bg-white/[0.02] transition-colors border-white/5 h-full">
+                                <PremiumCard glowColor="primary" className="p-6 hover:bg-white/2 transition-colors border-white/5 h-full">
                                     <div className="flex flex-col gap-4">
                                         <div className="p-2.5 bg-primary/10 rounded-lg w-fit">
                                             <Crown className="w-5 h-5 text-primary" />
@@ -378,7 +378,7 @@ export default async function DashboardPage() {
                     <Link href="/dashboard/portfolio" className="group block">
                         <PremiumCard
                             glowColor="accent"
-                            className="h-full hover:bg-white/[0.04] transition-colors"
+                            className="h-full hover:bg-white/4 transition-colors"
                         >
                             <div className="flex items-start justify-between">
                                 <div className="space-y-4">

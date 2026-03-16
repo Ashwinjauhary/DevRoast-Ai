@@ -52,7 +52,7 @@ export default function ReadmeGeneratorPage() {
                         value={input}
                         onChange={e => setInput(e.target.value)}
                         placeholder="github.com/owner/repo  or  owner/repo"
-                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                        className="w-full bg-white/3 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-primary/50 transition-colors"
                     />
                     <button
                         onClick={handleGenerate}

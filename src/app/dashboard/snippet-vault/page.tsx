@@ -106,14 +106,14 @@ export default function SnippetVaultPage() {
                                 placeholder="Title..."
                                 value={form.title}
                                 onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-                                className="col-span-2 md:col-span-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                                className="col-span-2 md:col-span-1 bg-white/3 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
                             />
                             
                             {/* Custom Dropdown */}
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-all"
+                                    className="w-full flex items-center justify-between bg-white/3 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-all"
                                 >
                                     <span className="font-medium">{form.language}</span>
                                     <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -158,7 +158,7 @@ export default function SnippetVaultPage() {
                             placeholder="Notes (optional)..."
                             value={form.notes}
                             onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
-                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                            className="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
                         />
                         <button onClick={handleSave} className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">
                             <Save className="w-4 h-4" /> {editId ? "Update Snippet" : "Save Snippet"}

@@ -103,7 +103,7 @@ export default function ResumeEnhancerPage() {
                                             onClick={() => setTemplate(t.id)}
                                             className={`p-4 border text-left transition-all relative overflow-hidden group rounded-2xl ${
                                                 template === t.id
-                                                    ? "bg-white/[0.05] border-white/20 shadow-xl"
+                                                    ? "bg-white/5 border-white/20 shadow-xl"
                                                     : "bg-black/20 border-white/5 hover:border-white/10"
                                             }`}
                                         >
@@ -165,8 +165,8 @@ export default function ResumeEnhancerPage() {
                 {/* Editor/Preview Area */}
                 <div className="lg:col-span-8">
                     {!latex ? (
-                        <div className="h-[600px] flex flex-col items-center justify-center border border-white/5 rounded-[3rem] bg-white/[0.01] relative overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-20" />
+                        <div className="h-[600px] flex flex-col items-center justify-center border border-white/5 rounded-[3rem] bg-white/1 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent opacity-20" />
                             <div className="relative z-10 flex flex-col items-center">
                                 <FileText className="w-20 h-20 mb-8 text-zinc-800 animate-pulse" />
                                 <p className="font-black uppercase tracking-[0.4em] text-sm text-zinc-700">Neural Synthesis Hub</p>

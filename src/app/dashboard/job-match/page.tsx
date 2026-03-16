@@ -98,7 +98,7 @@ export default function JobMatchPage() {
 
                 {/* Info / Tips Area */}
                 <div className="lg:col-span-5 space-y-6">
-                    <div className="p-6 bg-white/[0.02] border border-white/5 rounded-3xl space-y-4">
+                    <div className="p-6 bg-white/2 border border-white/5 rounded-3xl space-y-4">
                         <h4 className="text-xs font-black text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-amber-500" />
                             How it works
@@ -225,7 +225,7 @@ export default function JobMatchPage() {
                                     <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
                                         <MessageSquareQuote className="w-4 h-4" /> Optimization Roadmap
                                     </h3>
-                                    <div className="p-4 bg-white/[0.03] border border-white/5 rounded-2xl">
+                                    <div className="p-4 bg-white/3 border border-white/5 rounded-2xl">
                                         <p className="text-sm text-zinc-300 leading-relaxed font-light italic">
                                             {result.resumeAdvice}
                                         </p>

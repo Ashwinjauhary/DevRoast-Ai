@@ -45,7 +45,7 @@ export default function BranchNamerPage() {
                         onChange={e => setDescription(e.target.value)}
                         placeholder="e.g. Add user authentication with email/password and OAuth via GitHub..."
                         rows={4}
-                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-secondary/50 transition-colors resize-none"
+                        className="w-full bg-white/3 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-secondary/50 transition-colors resize-none"
                     />
                     {error && <p className="text-sm text-red-400">{error}</p>}
                     <button
@@ -62,7 +62,7 @@ export default function BranchNamerPage() {
                 <div className="space-y-4">
                     <h3 className="text-2xl font-black tracking-tight">Suggested Branches</h3>
                     {branches.map((branch, i) => (
-                        <div key={i} className="group flex items-center justify-between p-5 bg-white/[0.03] border border-white/10 rounded-2xl hover:bg-white/[0.05] transition-all">
+                        <div key={i} className="group flex items-center justify-between p-5 bg-white/3 border border-white/10 rounded-2xl hover:bg-white/5 transition-all">
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-8 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary font-black text-sm">
                                     {i + 1}

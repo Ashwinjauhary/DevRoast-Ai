@@ -43,7 +43,7 @@ export function BackButton() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleClick}
-                    className="fixed top-24 right-5 z-[100] group md:right-10"
+                    className="fixed top-24 right-5 z-100 group md:right-10"
                     aria-label={isLanding ? "Scroll to top" : "Go back"}
                 >
                     <div className="relative p-3 rounded-xl glass-darker border border-white/10 hover:border-primary/50 transition-all duration-300 shadow-2xl group-hover:shadow-primary/20">

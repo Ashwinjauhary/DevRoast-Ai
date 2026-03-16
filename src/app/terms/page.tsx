@@ -4,7 +4,7 @@ import { TerminalSquare, ArrowLeft } from "lucide-react";
 export default function TermsPage() {
     return (
         <div className="min-h-screen bg-black text-zinc-300 font-sans selection:bg-primary/30">
-            <div className="fixed inset-0 z-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
+            <div className="fixed inset-0 z-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[3rem_3rem] pointer-events-none" />
             
             <header className="relative z-10 border-b border-white/5 bg-black/50 backdrop-blur-xl">
                 <div className="container mx-auto px-6 h-20 flex items-center justify-between">
@@ -47,7 +47,7 @@ export default function TermsPage() {
                         <p>DevRoast AI is not responsible for any ego damage, failed interviews, or architectural realizations that lead to career changes. Use at your own risk.</p>
                     </section>
 
-                    <section className="p-8 border border-white/10 rounded-3xl bg-white/[0.02] backdrop-blur-md">
+                    <section className="p-8 border border-white/10 rounded-3xl bg-white/2 backdrop-blur-md">
                         <p className="text-sm text-zinc-500 italic">
                             Licensed under MIT. Respect the code, improve the craft.
                         </p>

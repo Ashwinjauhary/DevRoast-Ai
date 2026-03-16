@@ -76,7 +76,7 @@ export default async function ScoreHistoryPage() {
                         <h3 className="text-lg font-black tracking-tight">Full Analysis Log</h3>
                         <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-hide">
                             {[...analyses].reverse().map((a) => (
-                                <div key={a.id} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                                <div key={a.id} className="flex items-center justify-between p-4 bg-white/2 border border-white/5 rounded-xl">
                                     <div>
                                         <p className="text-sm font-medium text-white">{a.target}</p>
                                         <p className="text-[10px] text-zinc-600">{new Date(a.created_at).toLocaleString()} · {a.analysis_type}</p>

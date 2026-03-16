@@ -146,14 +146,14 @@ export default function DeveloperProfilePage() {
                             transition={{ delay: 0.2 }}
                             className="relative group rounded-[2.5rem] overflow-hidden border border-white/10 shadow-3xl transform -rotate-2 hover:rotate-0 transition-transform duration-700"
                         >
-                            <div className="aspect-[4/5] relative">
+                            <div className="aspect-4/5 relative">
                                 <Image 
                                     src="/Developer.png" 
                                     alt="Ashwin Jauhary" 
                                     fill 
                                     className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                                <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />
                             </div>
                             <div className="absolute bottom-10 left-10 right-10">
                                 <div className="text-[10px] font-black text-primary uppercase tracking-[0.5em] mb-2">Subject_Profile</div>
@@ -234,7 +234,7 @@ export default function DeveloperProfilePage() {
                                         <div className="space-y-2">
                                             {p.features.map((f, i) => (
                                                 <div key={i} className="flex items-center gap-2 text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
-                                                    <div className="w-1.5 h-[1px] bg-primary/50" />
+                                                    <div className="w-1.5 h-px bg-primary/50" />
                                                     {f}
                                                 </div>
                                             ))}
@@ -327,9 +327,9 @@ function StatItem({ label, value }: { label: string, value: string }) {
 
 function StrengthBadge({ text }: { text: string }) {
     return (
-        <div className="px-5 py-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-secondary/30 hover:bg-secondary/5 transition-all group">
+        <div className="px-5 py-4 rounded-2xl bg-white/2 border border-white/5 hover:border-secondary/30 hover:bg-secondary/5 transition-all group">
             <span className="text-[10px] font-black uppercase text-zinc-500 group-hover:text-white transition-colors flex items-center gap-3 tracking-widest">
-                <div className="w-2 h-[1px] bg-secondary" /> {text}
+                <div className="w-2 h-px bg-secondary" /> {text}
             </span>
         </div>
     );

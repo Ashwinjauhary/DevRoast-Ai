@@ -37,7 +37,7 @@ export function PremiumCard({
             {...props}
         >
             {/* Border Gradient edge */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/0 opacity-50 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-linear-to-b from-white/10 to-white/0 opacity-50 group-hover:opacity-100 transition-opacity" />
 
             {/* Content */}
             <div className="relative h-full w-full rounded-[0.95rem] bg-zinc-950/40 backdrop-blur-xl p-6 glass">

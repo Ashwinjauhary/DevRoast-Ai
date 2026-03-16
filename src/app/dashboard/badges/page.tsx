@@ -81,8 +81,8 @@ export default async function BadgesPage() {
                             key={badge.id}
                             className={`relative group p-6 rounded-[2rem] border transition-all duration-500 flex flex-col items-center text-center space-y-3 ${
                                 earned
-                                    ? "bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:-translate-y-1"
-                                    : "bg-black/20 border-white/[0.03] opacity-40 grayscale"
+                                    ? "bg-white/4 border-white/10 hover:bg-white/8 hover:-translate-y-1"
+                                    : "bg-black/20 border-white/3 opacity-40 grayscale"
                             }`}
                         >
                             {!earned && (

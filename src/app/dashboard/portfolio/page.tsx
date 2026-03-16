@@ -239,7 +239,7 @@ export default function PortfolioGeneratorPage() {
                                 onClick={() => setTemplate(t.id)}
                                 className={`flex flex-col text-left p-2 border transition-all relative overflow-hidden group ${
                                     template === t.id
-                                        ? "bg-white/[0.05] border-white/40 ring-1 ring-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                                        ? "bg-white/5 border-white/40 ring-1 ring-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                                         : "bg-black/20 border-white/5 hover:border-white/20"
                                 }`}
                             >

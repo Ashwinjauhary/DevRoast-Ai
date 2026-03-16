@@ -50,7 +50,7 @@ export default function OssRecommenderPage() {
                                 <button
                                     key={s}
                                     onClick={() => toggleSkill(s)}
-                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${skills.includes(s) ? "bg-secondary/20 border-secondary/50 text-secondary" : "bg-white/[0.02] border-white/10 text-zinc-500 hover:border-white/20"}`}
+                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${skills.includes(s) ? "bg-secondary/20 border-secondary/50 text-secondary" : "bg-white/2 border-white/10 text-zinc-500 hover:border-white/20"}`}
                                 >
                                     {s}
                                 </button>
@@ -64,7 +64,7 @@ export default function OssRecommenderPage() {
                             value={stackInput}
                             onChange={e => setStackInput(e.target.value)}
                             placeholder="e.g. React, PostgreSQL, Docker"
-                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-secondary/50 transition-colors"
+                            className="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-secondary/50 transition-colors"
                         />
                     </div>
 

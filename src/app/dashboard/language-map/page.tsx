@@ -125,7 +125,7 @@ export default async function LanguageMapPage() {
                             return (
                                 <div 
                                     key={lang} 
-                                    className="group p-6 rounded-[2rem] border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500 relative overflow-hidden flex flex-col justify-between"
+                                    className="group p-6 rounded-[2rem] border border-white/5 bg-white/2 hover:bg-white/4 hover:border-white/10 transition-all duration-500 relative overflow-hidden flex flex-col justify-between"
                                     style={{ borderLeft: `4px solid ${COLORS[i % COLORS.length]}` }}
                                 >
                                     <div className="absolute top-0 right-0 w-24 h-24 blur-3xl opacity-5 transition-opacity group-hover:opacity-20 pointer-events-none" style={{ backgroundColor: COLORS[i % COLORS.length] }} />

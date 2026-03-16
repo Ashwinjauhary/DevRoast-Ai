@@ -28,7 +28,7 @@ export function LeaderboardTable({ data, currentUserId }: { data: LeaderboardUse
 
     return (
         <div className="bg-black/40 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] overflow-hidden mt-8 shadow-2xl relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50" />
+            <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-50" />
             
             <div className="overflow-x-auto relative z-10">
                 <table className="w-full text-left">
@@ -48,7 +48,7 @@ export function LeaderboardTable({ data, currentUserId }: { data: LeaderboardUse
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.05 }}
-                                className={`border-b border-white/5 transition-colors ${user.userId === currentUserId ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-white/[0.02]"}`}
+                                className={`border-b border-white/5 transition-colors ${user.userId === currentUserId ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-white/2"}`}
                             >
                                 <td className="px-8 py-6">
                                     <div className="flex justify-center">

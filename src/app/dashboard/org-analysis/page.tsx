@@ -40,7 +40,7 @@ export default function OrgAnalysisPage() {
                         value={orgName}
                         onChange={e => setOrgName(e.target.value)}
                         placeholder="e.g.  vercel  or  github.com/vercel"
-                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                        className="w-full bg-white/3 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-primary/50 transition-colors"
                     />
                     {error && <p className="text-sm text-red-400">{error}</p>}
                     <button
@@ -79,7 +79,7 @@ export default function OrgAnalysisPage() {
                             <h3 className="text-lg font-black tracking-tight">Repository Breakdown</h3>
                             <div className="space-y-3">
                                 {result.repos?.map((repo: any, i: number) => (
-                                    <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                                    <div key={i} className="flex items-center justify-between p-4 bg-white/2 border border-white/5 rounded-xl">
                                         <div className="flex items-center gap-4">
                                             {repo.score >= result.avg_score
                                                 ? <TrendingUp className="w-4 h-4 text-emerald-400" />

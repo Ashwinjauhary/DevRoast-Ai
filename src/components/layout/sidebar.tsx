@@ -148,7 +148,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                                 "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group relative overflow-hidden",
                                                 isActive
                                                     ? "text-white bg-white/5 border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                                                    : "hover:text-white hover:bg-white/[0.02]"
+                                                    : "hover:text-white hover:bg-white/2"
                                             )}
                                         >
                                             {isActive && (
@@ -171,7 +171,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 <div className="shrink-0 p-6 pt-4 border-t border-white/5">
                     <Button
                         variant="ghost"
-                        className="w-full justify-start text-zinc-500 hover:text-white hover:bg-white/[0.03] px-4 py-5 rounded-xl transition-all"
+                        className="w-full justify-start text-zinc-500 hover:text-white hover:bg-white/3 px-4 py-5 rounded-xl transition-all"
                         onClick={async () => {
                             try {
                                 await handleSignOut();

@@ -129,7 +129,7 @@ export default async function DeveloperScorePage() {
                 </PremiumCard>
             </div>
 
-            <PremiumCard glowColor="none" className="bg-white/[0.01]">
+            <PremiumCard glowColor="none" className="bg-white/1">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-8 p-4">
                     <div className="space-y-2 text-center md:text-left">
                         <h4 className="text-xl font-black tracking-tight">Need a professional redemption?</h4>

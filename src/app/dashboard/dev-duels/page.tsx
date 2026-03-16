@@ -75,7 +75,7 @@ export default function DevDuelsPage() {
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-6xl mx-auto pb-24 relative">
             {/* Background Atmosphere */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-red-500/10 via-transparent to-transparent blur-[120px] -z-10" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-linear-to-b from-red-500/10 via-transparent to-transparent blur-[120px] -z-10" />
 
             <div className="space-y-4 text-center py-10">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-red-500 text-[10px] font-black uppercase tracking-widest mb-4">
@@ -161,7 +161,7 @@ export default function DevDuelsPage() {
                     >
                         {/* Winner Reveal Card */}
                         <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent blur-3xl" />
+                            <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/5 to-transparent blur-3xl" />
                             <PremiumCard glowColor="accent" className="overflow-hidden border-primary/20 bg-black/60 relative z-10">
                                 <div className="flex flex-col items-center text-center space-y-6 py-8">
                                     <div className="p-4 bg-accent/20 rounded-full border border-accent/40 animate-bounce">

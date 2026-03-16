@@ -20,7 +20,7 @@ export function GitHubConnectCard() {
     };
 
     return (
-        <PremiumCard glowColor="secondary" className="h-full bg-gradient-to-br from-zinc-900/50 to-black/50 border-zinc-800/50">
+        <PremiumCard glowColor="secondary" className="h-full bg-linear-to-br from-zinc-900/50 to-black/50 border-zinc-800/50">
             <div className="flex flex-col h-full space-y-6">
                 <div className="flex items-center justify-between">
                     <div className="p-3 bg-secondary/10 rounded-2xl border border-secondary/20">

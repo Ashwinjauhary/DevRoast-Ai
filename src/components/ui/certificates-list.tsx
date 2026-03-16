@@ -44,7 +44,7 @@ export function CertificatesList({ certificates, template }: CertificatesListPro
                                 template === 'cyberpunk' ? 'bg-white text-black border-4 border-black rounded-none shadow-[8px_8px_0px_rgba(0,0,0,1)]' :
                                 template === 'blueprint' ? 'bg-blue-900/10 border-2 border-dashed border-white/10 rounded-none' :
                                 template === 'hacker' ? 'bg-[#050505] border border-emerald-500/20 p-4' :
-                                template === 'prism' ? 'bg-white/[0.02] border-white/10 backdrop-blur-3xl rounded-[2.5rem]' :
+                                template === 'prism' ? 'bg-white/2 border-white/10 backdrop-blur-3xl rounded-[2.5rem]' :
                                 template === 'aura' ? 'bg-violet-950/40 border border-violet-500/20 rounded-[2rem]' :
                                 'bg-[#0a0a0a] border border-white/10 rounded-xl'
                             }`}
@@ -85,7 +85,7 @@ export function CertificatesList({ certificates, template }: CertificatesListPro
                                         <FileText className="w-3 h-3" /> Digital Copy (PDF)
                                     </div>
                                 ) : (
-                                    <div className="mt-4 rounded-xl overflow-hidden aspect-[4/3] bg-black/40 border border-white/5 transition-transform duration-500 group-hover:scale-105">
+                                    <div className="mt-4 rounded-xl overflow-hidden aspect-4/3 bg-black/40 border border-white/5 transition-transform duration-500 group-hover:scale-105">
                                         <img 
                                             src={cert.file_url} 
                                             alt={cert.title} 

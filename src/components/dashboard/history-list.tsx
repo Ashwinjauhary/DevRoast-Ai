@@ -61,7 +61,7 @@ export function HistoryList({ analyses }: HistoryListProps) {
                             </h3>
 
                             <div className="flex-1">
-                                <p className="text-sm text-zinc-500 italic font-medium line-clamp-3 bg-white/[0.02] p-4 rounded-2xl border border-white/5 group-hover:bg-white/[0.04] transition-colors">
+                                <p className="text-sm text-zinc-500 italic font-medium line-clamp-3 bg-white/2 p-4 rounded-2xl border border-white/5 group-hover:bg-white/4 transition-colors">
                                     "{((run.result_json as any)?.roastLines?.[0]) || "The silence is deafening. No roast logs found."}"
                                 </p>
                             </div>

@@ -32,7 +32,7 @@ export default async function RepositoriesPage() {
                     <br /><br />
                     <span className="text-sm">Error: {error}</span>
                 </p>
-                <p className="text-sm text-zinc-500 bg-white/[0.02] p-4 rounded-xl border border-white/5 mt-4 text-left">
+                <p className="text-sm text-zinc-500 bg-white/2 p-4 rounded-xl border border-white/5 mt-4 text-left">
                     <strong>Tip:</strong> You may need to sign out and sign back in to accept the new <code className="text-primary bg-primary/10 px-1 py-0.5 rounded">delete_repo</code> permission scope.
                 </p>
             </div>

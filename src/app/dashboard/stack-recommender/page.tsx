@@ -45,7 +45,7 @@ export default function StackRecommenderPage() {
                                 onChange={e => setGoal(e.target.value)}
                                 placeholder="e.g. Building a real-time multiplayer game with chat and leaderboards"
                                 rows={3}
-                                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-primary/50 transition-colors resize-none"
+                                className="w-full bg-white/3 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-primary/50 transition-colors resize-none"
                             />
                         </div>
                         <div>
@@ -54,7 +54,7 @@ export default function StackRecommenderPage() {
                                 value={currentStack}
                                 onChange={e => setCurrentStack(e.target.value)}
                                 placeholder="e.g. React, Node.js, MySQL, REST API, AWS EC2"
-                                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                                className="w-full bg-white/3 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-primary/50 transition-colors"
                             />
                         </div>
                     </div>
@@ -75,7 +75,7 @@ export default function StackRecommenderPage() {
                     </PremiumCard>
                     <div className="space-y-4">
                         {result.recommendations?.map((rec: any, i: number) => (
-                            <div key={i} className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3">
+                            <div key={i} className="p-6 bg-white/2 border border-white/5 rounded-2xl space-y-3">
                                 <div className="flex items-center justify-between">
                                     <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{rec.category}</span>
                                     <span className={`text-[10px] font-black uppercase tracking-widest ${EFFORT_COLORS[rec.migrationEffort] || "text-zinc-400"}`}>

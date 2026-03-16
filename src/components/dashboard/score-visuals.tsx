@@ -42,9 +42,9 @@ export function ScoreVisuals({ score, title, rank, categories }: ScoreVisualsPro
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-1">
-                <div className="relative group/score flex flex-col items-center justify-center p-12 bg-white/[0.02] border border-white/5 rounded-[2.5rem] glass-darker overflow-hidden h-full min-h-[400px]">
+                <div className="relative group/score flex flex-col items-center justify-center p-12 bg-white/2 border border-white/5 rounded-[2.5rem] glass-darker overflow-hidden h-full min-h-[400px]">
                     {/* Animated Glow Background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 opacity-0 group-hover/score:opacity-100 transition-opacity duration-1000" />
+                    <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-secondary/10 to-accent/10 opacity-0 group-hover/score:opacity-100 transition-opacity duration-1000" />
 
                     <div className="relative z-10">
                         <svg className="w-48 h-48 transform -rotate-90">
@@ -103,7 +103,7 @@ export function ScoreVisuals({ score, title, rank, categories }: ScoreVisualsPro
             </div>
 
             <div className="lg:col-span-2 space-y-6">
-                <div className="p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] glass h-full">
+                <div className="p-8 bg-white/2 border border-white/5 rounded-[2.5rem] glass h-full">
                     <h3 className="text-xl font-black tracking-tight mb-8 flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_10px_rgba(var(--secondary),1)]" />
                         Capability Matrix
@@ -121,7 +121,7 @@ export function ScoreVisuals({ score, title, rank, categories }: ScoreVisualsPro
                                         initial={{ width: 0 }}
                                         animate={{ width: `${val * 10}%` }}
                                         transition={{ duration: 1.5, ease: "circOut", delay: 0.2 * i }}
-                                        className="h-full bg-gradient-to-r from-secondary to-emerald-500 rounded-full"
+                                        className="h-full bg-linear-to-r from-secondary to-emerald-500 rounded-full"
                                     />
                                 </div>
                             </div>

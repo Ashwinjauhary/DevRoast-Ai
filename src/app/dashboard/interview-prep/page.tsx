@@ -50,7 +50,7 @@ export default function InterviewPrepPage() {
                                 <button
                                     key={w}
                                     onClick={() => toggle(weaknesses, w, setWeaknesses)}
-                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${weaknesses.includes(w) ? "bg-primary/20 border-primary/50 text-primary" : "bg-white/[0.02] border-white/10 text-zinc-500 hover:border-white/20"}`}
+                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${weaknesses.includes(w) ? "bg-primary/20 border-primary/50 text-primary" : "bg-white/2 border-white/10 text-zinc-500 hover:border-white/20"}`}
                                 >
                                     {w}
                                 </button>
@@ -65,7 +65,7 @@ export default function InterviewPrepPage() {
                                 <button
                                     key={s}
                                     onClick={() => toggle(techStack, s, setTechStack)}
-                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${techStack.includes(s) ? "bg-secondary/20 border-secondary/50 text-secondary" : "bg-white/[0.02] border-white/10 text-zinc-500 hover:border-white/20"}`}
+                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${techStack.includes(s) ? "bg-secondary/20 border-secondary/50 text-secondary" : "bg-white/2 border-white/10 text-zinc-500 hover:border-white/20"}`}
                                 >
                                     {s}
                                 </button>
@@ -88,7 +88,7 @@ export default function InterviewPrepPage() {
                     {questions.map((q, i) => {
                         const diffStyle = DIFF_COLORS[q.difficulty as keyof typeof DIFF_COLORS] || DIFF_COLORS.medium;
                         return (
-                            <div key={i} className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden">
+                            <div key={i} className="bg-white/2 border border-white/5 rounded-2xl overflow-hidden">
                                 <button className="w-full p-5 text-left flex items-center justify-between gap-4" onClick={() => setOpenIdx(openIdx === i ? null : i)}>
                                     <div className="flex items-start gap-4">
                                         <span className={`shrink-0 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest border ${diffStyle}`}>{q.difficulty}</span>

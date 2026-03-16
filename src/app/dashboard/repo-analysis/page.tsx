@@ -167,7 +167,7 @@ export default function RepoAnalysisPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="bg-red-500/10 border border-red-500/50 p-6 rounded-2xl flex items-start gap-4 text-red-200"
                             >
-                                <div className="p-2 flex-shrink-0 bg-red-500/20 rounded-full">
+                                <div className="p-2 shrink-0 bg-red-500/20 rounded-full">
                                     <AlertCircle className="w-6 h-6 text-red-400" />
                                 </div>
                                 <div className="space-y-1">
@@ -180,7 +180,7 @@ export default function RepoAnalysisPage() {
                         )}
 
                         <div id="roast-card-export" className="group relative rounded-[2rem] p-px overflow-hidden theme-primary">
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary via-indigo-500 to-purple-600 opacity-20" />
+                            <div className="absolute inset-0 bg-linear-to-br from-primary via-indigo-500 to-purple-600 opacity-20" />
 
                             <div className="relative bg-[#050505] p-8 sm:p-12 rounded-[1.95rem] overflow-hidden">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
@@ -197,7 +197,7 @@ export default function RepoAnalysisPage() {
                                             </div>
                                         </div>
 
-                                        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 relative overflow-hidden glass-darker">
+                                        <div className="bg-white/2 border border-white/5 rounded-3xl p-8 relative overflow-hidden glass-darker">
                                             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                                                 <div className="flex items-center gap-2 text-[10px] font-black text-primary bg-primary/5 border border-primary/20 px-3 py-1.5 rounded-full w-fit">
                                                     <TerminalSquare className="w-3 h-3" /> ATTACH_DEBUGGER...
@@ -221,7 +221,7 @@ export default function RepoAnalysisPage() {
                                                         key={`roast-${i}-${isEli5}`}
                                                         className="text-zinc-400 text-base md:text-lg leading-relaxed flex gap-4"
                                                     >
-                                                        <span className="text-secondary opacity-50 flex-shrink-0">[{i + 1}]</span>
+                                                        <span className="text-secondary opacity-50 shrink-0">[{i + 1}]</span>
                                                         <span className="text-zinc-300">"{line}"</span>
                                                     </motion.p>
                                                 ))}
@@ -231,7 +231,7 @@ export default function RepoAnalysisPage() {
 
                                     <div className="w-full md:w-80 space-y-6">
                                         <div className="bg-primary/5 border border-primary/20 rounded-3xl p-8 text-center relative overflow-hidden group/score">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/score:opacity-100 transition-opacity duration-700" />
+                                            <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-transparent opacity-0 group-hover/score:opacity-100 transition-opacity duration-700" />
                                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2 block relative z-10">Health Score</span>
                                             <div className="text-8xl font-black tracking-tighter text-white relative z-10 mb-2">
                                                 {result.score}<span className="text-zinc-700 text-4xl">/10</span>
@@ -284,8 +284,8 @@ export default function RepoAnalysisPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="p-4 sm:p-5 bg-white/[0.02] rounded-xl border border-white/5 font-mono text-xs sm:text-sm text-zinc-400 leading-relaxed border-l-2 border-l-primary shadow-sm relative overflow-hidden group">
-                                            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <div className="p-4 sm:p-5 bg-white/2 rounded-xl border border-white/5 font-mono text-xs sm:text-sm text-zinc-400 leading-relaxed border-l-2 border-l-primary shadow-sm relative overflow-hidden group">
+                                            <div className="absolute inset-0 bg-linear-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                             <p className="relative z-10 m-0">{result.dependencyHealth.analysis}</p>
                                         </div>
                                     </motion.div>
@@ -295,7 +295,7 @@ export default function RepoAnalysisPage() {
                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Architectural Fixes</span>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {result.suggestions.map((sug: string, i: number) => (
-                                            <div key={i} className="flex gap-3 items-start p-4 bg-white/[0.03] border border-white/10 rounded-2xl transition-all hover:bg-white/[0.05] hover:-translate-y-1">
+                                            <div key={i} className="flex gap-3 items-start p-4 bg-white/3 border border-white/10 rounded-2xl transition-all hover:bg-white/5 hover:-translate-y-1">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shadow-[0_0_10px_rgba(var(--primary),1)]" />
                                                 <span className="text-sm font-medium text-zinc-400 leading-relaxed">{sug}</span>
                                             </div>

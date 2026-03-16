@@ -74,7 +74,7 @@ export default function AiMentorPage() {
                 {/* Background Glow */}
                 <div className="absolute inset-0 bg-secondary/5 blur-[120px] rounded-full pointer-events-none" />
 
-                <div className="h-full flex flex-col bg-white/[0.02] border border-white/5 rounded-[2.5rem] glass overflow-hidden shadow-2xl">
+                <div className="h-full flex flex-col bg-white/2 border border-white/5 rounded-[2.5rem] glass overflow-hidden shadow-2xl">
                     {/* Chat Messages */}
                     <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 scrollbar-hide">
                         <AnimatePresence initial={false}>
@@ -93,7 +93,7 @@ export default function AiMentorPage() {
                                     </div>
 
                                     <div className={`max-w-[85%] md:max-w-[70%] rounded-[2rem] px-6 py-4 text-base leading-relaxed ${msg.role === "assistant"
-                                        ? "bg-white/[0.03] border border-white/5 text-zinc-300 glass-darker rounded-tl-none"
+                                        ? "bg-white/3 border border-white/5 text-zinc-300 glass-darker rounded-tl-none"
                                         : "bg-primary text-white shadow-[0_10px_30px_rgba(var(--primary),0.3)] rounded-tr-none font-medium"
                                         }`}>
                                         {msg.content}
@@ -111,7 +111,7 @@ export default function AiMentorPage() {
                                 <div className="w-10 h-10 rounded-2xl bg-secondary/20 border border-secondary/30 flex items-center justify-center shrink-0">
                                     <TerminalSquare className="w-5 h-5 text-secondary animate-pulse" />
                                 </div>
-                                <div className="bg-white/[0.03] border border-white/5 rounded-[2rem] rounded-tl-none px-6 py-4 flex items-center gap-3 text-zinc-400 glass-darker">
+                                <div className="bg-white/3 border border-white/5 rounded-[2rem] rounded-tl-none px-6 py-4 flex items-center gap-3 text-zinc-400 glass-darker">
                                     <Loader2 className="w-4 h-4 animate-spin text-secondary" />
                                     <span className="text-sm font-black uppercase tracking-widest italic">Calculating your worth...</span>
                                 </div>
@@ -128,7 +128,7 @@ export default function AiMentorPage() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder="Consult the mentor about your architectural decisions..."
-                                className="w-full bg-white/[0.03] border border-white/10 rounded-3xl py-5 pl-8 pr-24 text-base text-zinc-100 focus:outline-none focus:ring-1 focus:ring-secondary/50 transition-all placeholder:text-zinc-700 glass-darker font-medium"
+                                className="w-full bg-white/3 border border-white/10 rounded-3xl py-5 pl-8 pr-24 text-base text-zinc-100 focus:outline-none focus:ring-1 focus:ring-secondary/50 transition-all placeholder:text-zinc-700 glass-darker font-medium"
                                 disabled={loading}
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">

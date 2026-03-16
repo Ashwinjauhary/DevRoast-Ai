@@ -180,7 +180,7 @@ export default function NeuralLibraryPage() {
             </div>
 
             {/* Tabs */}
-            <div className="flex p-1 bg-white/[0.03] border border-white/10 rounded-3xl w-fit">
+            <div className="flex p-1 bg-white/3 border border-white/10 rounded-3xl w-fit">
                 {TABS.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
@@ -191,7 +191,7 @@ export default function NeuralLibraryPage() {
                             className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-sm font-black transition-all duration-500 ${
                                 isActive 
                                 ? "bg-white/10 text-white shadow-xl border border-white/10" 
-                                : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
+                                : "text-zinc-500 hover:text-zinc-300 hover:bg-white/2"
                             }`}
                         >
                             <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : ''}`} />
@@ -224,12 +224,12 @@ export default function NeuralLibraryPage() {
                                                 placeholder="Snippet Title (e.g., Auth Middleware Fix)"
                                                 value={snippetForm.title}
                                                 onChange={e => setSnippetForm(p => ({ ...p, title: e.target.value }))}
-                                                className="col-span-2 md:col-span-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                                                className="col-span-2 md:col-span-1 bg-white/3 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
                                             />
                                             <div className="relative" ref={dropdownRef}>
                                                 <button
                                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                                    className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-all font-bold uppercase tracking-widest text-[10px]"
+                                                    className="w-full flex items-center justify-between bg-white/3 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-all font-bold uppercase tracking-widest text-[10px]"
                                                 >
                                                     {snippetForm.language}
                                                     <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -259,7 +259,7 @@ export default function NeuralLibraryPage() {
                                             placeholder="Internal Notes (context, performance, etc.)..."
                                             value={snippetForm.notes}
                                             onChange={e => setSnippetForm(p => ({ ...p, notes: e.target.value }))}
-                                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                                            className="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors"
                                         />
                                     </div>
                                 ) : activeTab === "notes" ? (
@@ -268,7 +268,7 @@ export default function NeuralLibraryPage() {
                                             placeholder="Research/Note Title..."
                                             value={assetForm.title}
                                             onChange={e => setAssetForm(p => ({ ...p, title: e.target.value }))}
-                                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors font-bold"
+                                            className="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors font-bold"
                                         />
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="relative">
@@ -322,7 +322,7 @@ export default function NeuralLibraryPage() {
                                             placeholder="Certificate/Achievement Name (e.g., AWS Developer Associate)"
                                             value={assetForm.title}
                                             onChange={e => setAssetForm(p => ({ ...p, title: e.target.value }))}
-                                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors font-bold"
+                                            className="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors font-bold"
                                         />
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="relative group">
@@ -330,7 +330,7 @@ export default function NeuralLibraryPage() {
                                                     placeholder="Certificate Link / URL..."
                                                     value={assetForm.file_url}
                                                     onChange={e => setAssetForm(p => ({ ...p, file_url: e.target.value }))}
-                                                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors pl-12"
+                                                    className="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors pl-12"
                                                 />
                                                 <ExternalLink className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-primary transition-colors" />
                                             </div>
@@ -430,7 +430,7 @@ export default function NeuralLibraryPage() {
                                         {snippet.code}
                                     </pre>
                                     {snippet.notes && (
-                                        <div className="flex items-start gap-2 text-xs text-zinc-500 italic bg-white/[0.02] p-3 rounded-lg border border-white/5">
+                                        <div className="flex items-start gap-2 text-xs text-zinc-500 italic bg-white/2 p-3 rounded-lg border border-white/5">
                                             <FileText className="w-3.5 h-3.5 mt-0.5" />
                                             <span>{snippet.notes}</span>
                                         </div>
@@ -474,7 +474,7 @@ export default function NeuralLibraryPage() {
                                                 <a 
                                                     href={asset.file_url} 
                                                     target="_blank" 
-                                                    className="flex items-center gap-3 p-3 bg-white/[0.03] border border-white/10 rounded-xl hover:bg-white/5 transition-colors group"
+                                                    className="flex items-center gap-3 p-3 bg-white/3 border border-white/10 rounded-xl hover:bg-white/5 transition-colors group"
                                                 >
                                                     <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
                                                         <FileText className="w-4 h-4 text-primary" />
@@ -487,7 +487,7 @@ export default function NeuralLibraryPage() {
                                     ) : (
                                         <div className="space-y-4 flex-1 flex flex-col">
                                             {asset.file_url ? (
-                                                <div className="aspect-[4/3] w-full bg-[#050505] rounded-2xl border border-white/10 overflow-hidden relative group shadow-2xl">
+                                                <div className="aspect-4/3 w-full bg-[#050505] rounded-2xl border border-white/10 overflow-hidden relative group shadow-2xl">
                                                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                         {asset.file_url.toLowerCase().endsWith('.pdf') ? (
                                                             <div className="flex flex-col items-center gap-2 opacity-20">
@@ -503,7 +503,7 @@ export default function NeuralLibraryPage() {
                                                         )}
                                                     </div>
                                                     
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+                                                    <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-80" />
                                                     
                                                     <div className="absolute inset-x-0 bottom-0 p-5 translate-y-2 group-hover:translate-y-0 transition-transform">
                                                         <a 
@@ -517,7 +517,7 @@ export default function NeuralLibraryPage() {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="aspect-[4/3] w-full bg-black/40 rounded-2xl border border-dashed border-white/10 flex items-center justify-center">
+                                                <div className="aspect-4/3 w-full bg-black/40 rounded-2xl border border-dashed border-white/10 flex items-center justify-center">
                                                     <Trophy className="w-16 h-16 text-zinc-900 group-hover:text-primary/20 transition-colors" />
                                                 </div>
                                             )}

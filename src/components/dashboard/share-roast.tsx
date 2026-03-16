@@ -61,8 +61,8 @@ export function ShareRoast({ data }: ShareRoastProps) {
                     style={{ fontFamily: "var(--font-sans)" }}
                 >
                     {/* Background decoration */}
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-50" />
-                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-50" />
+                    <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
                     
                     <div className="relative z-10 flex justify-between items-start">
                         <div className="space-y-4">
@@ -122,7 +122,7 @@ export function ShareRoast({ data }: ShareRoastProps) {
             <button
                 onClick={handleDownload}
                 disabled={isGenerating}
-                className="group relative flex items-center gap-3 px-8 py-4 bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 rounded-2xl transition-all active:scale-95 disabled:opacity-50"
+                className="group relative flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/8 border border-white/10 rounded-2xl transition-all active:scale-95 disabled:opacity-50"
             >
                 <AnimatePresence mode="wait">
                     {isGenerating ? (

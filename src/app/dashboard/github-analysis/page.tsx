@@ -182,7 +182,7 @@ export default function GithubAnalysisPage() {
                                                     <div className="flex justify-end">
                                                         <button 
                                                             onClick={() => toast.dismiss(t.id)}
-                                                            className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all font-bold"
+                                                            className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all"
                                                         >
                                                             Understood
                                                         </button>
@@ -211,7 +211,7 @@ export default function GithubAnalysisPage() {
 
                         <div id="roast-card-export" className="group relative rounded-[2rem] p-px overflow-hidden">
                             {/* Animated Border Background */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent opacity-20" />
+                            <div className="absolute inset-0 bg-linear-to-br from-primary via-secondary to-accent opacity-20" />
 
                             <div className="relative bg-[#050505] p-8 sm:p-12 rounded-[1.95rem] overflow-hidden">
                                 {/* Decorative elements */}
@@ -230,7 +230,7 @@ export default function GithubAnalysisPage() {
                                             </div>
                                         </div>
 
-                                        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 relative overflow-hidden glass-darker">
+                                        <div className="bg-white/2 border border-white/5 rounded-3xl p-8 relative overflow-hidden glass-darker">
                                             <div className="flex items-center gap-2 mb-6 text-[10px] font-black text-secondary bg-secondary/5 border border-secondary/20 px-3 py-1.5 rounded-full w-fit">
                                                 <TerminalSquare className="w-3 h-3" /> ANALYZING_SOURCE...
                                             </div>
@@ -254,7 +254,7 @@ export default function GithubAnalysisPage() {
 
                                     <div className="w-full md:w-80 space-y-6">
                                         <div className="bg-primary/5 border border-primary/20 rounded-3xl p-8 text-center relative overflow-hidden group/score">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/score:opacity-100 transition-opacity duration-700" />
+                                            <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-transparent opacity-0 group-hover/score:opacity-100 transition-opacity duration-700" />
                                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2 block relative z-10">Integrity Score</span>
                                             <div className="text-8xl font-black tracking-tighter text-white relative z-10 mb-2">
                                                 {result.analysis.score}<span className="text-zinc-700 text-4xl">/10</span>
@@ -276,7 +276,7 @@ export default function GithubAnalysisPage() {
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${val * 10}%` }}
                                                             transition={{ duration: 1.5, ease: "circOut", delay: 0.5 + (i * 0.1) }}
-                                                            className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+                                                            className="h-full bg-linear-to-r from-primary to-accent rounded-full"
                                                         />
                                                     </div>
                                                 </div>
@@ -287,7 +287,7 @@ export default function GithubAnalysisPage() {
 
                                 <div className="mt-12 flex flex-wrap gap-2 relative z-10">
                                     {result.analysis.suggestions.slice(0, 3).map((sug: string, i: number) => (
-                                        <div key={i} className="px-4 py-2 bg-white/[0.03] border border-white/10 rounded-xl text-xs font-bold text-zinc-400">
+                                        <div key={i} className="px-4 py-2 bg-white/3 border border-white/10 rounded-xl text-xs font-bold text-zinc-400">
                                             {sug}
                                         </div>
                                     ))}

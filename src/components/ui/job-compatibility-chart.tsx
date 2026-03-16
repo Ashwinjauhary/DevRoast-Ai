@@ -10,9 +10,9 @@ export function JobCompatibilityChart({ data }: { data: any }) {
     return (
         <div className="w-full bg-[#0a0a0a] border border-white/5 rounded-[2rem] p-8 relative group overflow-hidden shadow-2xl">
             {/* High-tech grid background */}
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[20px_20px] mask-[radial-gradient(ellipse_at_center,black,transparent_80%)]" />
             
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
             <div className="flex justify-between items-start mb-12 relative z-10">
                 <div className="space-y-1">
@@ -80,7 +80,7 @@ export function JobCompatibilityChart({ data }: { data: any }) {
                                         <motion.div 
                                             animate={{ x: ['-100%', '200%'] }}
                                             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                                            className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
+                                            className="absolute top-0 bottom-0 w-20 bg-linear-to-r from-transparent via-white/40 to-transparent skew-x-12"
                                         />
                                     </motion.div>
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/item:opacity-100 transition-opacity">
@@ -93,7 +93,7 @@ export function JobCompatibilityChart({ data }: { data: any }) {
                 </div>
 
                 <div className="space-y-6">
-                    <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl relative overflow-hidden group/box">
+                    <div className="p-6 bg-white/2 border border-white/5 rounded-2xl relative overflow-hidden group/box">
                         <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
                         <h4 className="text-[10px] uppercase font-black tracking-widest text-primary mb-4 flex items-center gap-2">
                             <Info className="w-3 h-3" />

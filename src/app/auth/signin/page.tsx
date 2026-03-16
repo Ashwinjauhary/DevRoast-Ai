@@ -71,9 +71,9 @@ function SignInForm() {
                 </form>
 
                 <div className="relative flex items-center py-4">
-                    <div className="flex-grow border-t border-white/10"></div>
-                    <span className="flex-shrink-0 mx-4 text-xs font-medium uppercase text-zinc-600 tracking-widest">Or continue with</span>
-                    <div className="flex-grow border-t border-white/10"></div>
+                    <div className="grow border-t border-white/10"></div>
+                    <span className="shrink-0 mx-4 text-xs font-medium uppercase text-zinc-600 tracking-widest">Or continue with</span>
+                    <div className="grow border-t border-white/10"></div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -83,7 +83,7 @@ function SignInForm() {
                         suppressHydrationWarning
                         className="group relative w-full h-14 bg-white hover:bg-zinc-100 text-black rounded-xl font-semibold text-sm flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none overflow-hidden"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                         {loading === "github" ? (
                             <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
                         ) : (
@@ -122,7 +122,7 @@ export default function SignInPage() {
             {/* Left Panel - Branding & Visuals */}
             <div className="hidden lg:flex w-1/2 relative bg-[#050505] flex-col justify-between p-12 border-r border-white/5 overflow-hidden">
                 {/* Background Grid & Glow */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[24px_24px]"></div>
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-500/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none"></div>
 
@@ -135,7 +135,7 @@ export default function SignInPage() {
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-widest uppercase text-zinc-400 backdrop-blur-md">
                         <Shield className="w-3 h-3 text-green-400" /> Secure Login
                     </div>
-                    <h1 className="text-5xl font-black tracking-tighter leading-[1.1] text-transparent bg-clip-text bg-gradient-to-br from-white via-zinc-200 to-zinc-500">
+                    <h1 className="text-5xl font-black tracking-tighter leading-[1.1] text-transparent bg-clip-text bg-linear-to-br from-white via-zinc-200 to-zinc-500">
                         Prepare for the brutal truth.
                     </h1>
                     <p className="text-lg text-zinc-400 font-light leading-relaxed">

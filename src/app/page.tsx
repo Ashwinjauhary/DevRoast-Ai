@@ -42,7 +42,7 @@ export default function LandingPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3 group"
           >
-            <div className="relative flex items-center gap-2 bg-white/[0.03] px-4 py-2 rounded-xl border border-white/10 glass-darker group-hover:border-primary/50 transition-colors">
+            <div className="relative flex items-center gap-2 bg-white/3 px-4 py-2 rounded-xl border border-white/10 glass-darker group-hover:border-primary/50 transition-colors">
               <TerminalSquare className="w-5 h-5 text-primary group-hover:text-white transition-colors animate-pulse" />
               <span className="font-black tracking-tighter text-white text-lg lg:text-xl">DEVROAST<span className="text-secondary opacity-80">_AI</span></span>
             </div>
@@ -178,10 +178,10 @@ export default function LandingPage() {
             <Link href="/auth/signin" className="group relative w-full sm:w-auto flex items-center justify-center gap-4 bg-white text-black px-12 py-6 rounded-2xl font-black text-lg overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(255,255,255,0.15)] hover:shadow-[0_20px_60px_rgba(var(--primary),0.3)] border border-white/20">
               <Github className="w-6 h-6" />
               <span className="relative z-10 tracking-widest uppercase text-sm">Target Your GitHub</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-r from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
 
-            <Link href="#demo" className="group w-full sm:w-auto flex items-center justify-center gap-4 px-12 py-6 rounded-2xl font-black tracking-widest uppercase text-sm border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-zinc-300 transition-all backdrop-blur-xl glass-darker">
+            <Link href="#demo" className="group w-full sm:w-auto flex items-center justify-center gap-4 px-12 py-6 rounded-2xl font-black tracking-widest uppercase text-sm border border-white/10 bg-white/2 hover:bg-white/5 text-zinc-300 transition-all backdrop-blur-xl glass-darker">
               <Sparkles className="w-5 h-5 text-secondary group-hover:text-white transition-colors" />
               <span>View Interrogation</span>
             </Link>
@@ -198,13 +198,13 @@ export default function LandingPage() {
             className="w-full max-w-6xl mx-auto mt-40 relative z-20"
           >
             {/* Massive Underglow */}
-            <div className="absolute -inset-4 bg-gradient-to-b from-primary/30 via-accent/20 to-secondary/10 rounded-[3rem] blur-[80px] opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-30 pointer-events-none" />
+            <div className="absolute -inset-4 bg-linear-to-b from-primary/30 via-accent/20 to-secondary/10 rounded-[3rem] blur-[80px] opacity-50" />
+            <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent z-30 pointer-events-none" />
 
             <div className="relative bg-[#020202]/90 border border-white/10 rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden backdrop-blur-3xl transform-gpu">
 
               {/* Sleek Mac-like Header */}
-              <div className="h-14 border-b border-white/5 bg-white/[0.02] flex items-center px-8 gap-4 relative">
+              <div className="h-14 border-b border-white/5 bg-white/2 flex items-center px-8 gap-4 relative">
                 <div className="flex gap-2">
                   <div className="w-3.5 h-3.5 rounded-full bg-zinc-800 border border-zinc-700"></div>
                   <div className="w-3.5 h-3.5 rounded-full bg-zinc-800 border border-zinc-700"></div>
@@ -219,7 +219,7 @@ export default function LandingPage() {
               {/* Terminal Body */}
               <div className="p-8 md:p-16 h-[500px] flex flex-col justify-between relative">
                 {/* Fake Scanline */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 shadow-[0_0_20px_rgba(var(--primary),1)] animate-[scan_3s_ease-in-out_infinite]" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-primary to-transparent opacity-50 shadow-[0_0_20px_rgba(var(--primary),1)] animate-[scan_3s_ease-in-out_infinite]" />
 
                 <div className="font-mono text-xs md:text-sm text-zinc-400 space-y-6 flex-1">
                   <div className="flex items-center gap-4 mb-12">
@@ -252,7 +252,7 @@ export default function LandingPage() {
                   initial={{ scale: 0.9, opacity: 0, filter: "blur(20px)" }}
                   whileInView={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
                   transition={{ delay: 2, duration: 1, type: "spring" }}
-                  className="mt-8 p-1 bg-gradient-to-r from-accent via-primary to-accent rounded-3xl"
+                  className="mt-8 p-1 bg-linear-to-r from-accent via-primary to-accent rounded-3xl"
                 >
                   <div className="bg-black rounded-[1.4rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 h-full">
                     <div className="space-y-4">
@@ -289,7 +289,7 @@ export default function LandingPage() {
                 transition={{ delay: i * 0.15 }}
                 className="group"
               >
-                <div className="w-20 h-20 bg-white/[0.02] border border-white/5 rounded-3xl flex items-center justify-center mb-10 glass-darker group-hover:border-white/20 transition-colors">
+                <div className="w-20 h-20 bg-white/2 border border-white/5 rounded-3xl flex items-center justify-center mb-10 glass-darker group-hover:border-white/20 transition-colors">
                   {React.cloneElement(feature.icon as React.ReactElement, { className: `w-10 h-10 text-${feature.color}` } as any)}
                 </div>
                 <h3 className="text-3xl font-black text-white mb-6 tracking-tight">{feature.title}</h3>
@@ -307,7 +307,7 @@ export default function LandingPage() {
             className="relative group rounded-[3rem] overflow-hidden border border-white/10 bg-[#050505] shadow-2xl"
           >
             {/* Dynamic Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 opacity-50" />
+            <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-accent/5 opacity-50" />
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] -translate-y-1/2 translate-x-1/2" />
             
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 p-12 md:p-20 items-center">
@@ -352,7 +352,7 @@ export default function LandingPage() {
                       className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                    />
                    {/* Gradient Overlay */}
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
                    
                    <div className="absolute bottom-10 left-10 right-10">
                       <div className="text-[10px] font-black text-primary uppercase tracking-[0.5em] mb-2">Primary_Developer</div>

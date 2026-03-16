@@ -50,7 +50,7 @@ export default function LicenseCheckerPage() {
                         value={input}
                         onChange={e => setInput(e.target.value)}
                         placeholder="github.com/owner/repo  or  owner/repo"
-                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-accent/50 transition-colors"
+                        className="w-full bg-white/3 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-zinc-600 font-mono text-sm focus:outline-none focus:border-accent/50 transition-colors"
                     />
                     {error && <p className="text-sm text-red-400">{error}</p>}
                     <button
@@ -84,7 +84,7 @@ export default function LicenseCheckerPage() {
                         <div className="space-y-3">
                             <h3 className="text-2xl font-black tracking-tight">Issues Found ({result.issues.length})</h3>
                             {result.issues.map((issue: any, i: number) => (
-                                <div key={i} className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl space-y-2">
+                                <div key={i} className="p-5 bg-white/2 border border-white/5 rounded-2xl space-y-2">
                                     <div className="flex items-center gap-3">
                                         <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 ${SEV_COLORS[issue.severity as keyof typeof SEV_COLORS]}`}>{issue.severity}</span>
                                         <span className="text-sm font-bold text-white">{issue.package}</span>

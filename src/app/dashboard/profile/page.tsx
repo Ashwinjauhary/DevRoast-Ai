@@ -178,12 +178,12 @@ export default async function ProfilePage() {
                             </div>
 
                             <div className="w-full pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
-                                <div className="flex flex-col items-center justify-center p-4 bg-white/[0.02] rounded-2xl glass-darker border border-white/5 hover:border-white/10 transition-colors">
+                                <div className="flex flex-col items-center justify-center p-4 bg-white/2 rounded-2xl glass-darker border border-white/5 hover:border-white/10 transition-colors">
                                     <Activity className="w-5 h-5 text-primary mb-2" />
                                     <span className="text-3xl font-black text-white">{dbUser._count.analyses}</span>
                                     <span className="text-[10px] font-black tracking-widest text-zinc-500 uppercase mt-1">Scans</span>
                                 </div>
-                                <div className="flex flex-col items-center justify-center p-4 bg-white/[0.02] rounded-2xl glass-darker border border-white/5 hover:border-white/10 transition-colors">
+                                <div className="flex flex-col items-center justify-center p-4 bg-white/2 rounded-2xl glass-darker border border-white/5 hover:border-white/10 transition-colors">
                                     <MessageSquare className="w-5 h-5 text-secondary mb-2" />
                                     <span className="text-3xl font-black text-white">{dbUser._count.chats}</span>
                                     <span className="text-[10px] font-black tracking-widest text-zinc-500 uppercase mt-1">Chats</span>
@@ -206,7 +206,7 @@ export default async function ProfilePage() {
                             </div>
 
                             <div className="space-y-4">
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] glass-darker gap-4">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 bg-white/2 border border-white/5 rounded-[2rem] glass-darker gap-4">
                                     <div className="flex items-center gap-5">
                                         <div className="p-3 bg-white/5 rounded-2xl border border-white/10 text-white">
                                             <Github className="w-6 h-6" />
@@ -227,7 +227,7 @@ export default async function ProfilePage() {
                                     )}
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] glass-darker gap-4">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 bg-white/2 border border-white/5 rounded-[2rem] glass-darker gap-4">
                                     <div className="flex items-center gap-5">
                                         <div className="p-3 bg-white/5 rounded-2xl border border-white/10 text-white">
                                             <Mail className="w-6 h-6" />
@@ -263,8 +263,8 @@ export default async function ProfilePage() {
                         </div>
 
                         {dbUser.portfolios?.[0] || uniqueTech.length > 0 ? (
-                            <div className="grid md:grid-cols-2 gap-8 items-center bg-white/[0.02] p-6 rounded-[2.5rem] border border-white/5 border-dashed relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+                            <div className="grid md:grid-cols-2 gap-8 items-center bg-white/2 p-6 rounded-[2.5rem] border border-white/5 border-dashed relative overflow-hidden">
+                                <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent pointer-events-none" />
                                 <div className="space-y-4 relative z-10">
                                     <div>
                                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 block mb-1">Developer Archetype</span>
@@ -297,7 +297,7 @@ export default async function ProfilePage() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="py-12 flex flex-col items-center justify-center text-center space-y-4 bg-white/[0.02] rounded-[2.5rem] border border-white/5 border-dashed">
+                            <div className="py-12 flex flex-col items-center justify-center text-center space-y-4 bg-white/2 rounded-[2.5rem] border border-white/5 border-dashed">
                                 <Zap className="w-8 h-8 text-zinc-700" />
                                 <div className="space-y-1">
                                     <p className="text-white font-bold">No Portfolio Generated</p>
@@ -320,7 +320,7 @@ export default async function ProfilePage() {
                         </div>
 
                         <div className="flex-1 flex flex-col gap-4">
-                            <div className="p-5 bg-white/[0.02] border border-white/5 rounded-3xl space-y-4">
+                            <div className="p-5 bg-white/2 border border-white/5 rounded-3xl space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <Layers className="w-4 h-4 text-zinc-400" />
@@ -372,7 +372,7 @@ export default async function ProfilePage() {
                             key={badge.id} 
                             className={`p-4 rounded-2xl border transition-all duration-500 ${
                                 badge.unlocked 
-                                    ? 'bg-white/[0.03] border-white/10 opacity-100 hover:border-white/20' 
+                                    ? 'bg-white/3 border-white/10 opacity-100 hover:border-white/20' 
                                     : 'bg-black/20 border-white/5 opacity-40 grayscale'
                             }`}
                         >
@@ -489,7 +489,7 @@ export default async function ProfilePage() {
             {/* Interrogation Terminal Widget */}
             <PremiumCard glowColor="secondary" className="p-0 border-none overflow-hidden">
                 <div className="bg-black/80 rounded-[1.2rem] overflow-hidden">
-                    <div className="h-10 border-b border-white/5 bg-white/[0.03] flex items-center px-6 gap-3">
+                    <div className="h-10 border-b border-white/5 bg-white/3 flex items-center px-6 gap-3">
                         <div className="flex gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20" />
@@ -550,7 +550,7 @@ export default async function ProfilePage() {
                                 Engineering Impact
                             </h3>
                             <div className="space-y-4">
-                                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+                                <div className="p-4 bg-white/2 border border-white/5 rounded-2xl">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-[10px] font-black uppercase text-zinc-500">Avg Top-Tier Score</span>
                                         <span className="text-primary font-bold">{(avgTopScore).toFixed(1)} / 10</span>
@@ -558,11 +558,11 @@ export default async function ProfilePage() {
                                     <ImpactStats score={avgTopScore} />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl text-center">
+                                    <div className="p-4 bg-white/2 border border-white/5 rounded-2xl text-center">
                                         <span className="block text-[9px] font-black uppercase text-zinc-600 mb-1">Reliability</span>
                                         <span className="text-xl font-black text-white">{avgTopScore > 7 ? 'S-Tier' : avgTopScore > 5 ? 'A+' : 'B'}</span>
                                     </div>
-                                    <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl text-center">
+                                    <div className="p-4 bg-white/2 border border-white/5 rounded-2xl text-center">
                                         <span className="block text-[9px] font-black uppercase text-zinc-600 mb-1">Top Language</span>
                                         <span className="text-xl font-black text-white truncate">{uniqueTech[0] || 'N/A'}</span>
                                     </div>
@@ -578,15 +578,15 @@ export default async function ProfilePage() {
                                 System Diagnostics
                             </h3>
                             <div className="space-y-3">
-                                <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                                <div className="flex items-center justify-between p-3 bg-white/2 border border-white/5 rounded-xl">
                                     <span className="text-[10px] font-bold text-zinc-400">API Latency</span>
                                     <span className="text-[10px] font-black text-emerald-500">14ms // FAST</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                                <div className="flex items-center justify-between p-3 bg-white/2 border border-white/5 rounded-xl">
                                     <span className="text-[10px] font-bold text-zinc-400">Token Health</span>
                                     <span className="text-[10px] font-black text-emerald-500">OPTIMAL</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                                <div className="flex items-center justify-between p-3 bg-white/2 border border-white/5 rounded-xl">
                                     <span className="text-[10px] font-bold text-zinc-400">Memory Load</span>
                                     <span className="text-[10px] font-black text-secondary">12% // STABLE</span>
                                 </div>
@@ -612,7 +612,7 @@ export default async function ProfilePage() {
                         <div className="space-y-4">
                             {dbUser.analyses.length > 0 ? (
                                 dbUser.analyses.map((analysis) => (
-                                    <div key={analysis.id} className="group relative p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/[0.05] transition-all duration-500 overflow-hidden">
+                                    <div key={analysis.id} className="group relative p-6 bg-white/2 border border-white/5 rounded-[2rem] hover:bg-white/5 transition-all duration-500 overflow-hidden">
                                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Code2 className="w-16 h-16" />
                                         </div>

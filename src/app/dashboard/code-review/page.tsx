@@ -140,7 +140,7 @@ export default function CodeReviewPage() {
                                     <h3 className="font-black tracking-tight text-lg">Input Source</h3>
                                 </div>
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger className="bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white uppercase tracking-wider focus:outline-none flex items-center gap-2 hover:bg-white/[0.05] transition-colors outline-none cursor-pointer">
+                                    <DropdownMenuTrigger className="bg-white/3 border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white uppercase tracking-wider focus:outline-none flex items-center gap-2 hover:bg-white/5 transition-colors outline-none cursor-pointer">
                                         {language}
                                         <ChevronDown className="w-3 h-3 text-zinc-500" />
                                     </DropdownMenuTrigger>
@@ -203,7 +203,7 @@ export default function CodeReviewPage() {
                                     <h3 className="font-black tracking-tight text-lg text-white font-mono uppercase italic">The Roast</h3>
                                 </div>
                                 
-                                <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 space-y-4 glass-dark">
+                                <div className="bg-white/2 border border-white/5 rounded-3xl p-8 space-y-4 glass-dark">
                                     {roast.length === 0 && loading && <div className="animate-pulse flex space-x-4"><div className="flex-1 space-y-4 py-1"><div className="h-4 bg-white/5 rounded w-3/4"></div><div className="h-4 bg-white/5 rounded w-5/6"></div></div></div>}
                                     {roast.map((point, i) => (
                                         <motion.div 

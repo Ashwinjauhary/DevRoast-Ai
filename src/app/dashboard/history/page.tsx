@@ -30,7 +30,7 @@ export default async function HistoryPage() {
             </div>
 
             {analyses.length === 0 ? (
-                <div className="flex flex-col items-center justify-center min-vh-[60vh] py-20 bg-white/[0.02] border border-dashed border-white/10 rounded-[3rem] text-center space-y-8">
+                <div className="flex flex-col items-center justify-center min-vh-[60vh] py-20 bg-white/2 border border-dashed border-white/10 rounded-[3rem] text-center space-y-8">
                     <div className="p-8 bg-zinc-900/50 rounded-full border border-white/5">
                         <ShieldAlert className="w-16 h-16 text-zinc-800" />
                     </div>

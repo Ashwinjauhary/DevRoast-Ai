@@ -19,6 +19,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://dev-roast-ai-sand.vercel.app/"),
   title: {
     default: "DevRoast AI | Best AI Code Reviewer & GitHub Analyzer",
     template: "%s | DevRoast AI",

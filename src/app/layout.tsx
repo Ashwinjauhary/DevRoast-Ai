@@ -41,6 +41,9 @@ export const metadata: Metadata = {
   authors: [{ name: "DevRoast AI Team" }],
   creator: "DevRoast AI",
   publisher: "DevRoast AI",
+  verification: {
+    google: "6tL5BnCXfeKk0mb3gEPf62HjgG-Ad-lB49u1wWjMeKA",
+  },
   formatDetection: {
     email: false,
     address: false,

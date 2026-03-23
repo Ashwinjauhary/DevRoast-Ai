@@ -12,14 +12,14 @@ export function WebsiteJsonLd() {
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "DevRoast AI",
-          url: "https://devroast.ai",
+          url: "https://dev-roast-ai-sand.vercel.app/",
           description:
             "The world's best AI-powered code reviewer and GitHub profile analyzer. Get brutal, constructive AI code roasts to improve your developer skills.",
           potentialAction: {
             "@type": "SearchAction",
             target: {
               "@type": "EntryPoint",
-              urlTemplate: "https://devroast.ai/?q={search_term_string}",
+              urlTemplate: "https://dev-roast-ai-sand.vercel.app/?q={search_term_string}",
             },
             "query-input": "required name=search_term_string",
           },
@@ -56,7 +56,7 @@ export function SoftwareAppJsonLd() {
           author: {
             "@type": "Person",
             name: "Ashwin Jauhary",
-            url: "https://devroast.ai/developer",
+            url: "https://dev-roast-ai-sand.vercel.app/developer",
           },
         }),
       }}

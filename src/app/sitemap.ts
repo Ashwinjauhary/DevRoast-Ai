@@ -3,19 +3,19 @@ import type { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://devroast.ai",
+      url: "https://dev-roast-ai-sand.vercel.app/",
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
     },
     {
-      url: "https://devroast.ai/terms",
+      url: "https://dev-roast-ai-sand.vercel.app/terms",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: "https://devroast.ai/privacy",
+      url: "https://dev-roast-ai-sand.vercel.app/privacy",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,

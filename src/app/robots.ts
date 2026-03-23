@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/dashboard/", "/api/"], // Usually, we don't want dashboard indexed
     },
-    sitemap: "https://devroast.ai/sitemap.xml",
+    sitemap: "https://dev-roast-ai-sand.vercel.app/sitemap.xml",
   };
 }

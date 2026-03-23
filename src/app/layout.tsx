@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "DevRoast AI - Roast Your Code. Elevate Your GitHub.",
     description: "Discover the world's best AI code reviewer. Get your GitHub repositories brutally roasted and improved by DevRoast AI.",
-    url: "https://devroast.ai",
+    url: "https://dev-roast-ai-sand.vercel.app/",
     siteName: "DevRoast AI",
     images: [
       {

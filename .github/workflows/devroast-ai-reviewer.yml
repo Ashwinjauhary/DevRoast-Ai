@@ -21,7 +21,7 @@ jobs:
           echo "Triggering DevRoast for PR $PR_NUMBER..."
           
           # Hit the public/cloud version of DevRoast AI engine
-          RESPONSE=$(curl -s -X POST "https://devroast.ai/api/analyze/engine-repo" \
+          RESPONSE=$(curl -s -X POST "https://dev-roast-ai-sand.vercel.app/api/analyze/engine-repo" \
             -H "Content-Type: application/json" \
             -d "{\"owner\": \"${REPO%/*}\", \"repo\": \"${REPO#*/}\"}")
             

@@ -88,7 +88,11 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.png",
+    icon: [
+      { url: "/icon.png" },
+      { url: "/logo.png", media: "(prefers-color-scheme: light)" },
+    ],
+    shortcut: "/icon.png",
     apple: "/icon.png",
   },
   appleWebApp: {

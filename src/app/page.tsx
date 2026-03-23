@@ -386,7 +386,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
           <div className="flex items-center gap-3 mb-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">
             <TerminalSquare className="w-8 h-8 text-white" />
-            <span className="font-black tracking-tighter text-2xl text-white">DEVROAST.AI</span>
+            <span className="font-black tracking-tighter text-2xl text-white">DevRoast AI</span>
           </div>
           <p className="text-base max-w-md mx-auto leading-relaxed mb-16 font-medium italic">
             Engineered to destroy egos and elevate codebases. Proceed at your own risk.

@@ -18,7 +18,7 @@ export default function PrivacyPage() {
                 <div className="container mx-auto px-6 h-20 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2 group">
                         <TerminalSquare className="w-6 h-6 text-primary" />
-                        <span className="font-black tracking-tighter text-white">DEVROAST.AI</span>
+                        <span className="font-black tracking-tighter text-white">DevRoast AI</span>
                     </Link>
                     <Link href="/auth/signin" className="text-xs font-black uppercase tracking-widest hover:text-white transition-colors">
                         Authenticate
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
             </main>
 
             <footer className="relative z-10 border-t border-white/5 py-12 text-center text-xs font-black uppercase tracking-[0.2em] text-zinc-600">
-                &copy; 2026 DEVROAST AI. ROAST WITH CAUTION.
+                &copy; 2026 DevRoast AI. ROAST WITH CAUTION.
             </footer>
         </div>
     );

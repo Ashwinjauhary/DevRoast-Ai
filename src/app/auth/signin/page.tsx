@@ -1,5 +1,10 @@
 "use client";
 
+// Note: metadata must be in a server component (parent layout or a dedicated server wrapper).
+// We keep this client component as-is; SEO metadata is inherited from root layout.
+// Per-page SEO for /auth/signin is handled by adding a generateMetadata to a
+// server page wrapper if needed. Current layout title template covers this.
+
 import { signIn } from "next-auth/react";
 import { Github, Play, TerminalSquare, AlertCircle, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";

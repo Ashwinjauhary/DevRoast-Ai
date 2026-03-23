@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { TerminalSquare, ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "DevRoast AI Privacy Policy: Learn what data we collect (GitHub public profile, OAuth info), how we use it to power AI code review, and your rights over your data.",
+};
+
 
 export default function PrivacyPage() {
     return (

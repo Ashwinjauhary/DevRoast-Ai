@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Code2, TerminalSquare, ArrowRight, Shield, GitBranch, Cpu, Star, Sparkles, Menu, X } from "lucide-react";
+import { Github, TerminalSquare, ArrowRight, Shield, GitBranch, Cpu, Star, Sparkles, Menu, X } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { NeuralBg } from "@/components/ui/neural-bg";
+import { WebsiteJsonLd, SoftwareAppJsonLd, FAQJsonLd } from "@/components/seo/json-ld";
 import React, { useState } from "react";
 import Image from "next/image";
 
@@ -16,6 +17,9 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-primary/30">
+      <WebsiteJsonLd />
+      <SoftwareAppJsonLd />
+      <FAQJsonLd />
 
       {/* Immersive Background */}
       <motion.div
@@ -149,6 +153,7 @@ export default function LandingPage() {
           <div className="space-y-8 relative">
             <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[80vw] h-40 bg-primary/20 blur-[100px] rounded-[100%] pointer-events-none" />
 
+            <h1 aria-label="AI Code Reviewer - Architectural Destruction. Elevated Intelligence." className="sr-only">DevRoast AI: The Best AI Code Reviewer &amp; GitHub Profile Analyzer</h1>
             <AnimatedText
               text="ARCHITECTURAL DESTRUCTION."
               className="text-[11vw] md:text-[8rem] lg:text-[9rem] font-black tracking-tighter leading-[0.85] text-white mix-blend-overlay opacity-90 block"

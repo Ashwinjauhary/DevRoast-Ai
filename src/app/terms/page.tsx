@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { TerminalSquare, ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Read the DevRoast AI Terms of Service. By using DevRoast AI, you agree to these terms governing AI code review, roast analysis, and GitHub profile usage.",
+};
+
 
 export default function TermsPage() {
     return (

@@ -40,7 +40,7 @@ export function SoftwareAppJsonLd() {
           name: "DevRoast AI",
           applicationCategory: "DeveloperApplication",
           operatingSystem: "Web",
-          url: "https://devroast.ai",
+          url: "https://dev-roast-ai-sand.vercel.app/",
           description:
             "AI-powered code review, GitHub profile analysis, commit auditing, and developer scoring tool.",
           offers: {

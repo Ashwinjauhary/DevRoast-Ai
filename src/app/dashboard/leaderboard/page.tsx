@@ -27,7 +27,7 @@ export default async function LeaderboardPage() {
     });
 
     // Keep only the highest score per user
-    const userBestScores = new Map<string, any>();
+    const userBestScores = new Map<string, (typeof allProfileAnalyses)[number]>();
     for (const analysis of allProfileAnalyses) {
         if (!analysis.user) continue;
         const userId = analysis.user_id;
@@ -45,7 +45,7 @@ export default async function LeaderboardPage() {
             id: a.id,
             userId: a.user_id,
             name: a.user.name || a.user.github_username || "Unknown Dev",
-            username: a.user.github_username,
+            username: a.user.github_username || "unknown",
             image: a.user.image,
             score: a.score,
             date: a.created_at

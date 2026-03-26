@@ -20,12 +20,22 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dev-roast-ai-sand.vercel.app/"),
+  applicationName: "DevRoast AI",
   title: {
-    default: "DevRoast AI | Best AI Code Reviewer & GitHub Analyzer",
+    default: "DevRoast AI - The World's #1 AI GitHub Roaster & Code Analyzer",
     template: "%s | DevRoast AI",
   },
-  description: "Level up your GitHub profile with DevRoast AI. Get brutal AI-powered code roasts, automated PR reviews, commit audits, and developer analytics to write better code.",
+  description: "The world's #1 AI GitHub roaster. Get brutal AI-powered code reviews, automated PR audits, and developer analytics to dominate your tech career.",
+  alternates: {
+    canonical: "https://dev-roast-ai-sand.vercel.app/",
+  },
+  category: "technology",
   keywords: [
+    "dev",
+    "roast",
+    "ai",
+    "devroast",
+    "devroast ai",
     "AI code review",
     "GitHub roaster",
     "developer portfolio",
@@ -40,13 +50,14 @@ export const metadata: Metadata = {
     "tech career audit",
     "best AI code reviewer",
     "brutally honest AI",
-    "devroast ai",
     "GitHub analysis tool",
     "developer profile audit",
     "software architect portfolio",
     "GitHub portfolio enhancer",
     "best AI coding assistant",
-    "AI repository analyzer"
+    "AI repository analyzer",
+    "roast my code",
+    "roast my github"
   ],
   authors: [{ name: "DevRoast AI Team" }],
   creator: "DevRoast AI",
@@ -61,7 +72,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "DevRoast AI - Roast Your Code. Elevate Your GitHub.",
-    description: "Discover the world's best AI code reviewer. Get your GitHub repositories brutally roasted and improved by DevRoast AI.",
+    description: "The world's #1 AI code reviewer. Get your GitHub repositories brutally roasted and improved by DevRoast AI. Stop writing garbage code.",
     url: "https://dev-roast-ai-sand.vercel.app/",
     siteName: "DevRoast AI",
     images: [
@@ -69,11 +80,18 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "DevRoast AI - AI Code Reviewer",
+        alt: "DevRoast AI - The Brutal AI Code Reviewer",
       },
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevRoast AI - Roast Your GitHub Profile",
+    description: "Is your code actually good or are you just lucky? Let DevRoast AI rip apart your GitHub and tell you the truth.",
+    images: ["/og-image.png"],
+    creator: "@AshwinJauhary",
   },
   robots: {
     index: true,
@@ -99,6 +117,10 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "DevRoast AI",
+  },
+  other: {
+    "apple-mobile-web-app-title": "DevRoast AI",
+    "classification": "AI Developer Tool",
   },
 };
 

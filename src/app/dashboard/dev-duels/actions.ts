@@ -5,6 +5,11 @@ import { generateProfileAnalysis } from "@/lib/sambanova";
 
 const GITHUB_API = "https://api.github.com";
 
+interface Analysis {
+    score: number;
+    roastLines: string[];
+}
+
 async function fetchGitHubProfile(username: string, token?: string) {
     const headers: HeadersInit = {
         Accept: "application/vnd.github.v3+json",
@@ -31,8 +36,8 @@ async function fetchGitHubProfile(username: string, token?: string) {
         public_repos: data.public_repos,
         created_at: data.created_at,
         avatar_url: data.avatar_url,
-        total_stars: repos.reduce((acc: number, r: any) => acc + (r.stargazers_count || 0), 0),
-        top_languages: Array.from(new Set(repos.map((r: any) => r.language).filter(Boolean))).slice(0, 5),
+        total_stars: repos.reduce((acc: number, r: { stargazers_count?: number }) => acc + (r.stargazers_count || 0), 0),
+        top_languages: Array.from(new Set(repos.map((r: { language?: string }) => r.language).filter(Boolean))).slice(0, 5) as string[],
         recent_events_count: events.length,
         account_age_days: Math.floor((Date.now() - new Date(data.created_at).getTime()) / (1000 * 60 * 60 * 24)),
     };
@@ -40,7 +45,7 @@ async function fetchGitHubProfile(username: string, token?: string) {
 
 export async function performDuel(user1: string, user2: string) {
     const session = await auth();
-    const token = (session?.user as any)?.accessToken;
+    const token = (session?.user as { accessToken?: string })?.accessToken;
 
     try {
         const [data1, data2] = await Promise.all([
@@ -49,8 +54,8 @@ export async function performDuel(user1: string, user2: string) {
         ]);
 
         const [analysis1, analysis2] = await Promise.all([
-            generateProfileAnalysis(data1),
-            generateProfileAnalysis(data2)
+            generateProfileAnalysis(data1) as Promise<Analysis>,
+            generateProfileAnalysis(data2) as Promise<Analysis>
         ]);
 
         // SambaNova decides the winner based on the technical depth and roast quality
@@ -98,8 +103,9 @@ export async function performDuel(user1: string, user2: string) {
             },
             result: duelResult
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Duel failed";
         console.error("Duel Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }

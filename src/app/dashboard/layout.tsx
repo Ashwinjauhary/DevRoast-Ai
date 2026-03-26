@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { NeuralBg } from "@/components/ui/neural-bg";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 
 export default function DashboardLayout({
     children,

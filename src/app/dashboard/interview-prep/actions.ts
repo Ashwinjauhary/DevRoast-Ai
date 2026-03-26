@@ -9,5 +9,5 @@ export async function getInterviewQuestions(weaknesses: string[], techStack: str
     try {
         const questions = await generateInterviewQuestions(weaknesses, techStack);
         return { questions };
-    } catch (e: any) { return { error: e.message }; }
+    } catch (e: unknown) { return { error: e instanceof Error ? e.message : "An unknown error occurred" }; }
 }

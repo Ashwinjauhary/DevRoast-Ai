@@ -7,13 +7,39 @@ import { revalidatePath } from "next/cache";
 
 const GITHUB_API = "https://api.github.com";
 
-async function getHeaders() {
+export interface GitHubRepository {
+    id: number;
+    name: string;
+    full_name: string;
+    description: string | null;
+    private: boolean;
+    html_url: string;
+    language: string | null;
+    fork: boolean;
+    default_branch: string;
+    size: number;
+    stargazers_count: number;
+    forks_count: number;
+    updated_at: string;
+    created_at: string;
+    archived: boolean;
+    homepage: string | null;
+    open_issues_count: number;
+    owner: {
+        login: string;
+        avatar_url: string;
+    };
+    topics?: string[];
+}
+
+async function getHeaders(): Promise<Record<string, string> | undefined> {
     const session = await auth();
-    if (!session?.user?.accessToken) {
+    const token = (session?.user as { accessToken?: string })?.accessToken;
+    if (!token) {
         return undefined;
     }
     return {
-        Authorization: `Bearer ${session.user.accessToken}`,
+        Authorization: `Bearer ${token}`,
         Accept: "application/vnd.github.v3+json",
         "X-GitHub-Api-Version": "2022-11-28",
     };
@@ -29,7 +55,7 @@ export async function fetchRepositories() {
         }
         
         console.log("[GITHUB-ACTIONS] Fetching repos with headers: OK");
-        let allRepos: any[] = [];
+        let allRepos: GitHubRepository[] = [];
         let page = 1;
         let hasMore = true;
 
@@ -46,7 +72,7 @@ export async function fetchRepositories() {
                 throw new Error(`GitHub API error: ${response.status} ${response.statusText}. Details: ${errorText.substring(0, 100)}`);
             }
 
-            const data = await response.json();
+            const data = (await response.json()) as GitHubRepository[];
 
             if (!Array.isArray(data) || data.length === 0) {
                 hasMore = false;
@@ -61,9 +87,10 @@ export async function fetchRepositories() {
         const uniqueRepos = Array.from(new Map(allRepos.map(repo => [repo.id, repo])).values());
 
         return { success: true, data: uniqueRepos };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("[GITHUB-ACTIONS] Fatal error in fetchRepositories:", error);
-        return { success: false, error: error.message || "An unexpected error occurred while fetching repositories." };
+        return { success: false, error: message || "An unexpected error occurred while fetching repositories." };
     }
 }
 
@@ -85,12 +112,13 @@ export async function createRepository(data: { name: string; description?: strin
             throw new Error(`GitHub API error: ${errorBody.message || response.statusText}`);
         }
 
-        const newRepo = await response.json();
+        const newRepo = (await response.json()) as GitHubRepository;
         revalidatePath("/dashboard/repositories");
         return { success: true, data: newRepo };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("Error creating repository:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
@@ -112,12 +140,13 @@ export async function updateRepository(owner: string, repo: string, data: { name
             throw new Error(`GitHub API error: ${errorBody.message || response.statusText}`);
         }
 
-        const updatedRepo = await response.json();
+        const updatedRepo = (await response.json()) as GitHubRepository;
         revalidatePath("/dashboard/repositories");
         return { success: true, data: updatedRepo };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("Error updating repository:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
@@ -138,9 +167,10 @@ export async function deleteRepository(owner: string, repo: string) {
         // DELETE usually returns 204 No Content
         revalidatePath("/dashboard/repositories");
         return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("Error deleting repository:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
@@ -152,7 +182,7 @@ export async function autoImproveDescription(owner: string, repo: string) {
         // 1. Fetch current repository details
         const repoResponse = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers });
         if (!repoResponse.ok) throw new Error("Failed to fetch repository details");
-        const repoData = await repoResponse.json();
+        const repoData = (await repoResponse.json()) as GitHubRepository;
 
         // 2. Fetch current README (if any)
         const readmeResponse = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/readme`, { headers });
@@ -171,13 +201,13 @@ export async function autoImproveDescription(owner: string, repo: string) {
             if (treeResponse.ok) {
                 const treeData = await treeResponse.json();
                 if (treeData.tree && Array.isArray(treeData.tree)) {
-                    const allBlobs = treeData.tree.filter((item: any) => item.type === "blob");
-                    const files = allBlobs.map((item: any) => item.path).slice(0, 50);
+                    const allBlobs = (treeData.tree as { type: string; path: string }[]).filter((item) => item.type === "blob");
+                    const files = allBlobs.map((item) => item.path).slice(0, 50);
                     fileTree = files.join("\n");
 
                     // Get contents of up to 3 important feeling files
                     const contentExtensions = ['.js', '.ts', '.jsx', '.tsx', '.py', '.html', '.css', '.rs', '.go', '.java', '.php', '.rb'];
-                    const interestingFiles = allBlobs.filter((item: any) => contentExtensions.some(ext => item.path.endsWith(ext))).slice(0, 3);
+                    const interestingFiles = allBlobs.filter((item) => contentExtensions.some(ext => item.path.endsWith(ext))).slice(0, 3);
 
                     for (const file of interestingFiles) {
                         if (!headers) continue;
@@ -229,11 +259,12 @@ Current README Context: ${currentReadme.substring(0, 2000)}...
         });
         if (!updateDescRes.ok) throw new Error(`Failed to update description: ${await updateDescRes.text()}`);
         
-        const updatedRepo = await updateDescRes.json();
+        const updatedRepo = (await updateDescRes.json()) as GitHubRepository;
         return { success: true, message: "Description successfully updated!", data: updatedRepo };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("Error improving repo description:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
@@ -245,7 +276,7 @@ export async function autoImproveReadme(owner: string, repo: string) {
         // 1. Fetch current repository details
         const repoResponse = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers });
         if (!repoResponse.ok) throw new Error("Failed to fetch repository details");
-        const repoData = await repoResponse.json();
+        const repoData = (await repoResponse.json()) as GitHubRepository;
 
         // 2. Fetch current README (if any)
         const readmeResponse = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/readme`, { headers });
@@ -265,9 +296,9 @@ export async function autoImproveReadme(owner: string, repo: string) {
             if (treeResponse.ok) {
                 const treeData = await treeResponse.json();
                 if (treeData.tree && Array.isArray(treeData.tree)) {
-                    const files = treeData.tree
-                        .filter((item: any) => item.type === "blob")
-                        .map((item: any) => item.path)
+                    const files = (treeData.tree as { type: string; path: string }[])
+                        .filter((item) => item.type === "blob")
+                        .map((item) => item.path)
                         .slice(0, 50);
                     fileTree = files.join("\n");
                 }
@@ -304,7 +335,7 @@ Context:\n\n${repoContext}`;
         }
 
         // 4. Commit new README to GitHub
-        const readmeBody: any = {
+        const readmeBody: { message: string; content: string; sha?: string } = {
             message: "docs(readme): auto-generated beautiful README by AI ✨",
             content: Buffer.from(newReadme).toString('base64'),
         };
@@ -320,9 +351,10 @@ Context:\n\n${repoContext}`;
         }
 
         return { success: true, message: "README updated successfully!" };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("Error generating README:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
@@ -344,7 +376,10 @@ export async function autoFixAnyRepository(owner: string, repo: string) {
                 if (treeRes.ok) {
                     const treeData = await treeRes.json();
                     if (treeData.tree) {
-                        fileTree = treeData.tree.filter((item: any) => item.type === "blob").map((item: any) => item.path).join("\n");
+                        fileTree = (treeData.tree as { type: string; path: string }[])
+                            .filter((item) => item.type === "blob")
+                            .map((item) => item.path)
+                            .join("\n");
                     }
                 }
             }
@@ -366,7 +401,7 @@ File Tree: \n${fileTree.substring(0, 3000)}`;
             const jsonText = jsonMatch ? jsonMatch[0] : selectedFilesTextRaw;
             filesToFix = JSON.parse(jsonText.trim());
             if (!Array.isArray(filesToFix)) filesToFix = [];
-        } catch (e) {
+        } catch {
             console.error("AI returned malformed file list:", selectedFilesTextRaw);
             // Fallback: try to find anything that looks like a path in the tree
             const lines = selectedFilesTextRaw.split('\n');
@@ -432,8 +467,9 @@ Original Code:\n\n${scanResult.cleanText}`;
         }
 
         return { success: true, message: `Successfully opened ${filesRewritten} Auto-Fix issues in the repository!` };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
         console.error("AutoFix Repository Error:", error);
-        return { success: false, error: error.message || "An unexpected error occurred." };
+        return { success: false, error: message || "An unexpected error occurred." };
     }
 }

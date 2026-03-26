@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getSnippets, deleteSnippet, saveSnippet, updateSnippet } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { Save, Trash2, Copy, Plus, X, Code2, Pencil, ChevronDown, Check } from "lucide-react";
@@ -8,8 +8,17 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const LANGUAGES = ["JavaScript", "TypeScript", "Python", "Java", "C++", "Go", "Rust", "PHP", "Ruby", "SQL", "Bash", "Other"];
 
+interface Snippet {
+    id: string;
+    title: string;
+    code: string;
+    language: string;
+    notes?: string | null;
+    created_at: string | Date;
+}
+
 export default function SnippetVaultPage() {
-    const [snippets, setSnippets] = useState<any[]>([]);
+    const [snippets, setSnippets] = useState<Snippet[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editId, setEditId] = useState<string | null>(null);
@@ -18,7 +27,17 @@ export default function SnippetVaultPage() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => { load(); }, []);
+    const load = useCallback(async () => {
+        setLoading(true);
+        const data = await getSnippets();
+        if (data.snippets) setSnippets(data.snippets);
+        setLoading(false);
+    }, []);
+
+    useEffect(() => { 
+        const timer = setTimeout(() => load(), 0);
+        return () => clearTimeout(timer);
+    }, [load]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -30,12 +49,6 @@ export default function SnippetVaultPage() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    async function load() {
-        setLoading(true);
-        const data = await getSnippets();
-        if (data.snippets) setSnippets(data.snippets);
-        setLoading(false);
-    }
 
     async function handleSave() {
         if (!form.title || !form.code) return;
@@ -55,7 +68,7 @@ export default function SnippetVaultPage() {
         setSnippets(prev => prev.filter(s => s.id !== id));
     }
 
-    function handleEdit(snippet: any) {
+    function handleEdit(snippet: Snippet) {
         setForm({
             title: snippet.title,
             code: snippet.code,

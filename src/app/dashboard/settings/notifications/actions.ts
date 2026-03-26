@@ -15,7 +15,7 @@ export async function updateNotificationPrefs(prefs: Record<string, boolean>) {
     const session = await auth();
     if (!session?.user?.id) return { error: "Unauthorized" };
 
-    await (prisma.user as any).update({
+    await prisma.user.update({
         where: { id: session.user.id },
         data: { notifications: prefs }
     });
@@ -28,7 +28,7 @@ export async function getNotificationPrefs() {
     const session = await auth();
     if (!session?.user?.id) return DEFAULT_PREFS;
 
-    const user = await (prisma.user as any).findUnique({
+    const user = await prisma.user.findUnique({
         where: { id: session.user.id },
         select: { notifications: true }
     });

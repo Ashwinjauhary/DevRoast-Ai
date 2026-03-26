@@ -11,11 +11,17 @@ const STACKS = ["React", "Node.js", "Python", "Java", "TypeScript", "Go", "AWS",
 
 const DIFF_COLORS = { easy: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20", medium: "text-amber-400 bg-amber-500/10 border-amber-500/20", hard: "text-red-400 bg-red-500/10 border-red-500/20" };
 
+interface InterviewQuestion {
+    question: string;
+    hint: string;
+    difficulty: "easy" | "medium" | "hard";
+}
+
 export default function InterviewPrepPage() {
     const [weaknesses, setWeaknesses] = useState<string[]>([]);
     const [techStack, setTechStack] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
-    const [questions, setQuestions] = useState<any[]>([]);
+    const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
     const [openIdx, setOpenIdx] = useState<number | null>(null);
 
     function toggle(arr: string[], item: string, set: (v: string[]) => void) {
@@ -28,7 +34,7 @@ export default function InterviewPrepPage() {
         const data = await getInterviewQuestions(weaknesses, techStack);
         setLoading(false);
         if (data.error) toast.error(data.error);
-        else setQuestions(Array.isArray(data.questions) ? data.questions : []);
+        else setQuestions(Array.isArray(data.questions) ? data.questions as InterviewQuestion[] : []);
     }
 
     return (

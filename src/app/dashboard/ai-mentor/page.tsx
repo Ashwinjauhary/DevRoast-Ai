@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -56,7 +55,7 @@ export default function AiMentorPage() {
             } else {
                 throw new Error("Invalid intelligence format.");
             }
-        } catch (err) {
+        } catch {
             setMessages(prev => [...prev, { role: "assistant", content: "I encountered an error processing your request. Even the AI is struggling with this logic. Please try again." }]);
         } finally {
             setLoading(false);

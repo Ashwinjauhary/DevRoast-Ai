@@ -7,12 +7,13 @@ import { AnimatedText } from "@/components/ui/animated-text";
 import { Button } from "@/components/ui/button";
 import { 
     Swords, Trophy, Skull, Zap, Loader2, 
-    ArrowRight, Github, Star, Users, Code,
-    Skull as SkullIcon, ShieldAlert, Sparkles,
+    Github, Star, Users, Code,
+    Skull as SkullIcon, ShieldAlert,
     Flame
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
+import Image from "next/image";
 
 interface DuelPlayer {
     login: string;
@@ -195,7 +196,14 @@ export default function DevDuelsPage() {
                                     >
                                         <PremiumCard glowColor={isWinner ? "accent" : "none"} className={!isWinner ? "opacity-60 saturate-50" : ""}>
                                             <div className="flex items-center gap-6 mb-8">
-                                                <img src={player.avatar_url} className="w-20 h-20 rounded-2xl border-2 border-white/10" alt="" />
+                                            <div className="w-20 h-20 relative shrink-0">
+                                                <Image 
+                                                    src={player.avatar_url} 
+                                                    fill 
+                                                    className="rounded-2xl border-2 border-white/10 object-cover" 
+                                                    alt={player.login} 
+                                                />
+                                            </div>
                                                 <div>
                                                     <h3 className="text-2xl font-black text-white">@{player.login}</h3>
                                                     <div className="flex gap-2 mt-1">

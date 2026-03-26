@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     if (!org) return NextResponse.json({ error: "org parameter required" }, { status: 400 });
 
     try {
-        const token = (session?.user as any)?.accessToken;
+        const token = (session?.user as { accessToken?: string })?.accessToken;
         const headers: HeadersInit = {
             Accept: "application/vnd.github.v3+json",
             ...(token && { Authorization: `Bearer ${token}` }),
@@ -36,7 +36,19 @@ export async function GET(request: Request) {
 
         // Analyze each repo (limited to avoid rate limits)
         const results = await Promise.all(
-            repos.slice(0, 6).map(async (repo: any) => {
+            repos.slice(0, 6).map(async (repo: { 
+                name: string; 
+                full_name: string; 
+                description: string | null; 
+                stargazers_count: number; 
+                forks_count: number; 
+                open_issues_count: number; 
+                language: string; 
+                languages_url: string;
+                has_issues: boolean;
+                updated_at: string;
+                license: { name: string } | null;
+            }) => {
                 try {
                     const langRes = await fetch(repo.languages_url, { headers });
                     const languages = langRes.ok ? await langRes.json() : {};
@@ -76,7 +88,8 @@ export async function GET(request: Request) {
             worst,
             repos: results,
         });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "An unexpected error occurred";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

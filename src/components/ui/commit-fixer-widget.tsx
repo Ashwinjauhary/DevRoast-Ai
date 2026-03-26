@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { GitCommit, Settings2, RefreshCcw, Check, Copy, Wand2, AlertCircle } from "lucide-react";
-import { fetchRecentCommits, suggestCommitFixes, applyCommitFix } from "@/app/dashboard/commits/actions";
+import { GitCommit, Settings2, RefreshCcw, Check, Copy, Wand2 } from "lucide-react";
+import { fetchRecentCommits, suggestCommitFixes, applyCommitFix, type GitHubCommit } from "@/app/dashboard/commits/actions";
 import { AnimatePresence, motion } from "framer-motion";
 
+interface CommitFix { sha: string; suggested: string }
+
 export function CommitFixerWidget() {
-    const [commits, setCommits] = useState<any[]>([]);
-    const [fixes, setFixes] = useState<any[]>([]);
+    const [commits, setCommits] = useState<GitHubCommit[]>([]);
+    const [fixes, setFixes] = useState<CommitFix[]>([]);
     const [loading, setLoading] = useState(true);
     const [fixing, setFixing] = useState(false);
     const [applyingSha, setApplyingSha] = useState<string | null>(null);
@@ -34,7 +36,7 @@ export function CommitFixerWidget() {
         setFixing(false);
     };
 
-    const handleApplyCommitFix = async (commit: any, newMessage: string) => {
+    const handleApplyCommitFix = async (commit: GitHubCommit, newMessage: string) => {
         if (!commit.branch) {
             toast.error("Branch information is missing for this commit.");
             return;
@@ -59,8 +61,12 @@ export function CommitFixerWidget() {
     };
 
     useEffect(() => {
-        setMounted(true);
-        loadCommits();
+        // Use setTimeout to avoid synchronous setState inside effect
+        const timer = setTimeout(() => {
+            setMounted(true);
+            loadCommits();
+        }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     if (!mounted) return (

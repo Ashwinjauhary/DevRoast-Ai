@@ -9,5 +9,5 @@ export async function getBranchNames(description: string) {
     try {
         const branches = await generateBranchName(description);
         return { branches };
-    } catch (e: any) { return { error: e.message }; }
+    } catch (e: unknown) { return { error: e instanceof Error ? e.message : "Failed to generate branch name" }; }
 }

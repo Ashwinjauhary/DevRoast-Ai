@@ -5,7 +5,15 @@ import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
 
 const GITHUB_API = "https://api.github.com";
 
-export async function fetchRecentCommits() {
+export interface GitHubCommit {
+    sha: string;
+    message: string;
+    repo: string;
+    branch: string;
+    url: string;
+}
+
+export async function fetchRecentCommits(): Promise<{ success: boolean; commits?: GitHubCommit[]; error?: string }> {
     const session = await auth();
     if (!session?.user?.id || !session.user.accessToken) {
         return { success: false, error: "Unauthorized" };
@@ -13,7 +21,7 @@ export async function fetchRecentCommits() {
 
     // Get the user's Github login. If not in session, fetch user profile first.
     // Assuming session.user contains the github login. If not, we have to look it up.
-    let username = (session.user as any).github_username;
+    let username = session.user.github_username as string | undefined;
     console.log("[COMMITS] Fetching for user:", username);
 
     if (!username) {
@@ -46,24 +54,31 @@ export async function fetchRecentCommits() {
             throw new Error(`Failed to fetch events from GitHub: ${res.status}`);
         }
 
-        const events = await res.json();
+        const events = await res.json() as { 
+            type: string; 
+            payload?: { 
+                commits?: { sha: string; message: string }[]; 
+                ref?: string;
+            };
+            repo: { name: string };
+        }[];
         console.log(`[COMMITS] Found ${events.length} total events`);
         
-        const pushEvents = events.filter((e: any) => e.type === "PushEvent");
+        const pushEvents = events.filter(e => e.type === "PushEvent");
         console.log(`[COMMITS] Found ${pushEvents.length} push events`);
 
-        let recentCommits: any[] = [];
+        const recentCommits: GitHubCommit[] = [];
 
         // Extract commits from PushEvents
-        pushEvents.forEach((event: any) => {
+        pushEvents.forEach(event => {
             if (event.payload && event.payload.commits) {
-                event.payload.commits.forEach((commit: any) => {
+                event.payload.commits.forEach(commit => {
                     if (!commit.message.startsWith("Merge") && commit.message.length >= 3) {
                         recentCommits.push({
                             sha: commit.sha,
                             message: commit.message,
                             repo: event.repo.name,
-                            branch: event.payload.ref?.replace("refs/heads/", ""),
+                            branch: event.payload?.ref?.replace("refs/heads/", "") || "main",
                             url: `https://github.com/${event.repo.name}/commit/${commit.sha}`
                         });
                     }
@@ -80,7 +95,7 @@ export async function fetchRecentCommits() {
             });
             
             if (reposRes.ok) {
-                const repos = await reposRes.json();
+                const repos = await reposRes.json() as { full_name: string; default_branch: string }[];
                 for (const repo of repos) {
                     console.log(`[COMMITS] Checking fallback repo: ${repo.full_name}`);
                     const commitsRes = await fetch(`${GITHUB_API}/repos/${repo.full_name}/commits?per_page=3`, {
@@ -88,8 +103,8 @@ export async function fetchRecentCommits() {
                         cache: "no-store"
                     });
                     if (commitsRes.ok) {
-                        const commits = await commitsRes.json();
-                        commits.forEach((c: any) => {
+                        const commits = await commitsRes.json() as { sha: string; commit: { message: string }; html_url: string }[];
+                        commits.forEach(c => {
                             if (c.commit && !c.commit.message.startsWith("Merge") && c.commit.message.length >= 3) {
                                 recentCommits.push({
                                     sha: c.sha,
@@ -108,13 +123,14 @@ export async function fetchRecentCommits() {
         // Take up to 5 unique commits to analyze
         const uniqueCommits = Array.from(new Map(recentCommits.map(c => [c.sha, c])).values());
         return { success: true, commits: uniqueCommits.slice(0, 5) };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
         console.error("Fetch Recent Commits Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
-export async function suggestCommitFixes(commits: any[]) {
+export async function suggestCommitFixes(commits: GitHubCommit[]) {
     if (!commits || commits.length === 0) return { success: false, error: "No commits provided" };
 
     // Check if they are already conventional
@@ -128,32 +144,19 @@ export async function suggestCommitFixes(commits: any[]) {
 
     const unformattedLogs = commitsToFix.map(c => `[${c.sha}] ${c.message}`).join("\n");
 
-    const prompt = `You are a strict Open-Source Maintainer enforcing 'Conventional Commits'.
-Review the following recent raw commit messages and rewrite them to perfectly match the 'Conventional Commits' specification (e.g. feat:, fix:, chore:, docs:).
-
-Raw Commits:
-${unformattedLogs}
-
-Output ONLY valid JSON matching this schema:
-{
-  "fixedCommits": [
-    {
-       "sha": "full_sha_here",
-       "suggested": "feat(ui): add new interactive button to dashboard"
-    }
-  ]
-}`;
+    const prompt = `You are a strict Open-Source Maintainer enforcing 'Conventional Commits'. Review the commits. JSON: { "fixedCommits": [ { "sha": string, "suggested": string } ] }\n\nLogs:\n${unformattedLogs}`;
 
     try {
-        let aiResponse = await getSambaNovaResponse(prompt);
+        const aiResponse = await getSambaNovaResponse(prompt);
         // Clean markdown
-        if (aiResponse.startsWith("\`\`\`json")) aiResponse = aiResponse.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
-        else if (aiResponse.startsWith("\`\`\`")) aiResponse = aiResponse.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
+        let clean = aiResponse.trim();
+        if (clean.startsWith("\`\`\`json")) clean = clean.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
+        else if (clean.startsWith("\`\`\`")) clean = clean.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
 
-        const result = JSON.parse(aiResponse.trim());
+        const result = JSON.parse(clean);
 
         // Merge AI suggestions with the sha/url context
-        const finalFixes = result.fixedCommits.map((fix: any) => {
+        const finalFixes = (result.fixedCommits as { sha: string; suggested: string }[]).map(fix => {
             const originalCommit = commitsToFix.find(c => c.sha === fix.sha);
             return {
                 ...fix,
@@ -165,7 +168,7 @@ Output ONLY valid JSON matching this schema:
         });
 
         return { success: true, fixedCommits: finalFixes };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Suggest Commit Fixes Error:", error);
         return { success: false, error: "AI failed to parse commits" };
     }
@@ -186,7 +189,7 @@ export async function applyCommitFix(repo: string, branch: string, sha: string, 
         const headSha = refData.object.sha;
 
         if (headSha !== sha) {
-            return { success: false, error: "Only the latest commit on a branch can be auto-fixed currently. Please rebase manually for older commits." };
+            return { success: false, error: "Only the latest commit on a branch can be auto-fixed." };
         }
 
         // 2. Get the commit object to find parent and tree
@@ -206,7 +209,7 @@ export async function applyCommitFix(repo: string, branch: string, sha: string, 
             body: JSON.stringify({
                 message: newMessage,
                 tree: commitData.tree.sha,
-                parents: commitData.parents.map((p: any) => p.sha)
+                parents: (commitData.parents as { sha: string }[]).map(p => p.sha)
             })
         });
 
@@ -229,8 +232,9 @@ export async function applyCommitFix(repo: string, branch: string, sha: string, 
         if (!updateRefRes.ok) throw new Error("Failed to update branch reference");
 
         return { success: true, newSha: newCommitData.sha };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
         console.error("Apply Commit Fix Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }

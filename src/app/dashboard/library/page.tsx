@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getSnippets, deleteSnippet, saveSnippet, updateSnippet } from "../snippet-vault/actions";
 import { getLibraryAssets, saveLibraryAsset, updateLibraryAsset, deleteLibraryAsset, getCloudinarySignature } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { 
     Save, Trash2, Copy, Plus, X, Code2, Pencil, 
     ChevronDown, Check, FileText, Trophy, BookOpen, 
-    ExternalLink, Upload, ImageIcon, Cpu
+    ExternalLink, Upload, Cpu
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const LANGUAGES = ["JavaScript", "TypeScript", "Python", "Java", "C++", "Go", "Rust", "PHP", "Ruby", "SQL", "Bash", "Other"];
 const TABS = [
@@ -17,6 +18,24 @@ const TABS = [
     { id: "notes", label: "Neural Notes", icon: FileText, desc: "Developer logs & research" },
     { id: "achievements", label: "Certificates", icon: Trophy, desc: "Professional proof of work" }
 ];
+
+interface Snippet {
+    id: string;
+    title: string;
+    code: string;
+    language: string;
+    notes?: string | null;
+    created_at: string | Date;
+}
+
+interface LibraryAsset {
+    id: string;
+    type: "NOTE" | "CERTIFICATE" | string;
+    title: string;
+    content?: string | null;
+    file_url?: string | null;
+    created_at: string | Date;
+}
 
 export default function NeuralLibraryPage() {
     const [activeTab, setActiveTab] = useState("snippets");
@@ -26,8 +45,8 @@ export default function NeuralLibraryPage() {
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
     // Data states
-    const [snippets, setSnippets] = useState<any[]>([]);
-    const [assets, setAssets] = useState<any[]>([]);
+    const [snippets, setSnippets] = useState<Snippet[]>([]);
+    const [assets, setAssets] = useState<LibraryAsset[]>([]);
 
     // Form states
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,7 +54,19 @@ export default function NeuralLibraryPage() {
     const [snippetForm, setSnippetForm] = useState({ title: "", code: "", language: "JavaScript", notes: "" });
     const [assetForm, setAssetForm] = useState({ title: "", content: "", file_url: "" });
 
-    useEffect(() => { load(); }, [activeTab]);
+    const load = useCallback(async () => {
+        setLoading(true);
+        if (activeTab === "snippets") {
+            const data = await getSnippets();
+            if (data.snippets) setSnippets(data.snippets);
+        } else {
+            const data = await getLibraryAssets();
+            if (data.assets) setAssets(data.assets.filter((a: LibraryAsset) => a.type === (activeTab === "notes" ? "NOTE" : "CERTIFICATE")));
+        }
+        setLoading(false);
+    }, [activeTab]);
+
+    useEffect(() => { load(); }, [activeTab, load]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -46,18 +77,6 @@ export default function NeuralLibraryPage() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
-    async function load() {
-        setLoading(true);
-        if (activeTab === "snippets") {
-            const data = await getSnippets();
-            if (data.snippets) setSnippets(data.snippets);
-        } else {
-            const data = await getLibraryAssets();
-            if (data.assets) setAssets(data.assets.filter((a: any) => a.type === (activeTab === "notes" ? "NOTE" : "CERTIFICATE")));
-        }
-        setLoading(false);
-    }
 
     async function handleSaveSnippet() {
         if (!snippetForm.title || !snippetForm.code) return;
@@ -98,19 +117,21 @@ export default function NeuralLibraryPage() {
         load();
     }
 
-    function handleEdit(item: any) {
+    function handleEdit(item: Snippet | LibraryAsset) {
         if (activeTab === "snippets") {
+            const s = item as Snippet;
             setSnippetForm({
-                title: item.title,
-                code: item.code,
-                language: item.language,
-                notes: item.notes || ""
+                title: s.title,
+                code: s.code,
+                language: s.language,
+                notes: s.notes || ""
             });
         } else {
+            const a = item as LibraryAsset;
             setAssetForm({
-                title: item.title,
-                content: item.content || "",
-                file_url: item.file_url || ""
+                title: a.title,
+                content: a.content || "",
+                file_url: a.file_url || ""
             });
         }
         setEditId(item.id);
@@ -120,13 +141,13 @@ export default function NeuralLibraryPage() {
 
     async function handleUpload(file: File) {
         try {
-            const sigData: any = await getCloudinarySignature();
+            const sigData = (await getCloudinarySignature()) as unknown as { error?: string; apiKey: string; timestamp: number; signature: string; cloudName: string };
             if (sigData.error) throw new Error(sigData.error);
 
             const formData = new FormData();
             formData.append("file", file);
             formData.append("api_key", sigData.apiKey);
-            formData.append("timestamp", sigData.timestamp);
+            formData.append("timestamp", String(sigData.timestamp));
             formData.append("signature", sigData.signature);
             formData.append("folder", "devroast_library");
 
@@ -495,10 +516,11 @@ export default function NeuralLibraryPage() {
                                                                 <span className="text-[10px] font-black uppercase tracking-widest">PDF Preview Restricted</span>
                                                             </div>
                                                         ) : (
-                                                            <img 
+                                                            <Image 
                                                                 src={asset.file_url} 
                                                                 alt={asset.title}
-                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60 group-hover:opacity-100"
+                                                                fill
+                                                                className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-60 group-hover:opacity-100"
                                                             />
                                                         )}
                                                     </div>

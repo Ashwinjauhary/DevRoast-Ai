@@ -8,11 +8,20 @@ import { Github, Loader2, ExternalLink, Star } from "lucide-react";
 const SKILL_OPTIONS = ["React", "TypeScript", "Python", "Node.js", "Go", "Rust", "Java", "DevOps", "ML/AI", "Mobile", "Database", "Security"];
 const DIFF_STYLES: Record<string, string> = { beginner: "text-emerald-400", intermediate: "text-amber-400", advanced: "text-red-400" };
 
+interface OssRepo {
+    owner: string;
+    name: string;
+    description: string;
+    url: string;
+    difficulty: string;
+    why: string;
+}
+
 export default function OssRecommenderPage() {
     const [skills, setSkills] = useState<string[]>([]);
     const [stackInput, setStackInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [repos, setRepos] = useState<any[]>([]);
+    const [repos, setRepos] = useState<OssRepo[]>([]);
     const [error, setError] = useState("");
 
     function toggleSkill(skill: string) {
@@ -26,7 +35,7 @@ export default function OssRecommenderPage() {
         const data = await getOssRecommendations(skills, stack.length ? stack : skills);
         setLoading(false);
         if (data.error) setError(data.error);
-        else setRepos(Array.isArray(data.repos) ? data.repos : []);
+        else setRepos(Array.isArray(data.repos) ? data.repos as OssRepo[] : []);
     }
 
     return (

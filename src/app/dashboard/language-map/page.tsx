@@ -4,7 +4,12 @@ import { redirect } from "next/navigation";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { Map, AlertCircle, Calendar, Code2 } from "lucide-react";
-import { fetchRepositories } from "@/app/dashboard/repositories/actions";
+import { fetchRepositories, type GitHubRepository } from "@/app/dashboard/repositories/actions";
+
+interface LanguageAnalysisResult {
+    languages_breakdown?: Record<string, number>;
+    mainLanguage?: string;
+}
 
 export default async function LanguageMapPage() {
     const session = await auth();
@@ -26,7 +31,7 @@ export default async function LanguageMapPage() {
 
     // 1. Process Analyses (High precision byte data)
     analyses.forEach(a => {
-        const json = a.result_json as any;
+        const json = a.result_json as unknown as LanguageAnalysisResult;
         const langs: Record<string, number> = json?.languages_breakdown || {};
         const date = new Date(a.created_at);
         analyzedRepos.add(a.target.toLowerCase());
@@ -48,7 +53,7 @@ export default async function LanguageMapPage() {
 
     // 2. Process GitHub Metadata (Low precision but breadth coverage)
     if (githubReposResult.success && githubReposResult.data) {
-        githubReposResult.data.forEach((repo: any) => {
+        githubReposResult.data.forEach((repo: GitHubRepository) => {
             const lang = repo.language;
             const creationDate = new Date(repo.created_at);
             if (lang) {

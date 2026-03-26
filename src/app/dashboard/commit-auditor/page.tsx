@@ -1,9 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auditCommits } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { GitCommit, Loader2, TrendingUp } from "lucide-react";
+
+interface AuditCommit {
+    sha: string;
+    message: string;
+    rating: "professional" | "acceptable" | "embarrassing";
+    reason: string;
+}
+
+interface AuditResult {
+    overall_score: number;
+    verdict: string;
+    commits: AuditCommit[];
+}
 
 const RATING_STYLES = {
     professional: { text: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20", label: "PROFESSIONAL" },
@@ -14,8 +27,14 @@ const RATING_STYLES = {
 export default function CommitAuditorPage() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<AuditResult | null>(null);
     const [error, setError] = useState("");
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
+    }, []);
 
     async function handleAudit() {
         const parts = input.trim().replace(/^https?:\/\/github\.com\//, "").split("/");
@@ -25,14 +44,16 @@ export default function CommitAuditorPage() {
         const data = await auditCommits(owner, repo);
         setLoading(false);
         if (data.error) setError(data.error);
-        else setResult(data.result);
+        else setResult(data.result || null);
     }
 
     const counts = result ? {
-        professional: result.commits?.filter((c: any) => c.rating === "professional").length || 0,
-        acceptable: result.commits?.filter((c: any) => c.rating === "acceptable").length || 0,
-        embarrassing: result.commits?.filter((c: any) => c.rating === "embarrassing").length || 0,
+        professional: result.commits?.filter(c => c.rating === "professional").length || 0,
+        acceptable: result.commits?.filter(c => c.rating === "acceptable").length || 0,
+        embarrassing: result.commits?.filter(c => c.rating === "embarrassing").length || 0,
     } : null;
+
+    if (!mounted) return null;
 
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-4xl mx-auto pb-24">
@@ -103,7 +124,7 @@ export default function CommitAuditorPage() {
 
                     {/* Commit List */}
                     <div className="space-y-3">
-                        {result.commits?.map((commit: any, i: number) => {
+                        {result.commits?.map((commit, i) => {
                             const style = RATING_STYLES[commit.rating as keyof typeof RATING_STYLES] || RATING_STYLES.acceptable;
                             return (
                                 <div key={i} className="p-5 bg-white/2 border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">

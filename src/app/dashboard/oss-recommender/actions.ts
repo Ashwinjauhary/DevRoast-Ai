@@ -9,5 +9,5 @@ export async function getOssRecommendations(skills: string[], stack: string[]) {
     try {
         const repos = await recommendOpenSource(skills, stack);
         return { repos };
-    } catch (e: any) { return { error: e.message }; }
+    } catch (e: unknown) { return { error: e instanceof Error ? e.message : "Recommendation failed" }; }
 }

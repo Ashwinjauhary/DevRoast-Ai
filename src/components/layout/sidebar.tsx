@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import {
     LayoutDashboard, User, Github, GitBranch, Star, MessageSquareDiff,
     History, Settings, LogOut, Library, Briefcase, Trophy, TrendingUp,
-    FileText, GitCommit, Scale, Cpu, Building2, Shield, Map, Save,
+    FileText, GitCommit, Scale, Cpu, Building2, Shield, Map,
     GitMerge, Code2, Brain, ExternalLink, ScrollText, BookOpen, Crown,
     Swords, Target
 } from "lucide-react";
@@ -175,7 +175,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         onClick={async () => {
                             try {
                                 await handleSignOut();
-                            } catch (err) {
+                            } catch {
                                 // Next.js redirects throw an error that should not be caught for redirection to work,
                                 // but we provide a hard fallback to landing just in case.
                                 window.location.href = "/";
@@ -188,14 +188,5 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 </div>
             </div>
         </>
-    );
-}
-
-function Terminal(props: React.SVGProps<SVGSVGElement>) {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <polyline points="4 17 10 11 4 5" />
-            <line x1="12" y1="19" x2="20" y2="19" />
-        </svg>
     );
 }

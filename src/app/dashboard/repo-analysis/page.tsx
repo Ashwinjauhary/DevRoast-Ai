@@ -4,19 +4,34 @@ import { useState, useTransition } from "react";
 import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { GitBranch, Play, Loader2, AlertCircle, Download, TerminalSquare, Wand2, Sparkles, Code2 } from "lucide-react";
-import { toPng } from "html-to-image";
+import { GitBranch, Play, Loader2, AlertCircle, TerminalSquare, Wand2, Sparkles, Code2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { autoFixRepositoryCode } from "./actions";
 import { ShareRoast } from "@/components/dashboard/share-roast";
 
+interface RepoAnalysisResult {
+    owner: string;
+    repo: string;
+    score: number;
+    roastLines: string[];
+    eli5Lines?: string[];
+    categories: Record<string, number>;
+    suggestions: string[];
+    security_leaks: number;
+    dependencyHealth?: {
+        name: string;
+        healthScore: number;
+        analysis: string;
+    };
+}
+
 export default function RepoAnalysisPage() {
     const { data: session } = useSession();
     const [repoUrl, setRepoUrl] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<RepoAnalysisResult | null>(null);
     const [isPending, startTransition] = useTransition();
     const [isEli5, setIsEli5] = useState(false);
 
@@ -43,10 +58,11 @@ export default function RepoAnalysisPage() {
             if (!engineRes.ok) throw new Error("The probe failed. The code might be too toxic even for us.");
             const data = await engineRes.json();
 
-            setResult(data);
+            setResult(data as RepoAnalysisResult);
 
-        } catch (err: any) {
-            toast.error(err.message);
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Analysis failed";
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -128,7 +144,7 @@ export default function RepoAnalysisPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         className="space-y-8"
                     >
-                        // Analysis is always saved now
+                        {/* Analysis is always saved now */}
 
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                             <div className="space-y-1">
@@ -222,7 +238,7 @@ export default function RepoAnalysisPage() {
                                                         className="text-zinc-400 text-base md:text-lg leading-relaxed flex gap-4"
                                                     >
                                                         <span className="text-secondary opacity-50 shrink-0">[{i + 1}]</span>
-                                                        <span className="text-zinc-300">"{line}"</span>
+                                                        <span className="text-zinc-300">&quot;{line}&quot;</span>
                                                     </motion.p>
                                                 ))}
                                             </div>
@@ -242,7 +258,7 @@ export default function RepoAnalysisPage() {
                                         </div>
 
                                         <div className="space-y-4">
-                                            {Object.entries(result.categories).map(([key, val]: [string, any], i: number) => (
+                                            {Object.entries(result.categories).map(([key, val], i) => (
                                                 <div key={key} className="space-y-2">
                                                     <div className="flex justify-between text-[10px] font-black text-zinc-500 uppercase tracking-widest leading-none">
                                                         <span>{key}</span>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Award, ChevronDown, ChevronUp, ExternalLink, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDate } from "@/lib/utils";
+import Image from "next/image";
 
 interface Certificate {
     id: string;
@@ -85,11 +86,12 @@ export function CertificatesList({ certificates, template }: CertificatesListPro
                                         <FileText className="w-3 h-3" /> Digital Copy (PDF)
                                     </div>
                                 ) : (
-                                    <div className="mt-4 rounded-xl overflow-hidden aspect-4/3 bg-black/40 border border-white/5 transition-transform duration-500 group-hover:scale-105">
-                                        <img 
+                                    <div className="mt-4 rounded-xl overflow-hidden aspect-4/3 bg-black/40 border border-white/5 transition-transform duration-500 group-hover:scale-105 relative">
+                                        <Image 
                                             src={cert.file_url} 
                                             alt={cert.title} 
-                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                            fill
+                                            className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                                         />
                                     </div>
                                 )}

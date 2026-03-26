@@ -2,7 +2,7 @@ import { getSambaNovaResponse } from "./ai-repo-fixer";
 
 const GITHUB_API = "https://api.github.com";
 
-export async function auditDependencies(owner: string, repo: string, headers: any) {
+export async function auditDependencies(owner: string, repo: string, headers: HeadersInit) {
     const filesToTry = ["package.json", "requirements.txt", "go.mod", "pom.xml", "Cargo.toml", "composer.json"];
 
     let manifestName = null;
@@ -17,7 +17,7 @@ export async function auditDependencies(owner: string, repo: string, headers: an
                 manifestName = file;
                 break;
             }
-        } catch (e) {
+        } catch {
             // Continue to next file
         }
     }
@@ -56,7 +56,7 @@ ${manifestContent}
             healthScore: result.healthScore,
             analysis: result.analysis
         };
-    } catch (e) {
+    } catch {
         return { name: manifestName, healthScore: null, analysis: "Failed to audit tech debt." };
     }
 }

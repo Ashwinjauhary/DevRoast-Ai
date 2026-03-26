@@ -1,0 +1,45 @@
+﻿
+> devroast-ai@0.1.0 lint
+> eslint
+
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\next-auth.d.ts
+  1:8   warning  'NextAuth' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  warning  'JWT' is defined but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\code-review\page.tsx
+  81:30  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\dependency-monitor\page.tsx
+  25:16  warning  'fetchDeps' is defined but never used          @typescript-eslint/no-unused-vars
+  91:31  warning  '_critPct' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\history\page.tsx
+  3:10  warning  'TerminalSquare' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\library\page.tsx
+  10:27  warning  'ImageIcon' is defined but never used                                                                    @typescript-eslint/no-unused-vars
+  57:34  warning  React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\portfolio\page.tsx
+   6:38   warning  'Briefcase' is defined but never used         @typescript-eslint/no-unused-vars
+   6:124  warning  'Plus' is defined but never used              @typescript-eslint/no-unused-vars
+   6:130  warning  'Trash2' is defined but never used            @typescript-eslint/no-unused-vars
+  36:19   warning  'session' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\repositories\repository-manager.tsx
+  6:5  warning  'fetchRepositories' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\dashboard\resume-enhancer\actions.ts
+   53:43  warning  'customPrompt' is assigned a value but never used    @typescript-eslint/no-unused-vars
+   53:70  warning  'template' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  111:15  warning  '_templateStyle' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\app\portfolio\[username]\page.tsx
+  59:5  warning  '_parent' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ashwi\.gemini\antigravity\scratch\devroast-ai\src\components\ui\job-compatibility-chart.tsx
+  50:38  warning  '_t' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 18 problems (0 errors, 18 warnings)
+

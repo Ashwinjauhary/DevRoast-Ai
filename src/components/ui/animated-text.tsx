@@ -30,7 +30,7 @@ export function AnimatedText({ text, className, delay = 0, once = true }: Animat
                 type: "spring",
                 damping: 12,
                 stiffness: 100,
-            } as any,
+            } as const,
         },
         hidden: {
             opacity: 0,

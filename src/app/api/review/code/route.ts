@@ -62,7 +62,8 @@ export async function POST(req: Request) {
                 "Connection": "keep-alive",
             },
         });
-    } catch (err: any) {
-        return new NextResponse(err.message, { status: 500 });
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "SambaNova connection failure";
+        return new NextResponse(message, { status: 500 });
     }
 }

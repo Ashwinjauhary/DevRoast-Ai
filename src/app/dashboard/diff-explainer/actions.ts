@@ -9,5 +9,7 @@ export async function explainGitDiff(diff: string) {
     try {
         const result = await explainDiff(diff);
         return { result };
-    } catch (e: any) { return { error: e.message }; }
+    } catch (e: unknown) {
+        return { error: e instanceof Error ? e.message : "An unknown error occurred" };
+    }
 }

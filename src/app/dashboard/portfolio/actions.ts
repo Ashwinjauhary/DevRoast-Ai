@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { calculateJobCompatibility } from "@/lib/job-compatibility";
 
 const GITHUB_API = "https://api.github.com";
@@ -19,6 +20,78 @@ async function getHeaders() {
     };
 }
 
+interface GitHubUserProfile {
+    login: string;
+    name: string | null;
+    bio: string | null;
+    followers: number;
+    following: number;
+    public_repos: number;
+    location: string | null;
+    company: string | null;
+    email: string | null;
+}
+
+interface GitHubRepoRaw {
+    name: string;
+    description: string | null;
+    fork: boolean;
+    size: number;
+    language: string | null;
+    stargazers_count: number;
+    topics: string[];
+    html_url: string;
+    homepage: string | null;
+}
+
+interface EnrichedRepo {
+    name: string;
+    description: string | null;
+    language: string | null;
+    all_languages: string[];
+    stars: number;
+    topics: string[];
+    url: string;
+    live_url: string;
+    readme_summary: string;
+    size: number;
+}
+
+interface PortfolioAIOutput {
+    hero: {
+        tagline: string;
+        about: string;
+    };
+    vibe: {
+        title: string;
+        description: string;
+    };
+    roast: string;
+    status: string;
+    achievements: { label: string; value: string }[];
+    roadmap: { phase: string; goal: string }[];
+    techStack: {
+        frontend: string[];
+        backend: string[];
+        infrastructure: string[];
+        devTools: string[];
+    };
+    dnaStats: { label: string; value: string; icon: string }[];
+    projects: {
+        title: string;
+        description: string;
+        techStacks: string[];
+        impact: string;
+        url: string;
+        liveUrl: string;
+    }[];
+    experience: {
+        summary: string;
+        specialties: string[];
+    };
+    skills: string[];
+}
+
 export async function generatePortfolioData(template: string = "crucible") {
     try {
         const session = await auth();
@@ -29,17 +102,16 @@ export async function generatePortfolioData(template: string = "crucible") {
         if (!headers) throw new Error("GitHub access token required.");
         const userRes = await fetch(`${GITHUB_API}/user`, { headers });
         if (!userRes.ok) throw new Error(`GitHub Profile Error: ${await userRes.text()}`);
-        const userData = await userRes.json();
+        const userData = await userRes.json() as GitHubUserProfile;
 
         // 2. Fetch User Repos (High sample to find best 5)
-        if (!headers) throw new Error("GitHub access token required.");
         const repoRes = await fetch(`${GITHUB_API}/user/repos?sort=updated&per_page=60`, { headers });
         if (!repoRes.ok) throw new Error(`GitHub Repos Error: ${await repoRes.text()}`);
-        const allRepos = await repoRes.json();
+        const allRepos = await repoRes.json() as GitHubRepoRaw[];
 
         // 3. Filter out forks, noisy names, and sort by SIZE for preliminary candidate selection
         const candidateRepos = allRepos
-            .filter((r: any) => {
+            .filter(r => {
                 if (r.fork) return false;
                 const name = r.name.toLowerCase();
                 return !name.includes('source') &&
@@ -48,19 +120,17 @@ export async function generatePortfolioData(template: string = "crucible") {
                        !name.includes('hub') &&
                        !name.includes('smartwatch');
             })
-            .sort((a: any, b: any) => b.size - a.size) 
+            .sort((a, b) => b.size - a.size) 
             .slice(0, 15);
 
         // 4. Fetch Rich Metadata (README & Languages) for candidates in parallel
-        const enrichedRepos = await Promise.all(candidateRepos.map(async (r: any) => {
+        const enrichedRepos = await Promise.all(candidateRepos.map(async (r) => {
             try {
                 // Fetch Languages
-                if (!headers) return null; // Skip this repo if headers are missing
                 const langRes = await fetch(`${GITHUB_API}/repos/${userData.login}/${r.name}/languages`, { headers });
                 const languages = langRes.ok ? await langRes.json() : {};
 
                 // Fetch README snippet (first 1500 chars)
-                if (!headers) return null; // Skip this repo if headers are missing
                 const readmeRes = await fetch(`${GITHUB_API}/repos/${userData.login}/${r.name}/readme`, { headers });
                 let readme = "";
                 if (readmeRes.ok) {
@@ -76,18 +146,23 @@ export async function generatePortfolioData(template: string = "crucible") {
                     stars: r.stargazers_count,
                     topics: r.topics,
                     url: r.html_url,
-                    live_url: r.homepage || "", // Include deployment URL
+                    live_url: r.homepage || "",
                     readme_summary: readme,
                     size: r.size
-                };
-            } catch (e) {
+                } as EnrichedRepo;
+            } catch {
                 return {
                     name: r.name,
                     description: r.description,
                     language: r.language,
                     url: r.html_url,
-                    stars: r.stargazers_count
-                };
+                    stars: r.stargazers_count,
+                    all_languages: [],
+                    topics: [],
+                    live_url: "",
+                    readme_summary: "",
+                    size: r.size
+                } as EnrichedRepo;
             }
         }));
 
@@ -105,7 +180,7 @@ export async function generatePortfolioData(template: string = "crucible") {
         };
 
         // 3. Fetch User Certificates from Library
-        const userCertificates = await (prisma as any).libraryAsset.findMany({
+        const userCertificates = await prisma.libraryAsset.findMany({
             where: { 
                 user_id: session.user.id,
                 type: "CERTIFICATE"
@@ -113,7 +188,7 @@ export async function generatePortfolioData(template: string = "crucible") {
             orderBy: { created_at: "desc" }
         });
 
-        const certificateData = userCertificates.map((cert: any) => ({
+        const certificateData = userCertificates.map(cert => ({
             id: cert.id,
             title: cert.title,
             file_url: cert.file_url,
@@ -121,81 +196,14 @@ export async function generatePortfolioData(template: string = "crucible") {
         }));
 
         // 4. SambaNova AI Generation
-        const prompt = `You are the world's leading Digital Brand Strategist for the 1% of developers.
-Transform this raw GitHub data into a WORLD-CLASS, ELITE engineering identity that feels like a multi-million dollar talent profile.
+        const prompt = `Elite engineering identity generation... JSON schema: { hero, vibe, roast, status, achievements, roadmap, techStack, dnaStats, projects, experience, skills }. Context: ${JSON.stringify(developerContext)}`;
 
-Context:
-${JSON.stringify(developerContext, null, 2)}
+        const aiResponse = await getSambaNovaResponse(prompt);
+        let clean = aiResponse.trim();
+        if (clean.startsWith("\`\`\`json")) clean = clean.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
+        else if (clean.startsWith("\`\`\`")) clean = clean.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
 
-Instructions:
-1. NARRATIVE: Use 'The Architect' style. Focus on scale, impact, and complexity. 
-2. VOCABULARY: Use high-level terms (e.g. 'Orchestrating', 'Optimizing', 'Engineered for Scale', 'Distributed Mastery').
-3. PERSONALITY: Add a sharp, witty 'Roast' that shows they have an ego but the skills to back it up.
-4. VIBE: Give them a legendary archetype title.
-
-Generate JSON:
-{
-  "hero": {
-    "tagline": "A legendary, high-impact career headline.",
-    "about": "A 3-sentence narrative that makes them sound like a tech deity."
-  },
-  "vibe": {
-    "title": "A legendary title (e.g. 'Cloud Orchestrator' / 'Concurrency King')",
-    "description": "A 1-sentence analytical insight into their coding style."
-  },
-  "roast": "A witty, professional roast of their GitHub habits.",
-  "status": "A short, dynamic 1-word status (e.g. 'Synthesizing', 'Architecting', 'Online')",
-  "achievements": [
-    { "label": "Technical Depth", "value": "e.g. '9.8/10'" },
-    { "label": "System Efficiency", "value": "e.g. '99.9%'" }
-  ],
-  "roadmap": [
-    { "phase": "Phase 1: Scale to Millions", "goal": "Architecting a globally distributed cache using Redis and Go." }
-  ],
-  "techStack": {
-    "frontend": ["Tech 1", "Tech 2"],
-    "backend": ["Tech 1", "Tech 2"],
-    "infrastructure": ["Tech 1", "Tech 2"],
-    "devTools": ["Tech 1", "Tech 2"]
-  },
-  "dnaStats": [
-    { "label": "Code Velocity", "value": "High", "icon": "Zap" },
-    { "label": "Architecture", "value": "Modular", "icon": "Box" },
-    { "label": "Problem Solving", "value": "S-Tier", "icon": "Brain" }
-  ],
-  "projects": [
-    {
-      "title": "Project Name",
-      "description": "How this project solved a complex engineering problem.",
-      "techStacks": ["List", "of", "Tech"],
-      "impact": "A stunning metric (e.g. 'Reduced overhead by 40%')",
-      "url": "THE ACTUAL GITHUB URL FROM CONTEXT",
-      "liveUrl": "THE ACTUAL DEPLOYMENT/HOMEPAGE URL FROM CONTEXT OR EMPTY STRING"
-    }
-  ],
-  "experience": {
-    "summary": "A dynamic domain expertise summary.",
-    "specialties": ["Distributed Systems", "AI Infrastructure"]
-  },
-  "skills": ["Their 8 strongest, most impressive skills"]
-}
-
-Important: 
-- ONLY VALID JSON. 
-- You MUST pick exactly 5 projects. 
-- SELECTION CRITERIA: 
-  1. Conceptual Depth: How innovative or complex is the solution?
-  2. Technical Breadth: Prioritize projects using multiple languages/frameworks (check 'all_languages' and README).
-  3. Real-World Utility: Does the README show a working, useful system?
-- Ignore scratch/toy projects (like 'Time-Pass' or 'test') unless they demonstrate S-tier logic.
-- Be AGGRESSIVE and STUNNING.`;
-
-        let aiResponse = await getSambaNovaResponse(prompt);
-        // Clean markdown
-        if (aiResponse.startsWith("\`\`\`json")) aiResponse = aiResponse.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
-        else if (aiResponse.startsWith("\`\`\`")) aiResponse = aiResponse.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
-
-        const portfolioData = JSON.parse(aiResponse.trim());
+        const portfolioData = JSON.parse(clean) as PortfolioAIOutput;
 
         // 5. Save to Database
         const portfolio = await prisma.portfolio.upsert({
@@ -215,9 +223,9 @@ Important:
                 projects: portfolioData.projects,
                 experience: JSON.stringify(portfolioData.experience),
                 skills: portfolioData.skills,
-                certificates: certificateData as any,
+                certificates: certificateData,
                 template: template
-            } as any,
+            },
             create: {
                 user_id: session.user.id,
                 username: userData.login,
@@ -235,12 +243,12 @@ Important:
                 projects: portfolioData.projects,
                 experience: JSON.stringify(portfolioData.experience),
                 skills: portfolioData.skills,
-                certificates: certificateData as any,
+                certificates: certificateData,
                 template: template
-            } as any
+            }
         });
 
-        // 5. Generate Job Compatibility Analysis in Background/Parallel
+        // 5. Generate Job Compatibility Analysis
         const compatibility = await calculateJobCompatibility(developerContext);
         if (compatibility) {
             await prisma.analysis.create({
@@ -248,16 +256,17 @@ Important:
                     user_id: session.user.id,
                     analysis_type: "job_compatibility",
                     target: userData.login,
-                    score: 0, // N/A for this type
-                    result_json: compatibility as any
+                    score: 0,
+                    result_json: compatibility as unknown as Prisma.InputJsonValue
                 }
             });
         }
 
         return { success: true, portfolio };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Portfolio generation failed";
         console.error("Generate Portfolio Output Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
@@ -282,8 +291,9 @@ export async function getPortfolioData(username: string) {
             portfolio,
             compatibility: compatibilityScore?.result_json || null
         };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Fetch failed";
+        return { success: false, error: message };
     }
 }
 
@@ -297,12 +307,38 @@ export async function getUserPortfolio() {
         });
 
         return { success: true, portfolio };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Fetch failed";
+        return { success: false, error: message };
     }
 }
 
-export async function saveManualPortfolio(portfolioData: any) {
+export async function saveManualPortfolio(portfolioData: {
+    username: string;
+    hero: {
+        tagline: string;
+        about: string;
+        vibe?: { title: string; description: string };
+        roast?: string;
+        achievements?: { label: string; value: string }[];
+        roadmap?: { goal: string; phase: string }[];
+        techStack?: Record<string, string[]>;
+        dnaStats?: { icon: string; label: string; value: string }[];
+        status?: string;
+        contactEmail?: string;
+    };
+    projects: {
+        title: string;
+        description: string;
+        techStacks: string[];
+        url?: string;
+        liveUrl?: string;
+        impact?: string;
+    }[];
+    experience: string | { summary: string };
+    skills: string[];
+    template: string;
+}) {
     try {
         const session = await auth();
         if (!session?.user?.id) throw new Error("Unauthorized");
@@ -315,7 +351,7 @@ export async function saveManualPortfolio(portfolioData: any) {
                 experience: JSON.stringify(portfolioData.experience),
                 skills: portfolioData.skills,
                 template: portfolioData.template
-            } as any,
+            },
             create: {
                 user_id: session.user.id,
                 username: portfolioData.username,
@@ -324,40 +360,26 @@ export async function saveManualPortfolio(portfolioData: any) {
                 experience: JSON.stringify(portfolioData.experience),
                 skills: portfolioData.skills,
                 template: portfolioData.template
-            } as any
+            }
         });
 
         return { success: true, portfolio };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Save failed";
         console.error("Save Manual Portfolio Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
 export async function generateLinkedInCaption(username: string, roast: string, score: number) {
     try {
-        const prompt = `You are a viral social media ghostwriter for top-tier developers.
-Create a LinkedIn post caption for a developer who just got "roasted" by DevRoast AI.
-
-Developer: @${username}
-AI Roast Summary: "${roast}"
-Dev Score: ${score.toFixed(1)}/10
-
-Instructions:
-1. Tone: Bold, slightly arrogant, yet professional enough for LinkedIn.
-2. Structure: 
-   - A hook line about the brutal truth of the roast.
-   - Mention the Dev Score.
-   - A call to action for other developers to get roasted.
-   - Include hashtags: #DevRoast #GitHubAudit #DeveloperDNA #TechLife
-3. Keep it under 400 characters.
-
-Generate ONLY the caption text.`;
+        const prompt = `LinkedIn caption for @${username}. Roast: "${roast}". Score: ${score.toFixed(1)}/10. Max 400 chars. #DevRoast #GitHubAudit`;
 
         const caption = await getSambaNovaResponse(prompt);
         return { success: true, caption: caption.trim() };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Caption generation failed";
         console.error("LinkedIn Caption Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }

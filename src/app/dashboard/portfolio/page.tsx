@@ -3,13 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import { Loader2, Wand2, ArrowRight, Briefcase, ExternalLink, Code, Sparkles, Wand, Copy, Check, Activity, Edit3, Save, X, Plus, Trash2, FileCode, Monitor, Download } from "lucide-react";
+import { Loader2, Wand2, ArrowRight, ExternalLink, Code, Sparkles, Wand, Copy, Check, Activity, Edit3, Save, X, FileCode, Monitor, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { generatePortfolioData, saveManualPortfolio, getUserPortfolio } from "./actions";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
@@ -17,6 +17,9 @@ interface Project {
     title: string;
     description: string;
     techStacks: string[];
+    url?: string;
+    liveUrl?: string;
+    impact?: string;
 }
 
 interface PortfolioData {
@@ -25,13 +28,22 @@ interface PortfolioData {
     hero: {
         tagline: string;
         about: string;
+        vibe?: { title: string; description: string };
+        roast?: string;
+        achievements?: { label: string; value: string }[];
+        roadmap?: { goal: string; phase: string }[];
+        techStack?: Record<string, string[]>;
+        dnaStats?: { icon: string; label: string; value: string }[];
+        status?: string;
+        contactEmail?: string;
     };
     projects: Project[];
     skills: string[];
+    experience: string | { summary: string };
 }
 
 export default function PortfolioGeneratorPage() {
-    const { data: session } = useSession();
+
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
@@ -91,9 +103,11 @@ export default function PortfolioGeneratorPage() {
             } else {
                 toast.error(res.error || "Failed to generate portfolio.");
             }
-        } catch (err: any) {
-            toast.error(err.message);
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
+
             setLoading(false);
         }
     };
@@ -101,12 +115,13 @@ export default function PortfolioGeneratorPage() {
     const handleSave = async () => {
         setSaving(true);
         try {
+            if (!editData) throw new Error("Synthesis data missing.");
             let dataToSave = editData;
             
             if (isCodeMode) {
                 try {
                     dataToSave = JSON.parse(jsonEdit);
-                } catch (e) {
+                } catch {
                     throw new Error("Invalid JSON code. Please check your syntax.");
                 }
             }
@@ -123,9 +138,11 @@ export default function PortfolioGeneratorPage() {
             } else {
                 toast.error(res.error || "Failed to save portfolio.");
             }
-        } catch (err: any) {
-            toast.error(err.message);
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
+
             setSaving(false);
         }
     };
@@ -166,7 +183,7 @@ export default function PortfolioGeneratorPage() {
             try {
                 const parsed = JSON.parse(jsonEdit);
                 setEditData(parsed);
-            } catch (e) {
+            } catch {
                 toast.error("Invalid JSON detected. Fix it before switching back to visual mode.");
                 return; // Prevent switching if invalid
             }

@@ -12,7 +12,7 @@ interface TechItem {
 interface StackBentoProps {
   data?: {
     nodes: TechItem[];
-    links: any[];
+    links: Array<{ source: string; target: string }>;
   }
 }
 
@@ -119,7 +119,7 @@ export function StackBento({ data }: StackBentoProps) {
             </div>
           </div>
           <div className="absolute bottom-6 left-8 text-[9px] font-mono text-zinc-700 tracking-[0.2em] group-hover:text-indigo-500/40 transition-colors uppercase">
-            // Primary_Logic_Processors
+            {"// Primary_Logic_Processors"}
           </div>
         </motion.div>
 
@@ -143,7 +143,7 @@ export function StackBento({ data }: StackBentoProps) {
                   <span className="text-sm font-black text-white group-hover/btn:text-emerald-400 transition-colors uppercase italic">{n.id}</span>
                 </div>
               )) : (
-                <span className="text-xs font-mono text-zinc-600">// INITIALIZING_REPOS...</span>
+                <span className="text-xs font-mono text-zinc-600">{"// INITIALIZING_REPOS..."}</span>
               )}
             </div>
           </div>
@@ -190,7 +190,7 @@ export function StackBento({ data }: StackBentoProps) {
               )}
             </div>
             <div className="mt-auto pt-6 text-[8px] font-black uppercase text-zinc-600 tracking-[0.3em]">
-                Integrity_Check: Verified
+                {"Integrity_Check: Verified"}
             </div>
           </div>
         </motion.div>
@@ -257,14 +257,14 @@ export function StackBento({ data }: StackBentoProps) {
                             <span className="text-lg font-black text-zinc-700 uppercase italic">AWAITING_NEURAL_EXPANSION...</span>
                          </div>
                      </div>
-                     <span className="text-[8px] font-mono text-zinc-800 uppercase tracking-[0.4em]">Background_Process: Idling</span>
+                     <span className="text-[8px] font-mono text-zinc-800 uppercase tracking-[0.4em]">{"Background_Process: Idling"}</span>
                 </div>
               )}
             </div>
           </div>
           
           <div className="absolute bottom-4 right-8 flex items-center gap-4">
-             <div className="text-[8px] font-mono text-zinc-800 tracking-[0.4em] uppercase group-hover:text-zinc-500 transition-colors underline decoration-amber-500/20 decoration-2 underline-offset-4">Distributed_Compute_Active</div>
+             <div className="text-[8px] font-mono text-zinc-800 tracking-[0.4em] uppercase group-hover:text-zinc-500 transition-colors underline decoration-amber-500/20 decoration-2 underline-offset-4">{"Distributed_Compute_Active"}</div>
              <Globe className="w-3 h-3 text-zinc-800 animate-spin-slow group-hover:text-amber-500/40" />
           </div>
         </motion.div>

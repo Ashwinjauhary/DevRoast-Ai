@@ -6,8 +6,15 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { NeuralBg } from "@/components/ui/neural-bg";
-import { WebsiteJsonLd, SoftwareAppJsonLd, FAQJsonLd } from "@/components/seo/json-ld";
-import React, { useState } from "react";
+import {
+  WebsiteJsonLd,
+  SoftwareAppJsonLd,
+  FAQJsonLd,
+  BreadcrumbJsonLd,
+  OrganizationJsonLd,
+  BrandJsonLd,
+} from "@/components/seo/json-ld";
+import { useState } from "react";
 import Image from "next/image";
 
 export default function LandingPage() {
@@ -20,6 +27,9 @@ export default function LandingPage() {
       <WebsiteJsonLd />
       <SoftwareAppJsonLd />
       <FAQJsonLd />
+      <BreadcrumbJsonLd />
+      <OrganizationJsonLd />
+      <BrandJsonLd />
 
       {/* Immersive Background */}
       <motion.div
@@ -279,23 +289,23 @@ export default function LandingPage() {
         <section id="features" className="px-6 max-w-7xl mx-auto mt-64">
           <div className="text-center mb-24 space-y-6">
             <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-white">Surgical Precision.</h2>
-            <p className="text-xl md:text-3xl text-zinc-500 max-w-4xl mx-auto font-medium italic">We don't just insult your code. We deconstruct it using highly advanced logic analysis models.</p>
+            <p className="text-xl md:text-3xl text-zinc-500 max-w-4xl mx-auto font-medium italic">We don&apos;t just insult your code. We deconstruct it using highly advanced logic analysis models.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: <GitBranch className="w-10 h-10 text-primary" />, title: "Vector Graph Analysis", desc: "We map your directory chaos, detect circular dependencies, and objectively judge your terrifying folder structure.", color: "primary" },
-              { icon: <Star className="w-10 h-10 text-secondary" />, title: "Quantified Skill Rating", desc: "Get a brutal percentile mapping against 5M+ developers. Discover if your code is actually production-ready.", color: "secondary" },
-              { icon: <Cpu className="w-10 h-10 text-accent" />, title: "AI Guided Remediation", desc: "Receive direct architectural refactoring steps from an AI Mentor. We show you exactly how to stop writing garbage.", color: "accent" },
+              { Icon: GitBranch, title: "Vector Graph Analysis", desc: "We map your directory chaos, detect circular dependencies, and objectively judge your terrifying folder structure.", color: "primary" },
+              { Icon: Star, title: "Quantified Skill Rating", desc: "Get a brutal percentile mapping against 5M+ developers. Discover if your code is actually production-ready.", color: "secondary" },
+              { Icon: Cpu, title: "AI Guided Remediation", desc: "Receive direct architectural refactoring steps from an AI Mentor. We show you exactly how to stop writing garbage.", color: "accent" },
             ].map((feature, i) => (
               <PremiumCard
                 key={i}
-                glowColor={feature.color as any}
+                glowColor={feature.color as "primary" | "secondary" | "accent"}
                 transition={{ delay: i * 0.15 }}
                 className="group"
               >
                 <div className="w-20 h-20 bg-white/2 border border-white/5 rounded-3xl flex items-center justify-center mb-10 glass-darker group-hover:border-white/20 transition-colors">
-                  {React.cloneElement(feature.icon as React.ReactElement, { className: `w-10 h-10 text-${feature.color}` } as any)}
+                  <feature.Icon className={`w-10 h-10 text-${feature.color}`} />
                 </div>
                 <h3 className="text-3xl font-black text-white mb-6 tracking-tight">{feature.title}</h3>
                 <p className="text-zinc-400 text-lg leading-relaxed font-medium">{feature.desc}</p>

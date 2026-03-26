@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     
     // Support both session auth AND API key auth (Bearer drk_xxx)
     let resolvedUserId: string | null = session?.user?.id ?? null;
-    let resolvedGithubToken: string | null = (session?.user as any)?.accessToken ?? null;
+    let resolvedGithubToken: string | null = (session?.user as { accessToken?: string })?.accessToken ?? null;
 
     if (!resolvedUserId) {
         const apiKeyData = await validateApiKey(request.headers.get("authorization"));
@@ -85,11 +85,11 @@ export async function POST(request: Request) {
         // 3. Audit Dependencies (Tech Debt)
         const depsAudit = await auditDependencies(owner, repo, headers);
 
-        // Mix the original request identifiers and technical metrics back in
+// Mix the original request identifiers and technical metrics back in
         const finalResponse = {
             owner,
             repo,
-            ...roastData,
+            ...(roastData as object),
             languages_breakdown: languages || {},
             dependencyHealth: depsAudit,
             mainLanguage: repoData.language
@@ -112,8 +112,9 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ ...finalResponse, isSaved });
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Repo Analysis Error:", error);
-        return NextResponse.json({ error: "Failed to process repository analysis" }, { status: 500 });
+        const message = error instanceof Error ? error.message : "Failed to process repository analysis";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

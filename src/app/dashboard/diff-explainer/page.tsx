@@ -11,10 +11,21 @@ const CHANGE_ICONS = {
     modified: { icon: Edit, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
 };
 
+interface DiffChange {
+    type: "added" | "removed" | "modified";
+    description: string;
+}
+
+interface DiffResult {
+    summary: string;
+    changes: DiffChange[];
+    impact: string;
+}
+
 export default function DiffExplainerPage() {
     const [diff, setDiff] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<DiffResult | null>(null);
     const [error, setError] = useState("");
 
     async function handleExplain() {
@@ -23,14 +34,14 @@ export default function DiffExplainerPage() {
         const data = await explainGitDiff(diff);
         setLoading(false);
         if (data.error) setError(data.error);
-        else setResult(data.result);
+        else setResult(data.result as DiffResult);
     }
 
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-4xl mx-auto pb-24">
             <div className="space-y-3">
                 <h1 className="text-5xl font-black tracking-tighter text-white">Diff Explainer</h1>
-                <p className="text-xl text-zinc-500 italic">What does this pull request actually do? Let the AI explain it like you're 5.</p>
+                <p className="text-xl text-zinc-500 italic">What does this pull request actually do? Let the AI explain it like you&apos;re 5.</p>
             </div>
 
             <PremiumCard glowColor="primary">
@@ -69,7 +80,7 @@ export default function DiffExplainerPage() {
                     {result.changes?.length > 0 && (
                         <div className="space-y-3">
                             <h3 className="text-2xl font-black tracking-tight">What Changed</h3>
-                            {result.changes.map((change: any, i: number) => {
+                            {result.changes.map((change, i) => {
                                 const style = CHANGE_ICONS[change.type as keyof typeof CHANGE_ICONS] || CHANGE_ICONS.modified;
                                 const Icon = style.icon;
                                 return (

@@ -36,12 +36,12 @@ export default function TermsPage() {
                 <div className="space-y-12 text-lg leading-relaxed font-medium">
                     <section>
                         <h2 className="text-xl font-black uppercase tracking-widest text-primary mb-4">1. Acceptance of Terms</h2>
-                        <p>Welcome to the gauntlet. By entering DevRoast AI, you agree to these terms. If you can't handle the heat, stay out of the terminal.</p>
+                        <p>Welcome to the gauntlet. By entering DevRoast AI, you agree to these terms. If you can&apos;t handle the heat, stay out of the terminal.</p>
                     </section>
 
                     <section>
                         <h2 className="text-xl font-black uppercase tracking-widest text-secondary mb-4">2. The Roast Protocol</h2>
-                        <p>All analysis data, scores, and roasts are AI-generated. We provide zero guarantees of professional "kindness". We aim for objective, data-driven brutality to encourage better engineering practices.</p>
+                        <p>All analysis data, scores, and roasts are AI-generated. We provide zero guarantees of professional &quot;kindness&quot;. We aim for objective, data-driven brutality to encourage better engineering practices.</p>
                     </section>
 
                     <section>

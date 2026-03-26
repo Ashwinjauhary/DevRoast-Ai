@@ -2,12 +2,27 @@
 
 import { useState } from "react";
 import { PremiumCard } from "@/components/ui/premium-card";
-import { Building2, Loader2, AlertTriangle, TrendingUp, TrendingDown } from "lucide-react";
+import { Building2, Loader2, TrendingUp, TrendingDown } from "lucide-react";
+
+interface OrgRepo {
+    name: string;
+    language: string;
+    score: number;
+}
+
+interface OrgAnalysisResult {
+    total_repos: number;
+    avg_score: number;
+    best: OrgRepo;
+    worst: OrgRepo;
+    repos: OrgRepo[];
+    error?: string;
+}
 
 export default function OrgAnalysisPage() {
     const [orgName, setOrgName] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<OrgAnalysisResult | null>(null);
     const [error, setError] = useState("");
 
     async function handleAnalyze() {
@@ -16,10 +31,10 @@ export default function OrgAnalysisPage() {
         setLoading(true); setError(""); setResult(null);
         try {
             const res = await fetch(`/api/analyze/org?org=${encodeURIComponent(org)}`);
-            const data = await res.json();
+            const data = await res.json() as OrgAnalysisResult;
             if (data.error) setError(data.error);
             else setResult(data);
-        } catch (e: any) { setError(e.message); }
+        } catch (e: unknown) { setError(e instanceof Error ? e.message : "Analysis failed"); }
         finally { setLoading(false); }
     }
 
@@ -27,7 +42,7 @@ export default function OrgAnalysisPage() {
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-5xl mx-auto pb-24">
             <div className="space-y-3">
                 <h1 className="text-5xl font-black tracking-tighter text-white">Org Dashboard</h1>
-                <p className="text-xl text-zinc-500 italic">Analyze an entire GitHub organization. Rate your company's code quality.</p>
+                <p className="text-xl text-zinc-500 italic">Analyze an entire GitHub organization. Rate your company&apos;s code quality.</p>
             </div>
 
             <PremiumCard glowColor="primary">
@@ -78,7 +93,7 @@ export default function OrgAnalysisPage() {
                         <div className="space-y-4">
                             <h3 className="text-lg font-black tracking-tight">Repository Breakdown</h3>
                             <div className="space-y-3">
-                                {result.repos?.map((repo: any, i: number) => (
+                                {result.repos?.map((repo: OrgRepo, i: number) => (
                                     <div key={i} className="flex items-center justify-between p-4 bg-white/2 border border-white/5 rounded-xl">
                                         <div className="flex items-center gap-4">
                                             {repo.score >= result.avg_score

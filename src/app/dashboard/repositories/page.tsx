@@ -28,7 +28,7 @@ export default async function RepositoriesPage() {
                 </div>
                 <h2 className="text-2xl font-black text-white">Connection Failed</h2>
                 <p className="text-zinc-400 font-medium max-w-md">
-                    We couldn't fetch your GitHub repositories.
+                    We couldn&apos;t fetch your GitHub repositories.
                     <br /><br />
                     <span className="text-sm">Error: {error}</span>
                 </p>

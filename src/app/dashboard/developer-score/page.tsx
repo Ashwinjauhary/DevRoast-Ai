@@ -1,4 +1,4 @@
-import { Star, Trophy, Target, ShieldAlert, Code2, AlertTriangle, ArrowRight } from "lucide-react";
+import { Trophy, Target, ShieldAlert, ArrowRight } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
@@ -34,24 +34,33 @@ export default async function DeveloperScorePage() {
     }
 
     let totalScore = 0;
-    let counts = { codeQuality: 0, documentation: 0, consistency: 0, architecture: 0 };
-    let totals = { codeQuality: 0, documentation: 0, consistency: 0, architecture: 0 };
+    const counts = { codeQuality: 0, documentation: 0, consistency: 0, architecture: 0 };
+    const totals = { codeQuality: 0, documentation: 0, consistency: 0, architecture: 0 };
 
-    let allStrengths: string[] = [];
-    let allWeaknesses: string[] = [];
+    const allStrengths: string[] = [];
+    const allWeaknesses: string[] = [];
 
-    analyses.forEach((a: any) => {
+    analyses.forEach((a) => {
         totalScore += a.score;
-        const result = a.result_json as any;
+        const result = a.result_json as { 
+            categories?: { 
+                codeQuality?: number; 
+                documentation?: number; 
+                consistency?: number; 
+                architecture?: number; 
+            }; 
+            suggestions?: string[]; 
+            roastLines?: string[]; 
+        };
 
-        if (result.categories) {
+        if (result?.categories) {
             if (result.categories.codeQuality) { totals.codeQuality += result.categories.codeQuality; counts.codeQuality++; }
             if (result.categories.documentation) { totals.documentation += result.categories.documentation; counts.documentation++; }
             if (result.categories.consistency) { totals.consistency += result.categories.consistency; counts.consistency++; }
             if (result.categories.architecture) { totals.architecture += result.categories.architecture; counts.architecture++; }
         }
 
-        if (result.suggestions) {
+        if (result?.suggestions && result?.roastLines) {
             allStrengths.push(...result.suggestions.slice(0, 1));
             allWeaknesses.push(...result.roastLines.slice(0, 2));
         }
@@ -121,7 +130,7 @@ export default async function DeveloperScorePage() {
                             {scoreData.weaknesses.map((weak, i) => (
                                 <li key={i} className="flex gap-4 group/item">
                                     <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shadow-[0_0_10px_rgba(var(--accent),1)]" />
-                                    <span className="text-zinc-400 font-medium group-hover/item:text-white transition-colors">"{weak}"</span>
+                                    <span className="text-zinc-400 font-medium group-hover/item:text-white transition-colors">&quot;{weak}&quot;</span>
                                 </li>
                             ))}
                         </ul>

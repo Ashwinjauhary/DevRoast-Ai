@@ -10,7 +10,7 @@ export async function checkLicense(owner: string, repo: string) {
     if (!session?.user) return { error: "Not authenticated" };
 
     try {
-        const token = (session.user as any)?.accessToken;
+        const token = session.user.accessToken;
         const headers: HeadersInit = {
             Accept: "application/vnd.github.v3+json",
             ...(token && { Authorization: `Bearer ${token}` }),
@@ -36,7 +36,7 @@ export async function checkLicense(owner: string, repo: string) {
 
         const result = await checkLicenseCompliance(repoLicense, deps);
         return { result, repoLicense, repo, owner };
-    } catch (error: any) {
-        return { error: error.message };
+    } catch (error: unknown) {
+        return { error: error instanceof Error ? error.message : "An unknown error occurred" };
     }
 }

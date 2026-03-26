@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
+import type { GraphData } from "./stack-visualizer";
 
-export const DynamicStackVisualizer = dynamic<{ data?: any }>(
+export const DynamicStackVisualizer = dynamic<{ data?: GraphData }>(
     () => import("./stack-visualizer").then((mod) => mod.StackVisualizer),
     {
         ssr: false,

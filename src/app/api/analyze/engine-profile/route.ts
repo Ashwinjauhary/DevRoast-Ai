@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ ...roastData, isSaved });
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("AI Analysis Error:", error);
         return NextResponse.json({ error: "Failed to generate AI analysis" }, { status: 500 });
     }

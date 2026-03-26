@@ -12,6 +12,7 @@ export function WebsiteJsonLd() {
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "DevRoast AI",
+          alternateName: ["DevRoast", "Dev Roast", "DevRoast AI"],
           url: "https://dev-roast-ai-sand.vercel.app/",
           description:
             "The world's best AI-powered code reviewer and GitHub profile analyzer. Get brutal, constructive AI code roasts to improve your developer skills.",
@@ -103,6 +104,76 @@ export function FAQJsonLd() {
               text: faq.answer,
             },
           })),
+        }),
+      }}
+    />
+  );
+}
+
+export function BreadcrumbJsonLd() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: "https://dev-roast-ai-sand.vercel.app/",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Developer",
+              item: "https://dev-roast-ai-sand.vercel.app/developer",
+            },
+          ],
+        }),
+      }}
+    />
+  );
+}
+
+export function OrganizationJsonLd() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "DevRoast AI",
+          url: "https://dev-roast-ai-sand.vercel.app/",
+          logo: "https://dev-roast-ai-sand.vercel.app/logo.png",
+          sameAs: [
+            "https://github.com/Ashwinjauhary/DevRoast-Ai",
+            "https://twitter.com/AshwinJauhary",
+          ],
+          founder: {
+            "@type": "Person",
+            name: "Ashwin Jauhary",
+          },
+        }),
+      }}
+    />
+  );
+}
+
+export function BrandJsonLd() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Brand",
+          name: "DevRoast AI",
+          description: "The world's premier AI code review and developer roasting platform.",
+          logo: "https://dev-roast-ai-sand.vercel.app/logo.png",
         }),
       }}
     />

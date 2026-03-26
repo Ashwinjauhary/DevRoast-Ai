@@ -4,8 +4,7 @@ import { useState, useTransition } from "react";
 import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Github, Play, Loader2, AlertCircle, Download, TerminalSquare, Wand2, Zap } from "lucide-react";
-import { toPng } from "html-to-image";
+import { Github, GitBranch, Play, Loader2, Sparkles, Code2, TerminalSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
@@ -70,15 +69,14 @@ export default function GithubAnalysisPage() {
             const analysis = await engineRes.json();
 
             setResult({ metrics, analysis });
-        } catch (err: any) {
-            toast.error(err.message);
+
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Analysis failed";
+            toast.error(message);
         } finally {
             setLoading(false);
         }
     };
-
-
-
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-zinc-100 max-w-5xl mx-auto pb-24">
@@ -98,7 +96,7 @@ export default function GithubAnalysisPage() {
                 <div className="space-y-6">
                     <div className="space-y-2">
                         <h2 className="text-xl font-black tracking-tight flex items-center gap-2">
-                            <Github className="w-5 h-5 text-secondary" />
+                            <GitBranch className="w-5 h-5 text-secondary" />
                             Target Intelligence
                         </h2>
                         <p className="text-sm text-zinc-500 font-medium">Who are we dissecting today?</p>
@@ -106,7 +104,7 @@ export default function GithubAnalysisPage() {
 
                     <form onSubmit={handleAnalyze} className="flex flex-col sm:flex-row gap-4 items-center">
                         <div className="relative flex-1 w-full">
-                            <Github className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-600 transition-colors group-focus-within:text-secondary" />
+                            <GitBranch className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-600 transition-colors group-focus-within:text-secondary" />
                             <input
                                 type="text"
                                 placeholder="GitHub Username (e.g. torvalds)"
@@ -141,7 +139,7 @@ export default function GithubAnalysisPage() {
                                         <div className="relative">
                                             <div className="w-24 h-24 border-4 border-white/5 border-t-accent rounded-full animate-spin" />
                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <Zap className="w-8 h-8 text-accent animate-bounce" />
+                                                <Sparkles className="w-8 h-8 text-accent animate-bounce" />
                                             </div>
                                         </div>
                                     </div>
@@ -167,33 +165,36 @@ export default function GithubAnalysisPage() {
                                 {isOwnAccount && (
                                     <Button
                                         onClick={() => {
-                                            toast((t) => (
-                                                <div className="flex flex-col gap-4 max-w-md">
-                                                    <p className="text-xs font-black text-white uppercase tracking-tighter">
-                                                        Manual Redemption Path 🌪️ <br/>
-                                                        <span className="text-primary opacity-80 lowercase font-medium italic">Follow these protocols to repair your reputation.</span>
-                                                    </p>
-                                                    <ul className="space-y-2 text-[10px] text-zinc-400 font-mono list-disc pl-4">
-                                                        <li>Craft an elite <span className="text-white">Bio</span> (max 160 chars) focusing on architect-level impact.</li>
-                                                        <li>Update your <span className="text-white">Profile README</span> with modern tech stack badges.</li>
-                                                        <li>Ensure your <span className="text-white">Location</span> and <span className="text-white">Company</span> fields are industrial-certified.</li>
-                                                        <li>Pin your most high-integrity repositories to the top.</li>
-                                                    </ul>
-                                                    <div className="flex justify-end">
-                                                        <button 
-                                                            onClick={() => toast.dismiss(t.id)}
-                                                            className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all"
-                                                        >
-                                                            Understood
-                                                        </button>
+                                            startTransition(() => {
+                                                toast((t) => (
+                                                    <div className="flex flex-col gap-4 max-w-md">
+                                                        <p className="text-xs font-black text-white uppercase tracking-tighter">
+                                                            Manual Redemption Path 🌪️ <br/>
+                                                            <span className="text-primary opacity-80 lowercase font-medium italic">Follow these protocols to repair your reputation.</span>
+                                                        </p>
+                                                        <ul className="space-y-2 text-[10px] text-zinc-400 font-mono list-disc pl-4">
+                                                            <li>Craft an elite <span className="text-white">Bio</span> (max 160 chars) focusing on architect-level impact.</li>
+                                                            <li>Update your <span className="text-white">Profile README</span> with modern tech stack badges.</li>
+                                                            <li>Ensure your <span className="text-white">Location</span> and <span className="text-white">Company</span> fields are industrial-certified.</li>
+                                                            <li>Pin your most high-integrity repositories to the top.</li>
+                                                        </ul>
+                                                        <div className="flex justify-end">
+                                                            <button 
+                                                                onClick={() => toast.dismiss(t.id)}
+                                                                className="px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/20 transition-all"
+                                                            >
+                                                                Understood
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ), { duration: 10000, position: "top-center" });
+                                                ), { duration: 10000, position: "top-center" });
+                                            });
                                         }}
+                                        disabled={isPending}
                                         variant="outline"
                                         className="gap-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 hover:text-primary flex-1 sm:flex-none font-bold"
                                     >
-                                        <Zap className="w-4 h-4" />
+                                        <Code2 className="w-4 h-4" />
                                         Improve Profile
                                     </Button>
                                 )}

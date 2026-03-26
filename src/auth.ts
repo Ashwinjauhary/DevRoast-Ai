@@ -70,14 +70,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (user) {
                 token.sub = user.id;
                 // If user object has github_username (from DB), persist it to token
-                if ((user as any).github_username) {
-                    token.github_username = (user as any).github_username;
+                if ('github_username' in user && user.github_username) {
+                    token.github_username = user.github_username as string;
                 }
             }
             
             // If currently signing in with GitHub, ensure we have the latest username
-            if (account?.provider === "github" && (profile as any)?.login) {
-                token.github_username = (profile as any).login as string;
+            if (account?.provider === "github" && profile && 'login' in profile) {
+                token.github_username = profile.login as string;
                 token.accessToken = account.access_token;
             } else if (account) {
                 // For other providers, still persist the access token if needed
@@ -90,20 +90,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     events: {
         async linkAccount({ user, profile, account }) {
             console.log("linkAccount Event Triggered", { userId: user.id, provider: account.provider });
-            if (account.provider === "github" && (profile as any)?.login) {
+            if (account.provider === "github" && profile && 'login' in profile) {
                 await prisma.user.update({
                     where: { id: user.id },
-                    data: { github_username: (profile as any).login as string }
+                    data: { github_username: profile.login as string }
                 });
                 console.log("Updated github_username in DB via linkAccount");
             }
         },
         async signIn({ user, account, profile }) {
             // Ensure github_username is synced on every GitHub sign in
-            if (account?.provider === "github" && (profile as any)?.login) {
+            if (account?.provider === "github" && profile && 'login' in profile) {
                 await prisma.user.update({
                     where: { id: user.id },
-                    data: { github_username: (profile as any).login as string }
+                    data: { github_username: profile.login as string }
                 });
                 console.log("Synced github_username in DB via signIn");
             }

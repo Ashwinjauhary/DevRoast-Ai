@@ -17,7 +17,7 @@ export async function validateApiKey(authHeader: string | null): Promise<{
 
     // Find candidate keys by prefix (first 12 chars = "drk_" + 8)
     const prefix = rawToken.slice(0, 12);
-    const candidates = await (prisma as any).apiKey.findMany({
+    const candidates = await (prisma as unknown as { apiKey: { findMany: (args: { where: { prefix: string }, select: { key_hash: boolean, user_id: boolean } }) => Promise<Array<{ key_hash: string, user_id: string }>> } }).apiKey.findMany({
         where: { prefix },
         select: { key_hash: true, user_id: true }
     });

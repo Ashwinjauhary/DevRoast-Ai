@@ -34,7 +34,7 @@ export async function getSambaNovaResponse(prompt: string, attempt: number = 0):
                 }
             }
             console.warn(`[AI-FIXER] Groq failed (${response.status}). Falling back to SambaNova...`);
-        } catch (error) {
+        } catch {
             console.warn(`[AI-FIXER] Groq error. Falling back...`);
         }
     }
@@ -69,7 +69,7 @@ export async function getSambaNovaResponse(prompt: string, attempt: number = 0):
         const data = await response.json();
         return data.choices?.[0]?.message?.content || "";
 
-    } catch (error: any) {
+    } catch {
         return getSambaNovaResponse(prompt, attempt + 1);
     }
 }

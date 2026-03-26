@@ -103,7 +103,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ user
                 }
             }
         );
-    } catch (e) {
+    } catch {
         return new Response("Failed to generate badge", { status: 500 });
     }
 }

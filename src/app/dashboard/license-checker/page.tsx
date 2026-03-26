@@ -13,10 +13,23 @@ const STATUS_STYLES = {
 
 const SEV_COLORS = { high: "text-red-400", medium: "text-amber-400", low: "text-blue-400" };
 
+interface LicenseIssue {
+    severity: "high" | "medium" | "low";
+    package: string;
+    license: string;
+    issue: string;
+}
+
+interface LicenseResult {
+    overall_status: "compliant" | "warning" | "violation";
+    summary: string;
+    issues: LicenseIssue[];
+}
+
 export default function LicenseCheckerPage() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<LicenseResult | null>(null);
     const [repoLicense, setRepoLicense] = useState("");
     const [error, setError] = useState("");
 
@@ -28,7 +41,10 @@ export default function LicenseCheckerPage() {
         const data = await checkLicense(owner, repo);
         setLoading(false);
         if (data.error) setError(data.error);
-        else { setResult(data.result); setRepoLicense((data as any).repoLicense || ""); }
+        else { 
+            setResult(data.result as LicenseResult); 
+            setRepoLicense(data.repoLicense || ""); 
+        }
     }
 
     const statusStyle = result ? STATUS_STYLES[result.overall_status as keyof typeof STATUS_STYLES] || STATUS_STYLES.warning : null;
@@ -83,7 +99,7 @@ export default function LicenseCheckerPage() {
                     {result.issues?.length > 0 && (
                         <div className="space-y-3">
                             <h3 className="text-2xl font-black tracking-tight">Issues Found ({result.issues.length})</h3>
-                            {result.issues.map((issue: any, i: number) => (
+                            {result.issues.map((issue, i) => (
                                 <div key={i} className="p-5 bg-white/2 border border-white/5 rounded-2xl space-y-2">
                                     <div className="flex items-center gap-3">
                                         <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 ${SEV_COLORS[issue.severity as keyof typeof SEV_COLORS]}`}>{issue.severity}</span>

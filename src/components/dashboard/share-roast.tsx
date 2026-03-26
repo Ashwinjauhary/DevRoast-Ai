@@ -2,8 +2,7 @@
 
 import { useRef, useState } from "react";
 import { toPng } from "html-to-image";
-import { Share2, Download, Check, Loader2 } from "lucide-react";
-import { PremiumCard } from "@/components/ui/premium-card";
+import { Share2, Check, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -75,7 +74,7 @@ export function ShareRoast({ data }: ShareRoastProps) {
                             
                             <div className="flex items-center gap-4 mt-8">
                                 {data.avatarUrl ? (
-                                    <img src={data.avatarUrl} alt={data.username} className="w-16 h-16 rounded-full border-2 border-primary/50" />
+                                    <Image src={data.avatarUrl} alt={data.username} width={64} height={64} className="rounded-full border-2 border-primary/50" />
                                 ) : (
                                     <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center text-3xl font-black text-white border-2 border-white/10 uppercase">
                                         {data.username?.charAt(0) || data.name?.charAt(0)}
@@ -98,7 +97,7 @@ export function ShareRoast({ data }: ShareRoastProps) {
 
                     <div className="relative z-10 pb-4">
                         <p className="text-2xl font-black italic text-zinc-500 tracking-tight leading-tight">
-                            "{data.label}"
+                            &quot;{data.label}&quot;
                         </p>
                     </div>
 

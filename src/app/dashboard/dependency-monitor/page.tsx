@@ -5,31 +5,24 @@ import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
 import { Shield, AlertTriangle, CheckCircle, XCircle, ExternalLink } from "lucide-react";
 
-const GITHUB_API = "https://api.github.com";
 
-async function fetchDeps(owner: string, repo: string, token?: string) {
-    const headers: HeadersInit = {
-        Accept: "application/vnd.github.v3+json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-    };
-    const res = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/package.json`, { headers });
-    if (!res.ok) return null;
-    const file = await res.json();
-    const content = Buffer.from(file.content, "base64").toString("utf-8");
-    const pkg = JSON.parse(content);
-    return { ...pkg.dependencies, ...pkg.devDependencies };
+
+interface DependencyHealth {
+    critical: number;
+    outdated: number;
+    upToDate: number;
+    vulnerabilities: {
+        name: string;
+        version: string;
+        severity: string;
+    }[];
 }
 
-async function checkNpmAdvisories(packageName: string) {
-    try {
-        const res = await fetch(`https://registry.npmjs.org/${packageName}`, { next: { revalidate: 3600 } });
-        if (!res.ok) return null;
-        const data = await res.json();
-        const latestVersion = data["dist-tags"]?.latest;
-        const deprecated = data.versions?.[latestVersion]?.deprecated;
-        return { latestVersion, deprecated: !!deprecated };
-    } catch { return null; }
+interface RepoAnalysisResult {
+    dependencyHealth?: DependencyHealth;
 }
+
+
 
 export default async function DependencyMonitorPage() {
     const session = await auth();
@@ -44,7 +37,7 @@ export default async function DependencyMonitorPage() {
     });
 
     const analysesWithDeps = recentAnalyses.filter(a => {
-        const json = a.result_json as any;
+        const json = a.result_json as unknown as RepoAnalysisResult;
         return json?.dependencyHealth;
     });
 
@@ -66,12 +59,11 @@ export default async function DependencyMonitorPage() {
             ) : (
                 <div className="space-y-8">
                     {analysesWithDeps.map(analysis => {
-                        const json = analysis.result_json as any;
+                        const json = analysis.result_json as unknown as RepoAnalysisResult;
                         const health = json?.dependencyHealth;
                         if (!health) return null;
 
                         const totalDeps = (health.critical || 0) + (health.outdated || 0) + (health.upToDate || 0);
-                        const critPct = totalDeps > 0 ? Math.round((health.critical / totalDeps) * 100) : 0;
                         const healthScore = totalDeps > 0 ? Math.round(((health.upToDate || 0) / totalDeps) * 100) : 100;
 
                         return (
@@ -112,7 +104,7 @@ export default async function DependencyMonitorPage() {
                                     {health.vulnerabilities?.length > 0 && (
                                         <div className="space-y-2">
                                             <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Vulnerabilities</p>
-                                            {health.vulnerabilities.slice(0, 5).map((vuln: any, i: number) => (
+                                            {health.vulnerabilities.slice(0, 5).map((vuln, i) => (
                                                 <div key={i} className="flex items-center justify-between p-3 bg-red-500/5 border border-red-500/10 rounded-xl">
                                                     <div>
                                                         <span className="text-sm font-bold text-white">{vuln.name}</span>

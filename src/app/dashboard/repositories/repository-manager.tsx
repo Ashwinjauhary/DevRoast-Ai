@@ -2,44 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { fetchRepositories, createRepository, updateRepository, deleteRepository, autoImproveDescription, autoImproveReadme, autoFixAnyRepository } from "./actions";
+import { 
+    createRepository, updateRepository, deleteRepository, 
+    autoImproveDescription, autoImproveReadme, autoFixAnyRepository,
+    GitHubRepository 
+} from "./actions";
 import { Button } from "@/components/ui/button";
-import { FolderGit2, Star, GitFork, Eye, Lock, Globe, Trash2, Edit2, Plus, ExternalLink, Loader2, RefreshCcw, CircleDot, Archive, GitBranch, HardDrive, Sparkles, AlignLeft, FileText, Search, X, ChevronDown, SortAsc, Clock, MoveUp, Calendar, Layers } from "lucide-react";
+import { FolderGit2, Star, GitFork, Lock, Globe, Trash2, Edit2, Plus, ExternalLink, Loader2, RefreshCcw, CircleDot, Archive, GitBranch, HardDrive, Sparkles, AlignLeft, FileText, Search, X, ChevronDown, SortAsc, Clock, Calendar, Layers } from "lucide-react";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-interface GitHubRepository {
-    id: number;
-    name: string;
-    description: string | null;
-    private: boolean;
-    html_url: string;
-    stargazers_count: number;
-    forks_count: number;
-    updated_at: string;
-    created_at: string;
-    language: string | null;
-    size: number;
-    fork: boolean;
-    archived: boolean;
-    homepage: string | null;
-    default_branch: string;
-    open_issues_count: number;
-    owner: {
-        login: string;
-        avatar_url: string;
-    };
-}
 
 export function RepositoryManager({ initialRepos }: { initialRepos: GitHubRepository[] }) {
     const router = useRouter();
+    const [repos, setRepos] = useState<GitHubRepository[]>(initialRepos);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => {
+            setMounted(true);
+            setRepos(initialRepos);
+        }, 0);
 
         // Auto-Sync on Focus
         const handleFocus = () => {
@@ -47,15 +33,11 @@ export function RepositoryManager({ initialRepos }: { initialRepos: GitHubReposi
         };
 
         window.addEventListener("focus", handleFocus);
-        return () => window.removeEventListener("focus", handleFocus);
-    }, [router]);
-
-    const [repos, setRepos] = useState<GitHubRepository[]>(initialRepos);
-
-    // Sync state with props when server data changes
-    useEffect(() => {
-        setRepos(initialRepos);
-    }, [initialRepos]);
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener("focus", handleFocus);
+        };
+    }, [router, initialRepos]);
 
     const [isCreating, setIsCreating] = useState(false);
     const [editingRepo, setEditingRepo] = useState<GitHubRepository | null>(null);
@@ -113,8 +95,8 @@ export function RepositoryManager({ initialRepos }: { initialRepos: GitHubReposi
         toast((t) => (
             <div className="flex flex-col gap-4">
                 <p className="text-xs font-black text-white uppercase tracking-tighter">
-                    Destroy {repo.name}? <br/>
-                    <span className="text-red-400 opacity-80 lowercase font-medium italic">This action is irreversible.</span>
+                                    Destroy {repo.name}? <br/>
+                                    <span className="text-red-400 opacity-80 lowercase font-medium italic">This action is irreversible.</span>
                 </p>
                 <div className="flex gap-2 justify-end">
                     <button 
@@ -595,7 +577,7 @@ export function RepositoryManager({ initialRepos }: { initialRepos: GitHubReposi
                 <div className="py-20 text-center border border-white/5 border-dashed rounded-3xl glass-darker">
                     <FolderGit2 className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">No repositories found</h3>
-                    <p className="text-zinc-500">You don't have any repositories yet, or we couldn't fetch them.</p>
+                    <p className="text-zinc-500">You don&apos;t have any repositories yet, or we couldn&apos;t fetch them.</p>
                 </div>
             )}
         </div>

@@ -8,7 +8,7 @@ export interface JobCompatibilityResult {
     }>;
 }
 
-export async function calculateJobCompatibility(developerContext: any): Promise<JobCompatibilityResult | null> {
+export async function calculateJobCompatibility(developerContext: Record<string, unknown>): Promise<JobCompatibilityResult | null> {
     const prompt = `You are an elite Tech Recruiter AI that analyzes developer portfolios and matches their skills/experience to industry archetypes.
 Given the following developer context (languages, repos, bio), analyze how well they fit into the following 4 archetypes:
 1. FAANG / Big Tech (values: scale, algorithms, C++, Java, Go, systems)
@@ -39,7 +39,7 @@ ${JSON.stringify(developerContext, null, 2)}`;
 
         const result = JSON.parse(aiResponse.trim());
         return result;
-    } catch (e) {
+    } catch (e: unknown) {
         console.error("Job Compatibility Engine failed:", e);
         return null;
     }

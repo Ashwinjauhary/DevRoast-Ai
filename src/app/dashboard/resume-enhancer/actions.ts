@@ -11,7 +11,7 @@ export async function fetchResumeContext() {
         if (!session?.user?.id) throw new Error("Unauthorized");
 
         const userId = session.user.id;
-        const githubUsername = (session.user as any).github_username;
+        const githubUsername = session.user.github_username;
 
         const dbUser = await prisma.user.findUnique({
             where: { id: userId },
@@ -35,18 +35,18 @@ export async function fetchResumeContext() {
                 email: session.user.email || "",
                 projects: dbUser?.analyses.map(a => ({
                    name: a.target,
-                   desc: (a.result_json as any)?.summary || "Professional engineer.",
-                   tech: (a.result_json as any)?.mainLanguage || "Tech Stack",
+                   desc: (a.result_json as { summary?: string })?.summary || "Professional engineer.",
+                   tech: (a.result_json as { mainLanguage?: string })?.mainLanguage || "Tech Stack",
                 })) || [],
-                topRepos: topRepos.map((r: any) => ({
+                topRepos: topRepos.map((r: { name: string; description: string | null; language: string | null }) => ({
                     name: r.name,
                     desc: r.description,
                     lang: r.language
                 }))
             }
         };
-    } catch (e: any) {
-        return { success: false, error: e.message };
+    } catch (e: unknown) {
+        return { success: false, error: e instanceof Error ? e.message : "Failed to fetch resume context" };
     }
 }
 
@@ -56,7 +56,7 @@ export async function generateResumeLatex(customPrompt: string = "", template: s
         if (!session?.user?.id) throw new Error("Unauthorized");
 
         const userId = session.user.id;
-        const githubUsername = (session.user as any).github_username;
+        const githubUsername = session.user.github_username;
 
         // 1. Fetch User Data from DB
         const dbUser = await prisma.user.findUnique({
@@ -79,7 +79,7 @@ export async function generateResumeLatex(customPrompt: string = "", template: s
         // 3. Aggregate Language Data
         const langTotals: Record<string, number> = {};
         dbUser.analyses.forEach(a => {
-            const json = a.result_json as any;
+            const json = a.result_json as { languages_breakdown?: Record<string, number> };
             const langs: Record<string, number> = json?.languages_breakdown || {};
             Object.entries(langs).forEach(([lang, bytes]) => {
                 langTotals[lang] = (langTotals[lang] || 0) + (bytes as number);
@@ -93,22 +93,22 @@ export async function generateResumeLatex(customPrompt: string = "", template: s
             topAnalyses: dbUser.analyses.map(a => ({
                 repo: a.target,
                 score: a.score,
-                summary: (a.result_json as any)?.summary,
-                achievements: (a.result_json as any)?.achievements || [],
-                tech: (a.result_json as any)?.mainLanguage,
-                complexity: (a.result_json as any)?.complexity
+                summary: (a.result_json as { summary?: string })?.summary,
+                achievements: (a.result_json as { achievements?: string[] })?.achievements || [],
+                tech: (a.result_json as { mainLanguage?: string })?.mainLanguage,
+                complexity: (a.result_json as { complexity?: string })?.complexity
             })),
             languages: Object.entries(langTotals).sort((a, b) => b[1] - a[1]).slice(0, 10).map(l => l[0]),
-            allRepos: topRepos.map((r: any) => ({
+            allRepos: topRepos.map((r: { name: string; description: string | null; language: string | null; stargazers_count: number; topics?: string[] }) => ({
                 name: r.name,
                 desc: r.description,
                 lang: r.language,
                 stars: r.stargazers_count,
-                topics: r.topics
+                topics: r.topics || []
             }))
         };
 
-        const templateStyle = {
+        const _templateStyle = {
             modern: "Professional centered header, bold section titles with thick horizontal rules, high-density bullet points.",
             executive: "Classic serif, semi-centered, traditional spacing.",
             brutalist: "Monospace accents, industrial dividers, bold impact."
@@ -117,6 +117,9 @@ export async function generateResumeLatex(customPrompt: string = "", template: s
         // 5. SambaNova Prompt
         const prompt = `You are the world's leading 10/10 Engineer Resume Architect. Generate a MASTERPIECE LaTeX document. 
 The user is unhappy with "cheap" looking results. Use ONLY the highest level of professional LaTeX engineering.
+
+STYLE DIRECTION: ${_templateStyle[template as keyof typeof _templateStyle] || _templateStyle.modern}
+${customPrompt ? `ADDITIONAL USER REQUESTS: ${customPrompt}` : ""}
 
 USER DATA:
 ${JSON.stringify(context, null, 2)}
@@ -173,8 +176,8 @@ BEGIN 1000% PERFECT LATEX:`;
         }
 
         return { success: true, latex: cleanedLatex };
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.error("Resume Action Error:", e);
-        return { success: false, error: e.message };
+        return { success: false, error: e instanceof Error ? e.message : "Failed to generate resume" };
     }
 }

@@ -6,17 +6,21 @@ import { AnimatedText } from "@/components/ui/animated-text";
 import { User, Github, Mail, ShieldCheck, Activity, MessageSquare, Zap, Cpu, Globe, ArrowUpRight, Code2, Layers, Flame, Terminal, Box, Shield, Star, LayoutGrid, Timer, Search, TerminalSquare } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ImpactStats } from "@/components/dashboard/impact-stats";
-import { fetchRepositories } from "@/app/dashboard/repositories/actions";
+import { fetchRepositories, GitHubRepository } from "@/app/dashboard/repositories/actions";
+import Image from "next/image";
 
 export default async function ProfilePage() {
     const session = await auth();
 
-    if (!session?.user?.id) {
+    const user = session?.user as { id: string; github_username?: string } | undefined;
+    if (!user?.id) {
         redirect("/auth/signin");
     }
 
+    const userId = user.id;
+
     const dbUser = await prisma.user.findUnique({
-        where: { id: session.user.id },
+        where: { id: userId },
         include: {
             accounts: true,
             portfolios: {
@@ -36,10 +40,10 @@ export default async function ProfilePage() {
         redirect("/auth/signin");
     }
 
-    const githubUsername = dbUser.github_username || (session.user as any).github_username;
+    const githubUsername = dbUser.github_username || user?.github_username;
     
     // Sort for personal analyses by score DESC
-    const personalAnalyses = dbUser.analyses.filter((a: any) => {
+    const personalAnalyses = dbUser.analyses.filter((a) => {
         if (!githubUsername) return false;
         if (a.analysis_type === 'profile') return a.target.toLowerCase() === githubUsername.toLowerCase();
         if (a.analysis_type === 'repository') return a.target.toLowerCase().startsWith(githubUsername.toLowerCase() + '/');
@@ -47,21 +51,21 @@ export default async function ProfilePage() {
     });
 
     const sortedPersonalAnalyses = [...personalAnalyses].sort((a, b) => (b.score || 0) - (a.score || 0));
-    let top5Repos = sortedPersonalAnalyses.filter(a => a.analysis_type === 'repository').slice(0, 5);
+    const top5Repos = sortedPersonalAnalyses.filter(a => a.analysis_type === 'repository').slice(0, 5);
     
     // Fallback: If less than 5 analyzed repos, fetch from GitHub to fill the identification
-    const portfolioProjects = (dbUser.portfolios?.[0]?.projects as any[]) || [];
+    const portfolioProjects = (dbUser.portfolios?.[0]?.projects as Array<{ name: string; description: string }>) || [];
     const hasPortfolio = portfolioProjects.length > 0;
     const baseCount = hasPortfolio ? portfolioProjects.length : top5Repos.length;
 
-    let extraRepos: any[] = [];
+    let extraRepos: Array<{ name: string; full_name: string; fork: boolean; size?: number; language?: string | null }> = [];
     if (baseCount < 5) {
         try {
             const githubReposResult = await fetchRepositories();
             if (githubReposResult.success) {
-                const analyzedTargets = new Set((personalAnalyses.filter(a => a.analysis_type === 'repository')).map((a: any) => a.target.toLowerCase()));
+                const analyzedTargets = new Set(personalAnalyses.filter(a => a.analysis_type === 'repository').map((a) => a.target.toLowerCase()));
                 extraRepos = (githubReposResult.data || [])
-                    .filter((r: any) => {
+                    .filter((r: GitHubRepository) => {
                         const name = r.name.toLowerCase();
                         return !analyzedTargets.has(r.full_name.toLowerCase()) && 
                                !r.fork && 
@@ -71,7 +75,7 @@ export default async function ProfilePage() {
                                !name.includes('hub') &&
                                !name.includes('smartwatch');
                     })
-                    .sort((a: any, b: any) => (b.size || 0) - (a.size || 0))
+                    .sort((a, b) => (b.size || 0) - (a.size || 0))
                     .slice(0, 5 - baseCount);
             }
         } catch (e) {
@@ -82,7 +86,7 @@ export default async function ProfilePage() {
     // Extract unique tech from top repos + extra repos
     const topTech = new Set<string>();
     top5Repos.forEach(a => {
-        const data = a.result_json as any;
+        const data = a.result_json as { languages_breakdown?: Record<string, number>; mainLanguage?: string };
         if (data?.languages_breakdown) {
             Object.keys(data.languages_breakdown).forEach(lang => topTech.add(lang));
         }
@@ -165,7 +169,12 @@ export default async function ProfilePage() {
                                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl group-hover:bg-primary/40 transition-colors duration-500" />
                                 <div className="w-32 h-32 rounded-full border-4 border-white/10 overflow-hidden relative bg-black/50 flex items-center justify-center shadow-2xl glass z-10">
                                     {dbUser.image ? (
-                                        <img src={dbUser.image} alt="Profile" className="w-full h-full object-cover" />
+                                        <Image 
+                                            src={dbUser.image} 
+                                            alt="Profile" 
+                                            fill 
+                                            className="object-cover" 
+                                        />
                                     ) : (
                                         <User className="w-12 h-12 text-zinc-600" />
                                     )}
@@ -269,11 +278,11 @@ export default async function ProfilePage() {
                                     <div>
                                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 block mb-1">Developer Archetype</span>
                                         <h4 className="text-3xl font-black italic uppercase tracking-tighter text-white">
-                                            {dbUser.portfolios?.[0] ? (dbUser.portfolios[0].hero as any)?.vibe?.title : (avgTopScore > 7 ? "Architect Supreme" : "Code Mercenary")}
+                                            {dbUser.portfolios?.[0] ? (dbUser.portfolios[0].hero as { vibe?: { title: string } })?.vibe?.title : (avgTopScore > 7 ? "Architect Supreme" : "Code Mercenary")}
                                         </h4>
                                     </div>
                                     <p className="text-sm text-zinc-400 font-medium italic border-l-2 border-primary/30 pl-4 leading-relaxed">
-                                        "{dbUser.portfolios?.[0] ? (dbUser.portfolios[0].hero as any)?.vibe?.description : `Analyzing coding patterns... Detected high proficiency in ${uniqueTech[0] || 'Modern Web Protocols'}.`}"
+                                        &quot;{dbUser.portfolios?.[0] ? (dbUser.portfolios[0].hero as { vibe?: { description: string } })?.vibe?.description : `Analyzing coding patterns... Detected high proficiency in ${uniqueTech[0] || 'Modern Web Protocols'}.`}&quot;
                                     </p>
                                 </div>
                                 <div className="space-y-4 relative z-10">
@@ -518,7 +527,7 @@ export default async function ProfilePage() {
                             </div>
                             <div className="flex items-start gap-4">
                                 <span className="text-zinc-700 shrink-0">19:04:18</span>
-                                <span className="text-zinc-400 italic">"Architectural debt discovered in deep dependency layers."</span>
+                                <span className="text-zinc-400 italic">&quot;Architectural debt discovered in deep dependency layers.&quot;</span>
                             </div>
                             <div className="flex items-start gap-4">
                                 <span className="text-zinc-700 shrink-0">19:04:22</span>
@@ -527,7 +536,7 @@ export default async function ProfilePage() {
                             {dbUser.analyses?.[0] && (
                                 <div className="flex items-start gap-4">
                                     <span className="text-zinc-700 shrink-0">19:04:30</span>
-                                    <span className="text-secondary font-bold uppercase">TARGET_ID: {dbUser.analyses[0].target} // SCORE: {dbUser.analyses[0].score}%</span>
+                                    <span className="text-secondary font-bold uppercase">TARGET_ID: {dbUser.analyses[0].target} {" // "} SCORE: {dbUser.analyses[0].score}%</span>
                                 </div>
                             )}
                             <div className="flex items-center gap-2 text-secondary pt-4">

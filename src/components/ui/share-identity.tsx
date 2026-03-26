@@ -42,7 +42,7 @@ export function ShareIdentity({ username, template, roast, score }: ShareIdentit
             } else {
                 window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
             }
-        } catch (err) {
+        } catch {
             window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
         } finally {
             setIsGeneratingCaption(false);

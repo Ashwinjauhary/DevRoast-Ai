@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { TerminalSquare, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import { redirect } from "next/navigation";
 import { HistoryList } from "@/components/dashboard/history-list";
 import { AnimatedText } from "@/components/ui/animated-text";
@@ -36,7 +36,7 @@ export default async function HistoryPage() {
                     </div>
                     <div className="space-y-2">
                         <h3 className="text-3xl font-black tracking-tight text-white uppercase italic">Zero Evidence Found</h3>
-                        <p className="max-w-xs mx-auto text-zinc-500 font-medium italic">You haven't been audited yet. Perhaps your code is hiding in the shadows?</p>
+                        <p className="max-w-xs mx-auto text-zinc-500 font-medium italic">You haven&apos;t been audited yet. Perhaps your code is hiding in the shadows?</p>
                     </div>
                     <Link href="/dashboard" className="px-10 py-4 bg-white text-black rounded-2xl font-black hover:scale-105 transition-transform active:scale-95">
                         START FIRST SCAN

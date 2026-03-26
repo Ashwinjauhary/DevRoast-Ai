@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { generateResumeLatex, fetchResumeContext } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
@@ -20,14 +20,26 @@ export default function ResumeEnhancerPage() {
     const [view, setView] = useState<"edit" | "preview">("preview");
     const [template, setTemplate] = useState("modern");
     const [copied, setCopied] = useState(false);
-    const [userContext, setUserContext] = useState<any>(null);
+    const [userContext, setUserContext] = useState<{
+        name: string;
+        username: string | undefined;
+        email: string;
+        projects: Array<{ name: string; desc: string; tech: string }>;
+        topRepos: Array<{ name: string; desc: string | null; lang: string | null }>;
+    } | null>(null);
 
     useEffect(() => {
         async function loadContext() {
             setContextLoading(true);
             const res = await fetchResumeContext();
-            if (res.success) {
-                setUserContext(res.data);
+            if (res.success && res.data) {
+                setUserContext(res.data as {
+                    name: string;
+                    username: string | undefined;
+                    email: string;
+                    projects: Array<{ name: string; desc: string; tech: string }>;
+                    topRepos: Array<{ name: string; desc: string | null; lang: string | null }>;
+                });
             }
             setContextLoading(false);
         }
@@ -48,6 +60,8 @@ export default function ResumeEnhancerPage() {
 
     const handleCopy = () => {
         navigator.clipboard.writeText(latex);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
         toast.success("LaTeX code copied to clipboard!");
     };
 
@@ -149,7 +163,7 @@ export default function ResumeEnhancerPage() {
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                     <Button onClick={handleCopy} className="bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white text-[10px] font-black uppercase tracking-widest">
-                                        {copied ? <Check className="w-3.3 h-3 mr-2 text-emerald-500" /> : <Copy className="w-3 h-3 mr-2" />}
+                                        {copied ? <Check className="w-3.5 h-3 mr-2 text-emerald-500" /> : <Copy className="w-3 h-3 mr-2" />}
                                         {copied ? "Copied" : "Copy .tex"}
                                     </Button>
                                     <Button onClick={handleDownload} className="bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 text-[10px] font-black uppercase tracking-widest">
@@ -170,7 +184,7 @@ export default function ResumeEnhancerPage() {
                             <div className="relative z-10 flex flex-col items-center">
                                 <FileText className="w-20 h-20 mb-8 text-zinc-800 animate-pulse" />
                                 <p className="font-black uppercase tracking-[0.4em] text-sm text-zinc-700">Neural Synthesis Hub</p>
-                                <p className="text-[10px] text-zinc-800 mt-3 font-mono border border-white/5 px-4 py-1 rounded-full">// Architecture_Ready</p>
+                                <p className="text-[10px] text-zinc-800 mt-3 font-mono border border-white/5 px-4 py-1 rounded-full">{"//"} Architecture_Ready</p>
                             </div>
                         </div>
                     ) : (
@@ -262,7 +276,7 @@ export default function ResumeEnhancerPage() {
                                                             <div className="h-[2px] bg-zinc-900 w-full" />
                                                         </div>
                                                         <div className="grid grid-cols-1 gap-2">
-                                                            <p className="text-sm text-zinc-800"><span className="font-black uppercase text-[10px] tracking-widest mr-2">Top Technologies:</span> {userContext?.topRepos?.map((r:any) => r.lang).filter(Boolean).slice(0, 5).join(", ")}</p>
+                                                            <p className="text-sm text-zinc-800"><span className="font-black uppercase text-[10px] tracking-widest mr-2">Top Technologies:</span> {userContext?.topRepos?.map((r) => r.lang).filter(Boolean).slice(0, 5).join(", ")}</p>
                                                         </div>
                                                     </div>
 
@@ -273,7 +287,7 @@ export default function ResumeEnhancerPage() {
                                                             <div className="h-[2px] bg-zinc-900 w-full" />
                                                         </div>
                                                         <div className="space-y-8">
-                                                            {userContext?.projects?.map((p: any, i: number) => (
+                                                            {userContext?.projects?.map((p, i) => (
                                                                 <div key={i} className="space-y-2">
                                                                     <div className="flex justify-between items-center">
                                                                         <h3 className="text-base font-black uppercase tracking-tight">{p.name}</h3>

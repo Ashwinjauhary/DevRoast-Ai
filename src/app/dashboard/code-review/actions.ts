@@ -1,8 +1,6 @@
 "use server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { reviewCodeSnippet } from "@/lib/sambanova";
 
 export async function reviewCode(code: string, language: string) {
     const session = await auth();
@@ -57,8 +55,8 @@ export async function reviewCode(code: string, language: string) {
         if (!response.ok) throw new Error("SambaNova API failure");
 
         return response;
-    } catch (err: any) {
-        return { error: err.message };
+    } catch (err: unknown) {
+        return { error: err instanceof Error ? err.message : "SambaNova review failed" };
     }
 }
 

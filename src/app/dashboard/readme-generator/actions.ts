@@ -10,7 +10,7 @@ export async function generateReadmeAction(owner: string, repo: string) {
     if (!session?.user) return { error: "Not authenticated" };
 
     try {
-        const token = (session.user as any)?.accessToken;
+        const token = session.user.accessToken;
         const headers: HeadersInit = {
             Accept: "application/vnd.github.v3+json",
             ...(token && { Authorization: `Bearer ${token}` }),
@@ -28,8 +28,8 @@ export async function generateReadmeAction(owner: string, repo: string) {
         const treeData = treesRes.ok ? await treesRes.json() : {};
 
         const fileList = (treeData.tree || [])
-            .filter((f: any) => f.type === "blob")
-            .map((f: any) => f.path)
+            .filter((f: { type: string }) => f.type === "blob")
+            .map((f: { path: string }) => f.path)
             .slice(0, 50);
 
         const metrics = {
@@ -50,7 +50,7 @@ export async function generateReadmeAction(owner: string, repo: string) {
 
         const readme = await generateReadme(metrics);
         return { readme };
-    } catch (error: any) {
-        return { error: error.message };
+    } catch (error: unknown) {
+        return { error: error instanceof Error ? error.message : "Failed to generate README" };
     }
 }

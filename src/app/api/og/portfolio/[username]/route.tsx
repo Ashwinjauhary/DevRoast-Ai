@@ -22,9 +22,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
                 where: { username }
             });
             if (portfolio && portfolio.hero) {
-                const hero = portfolio.hero as any;
+                const hero = portfolio.hero as { tagline?: string; roast?: string; achievements?: { value: string }[] };
                 tagLine = hero.tagline || tagLine;
-                skills = (portfolio.skills as any)?.slice(0, 3) || skills;
+                skills = (portfolio.skills as string[])?.slice(0, 3) || skills;
                 roast = hero.roast || "";
                 
                 // Extract score from achievements if possible
@@ -99,7 +99,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
                         <div style={{ padding: "40px", background: "rgba(255, 255, 255, 0.03)", borderLeft: "8px solid #f43f5e", display: "flex", flexDirection: "column", gap: "15px" }}>
                             <span style={{ fontSize: "20px", fontWeight: "black", color: "#f43f5e", textTransform: "uppercase", letterSpacing: "0.2em" }}>The Roast</span>
                             <p style={{ fontSize: "32px", color: "#d4d4d8", fontWeight: "medium", fontStyle: "italic", margin: 0, lineHeight: 1.4 }}>
-                                "{roast || tagLine}"
+                                &quot;{roast || tagLine}&quot;
                             </p>
                         </div>
                     </div>
@@ -128,8 +128,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
                 height: 630,
             }
         );
-    } catch (e: any) {
-        return new Response(`Failed to generate the image`, {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Internal Server Error";
+        return new Response(`Failed to generate the image: ${message}`, {
             status: 500,
         });
     }

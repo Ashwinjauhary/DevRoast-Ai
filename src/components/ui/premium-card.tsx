@@ -16,12 +16,6 @@ export function PremiumCard({
     glowColor = "primary",
     ...props
 }: PremiumCardProps) {
-    const glowStyles = {
-        primary: "group-hover:shadow-[0_0_30px_-5px_rgba(var(--primary),0.3)]",
-        secondary: "group-hover:shadow-[0_0_30px_-5px_rgba(var(--secondary),0.3)]",
-        accent: "group-hover:shadow-[0_0_30px_-5px_rgba(var(--accent),0.3)]",
-        none: "",
-    };
 
     return (
         <motion.div

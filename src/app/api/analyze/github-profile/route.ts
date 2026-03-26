@@ -8,6 +8,32 @@ function logDebug(message: string) {
     console.log(`[DEBUG][github-profile] ${message}`);
 }
 
+interface GitHubRepo {
+    id: number;
+    name: string;
+    full_name: string;
+    description: string | null;
+    html_url: string;
+    stargazers_count: number;
+    forks_count: number;
+    watchers_count: number;
+    language: string | null;
+    fork: boolean;
+}
+
+interface GitHubUser {
+    login: string;
+    name: string | null;
+    bio: string | null;
+    followers: number;
+    following: number;
+    public_repos: number;
+    total_private_repos?: number;
+    created_at: string;
+    location: string | null;
+    company: string | null;
+}
+
 export async function GET(request: Request) {
     const session = await auth();
     const { searchParams } = new URL(request.url);
@@ -20,7 +46,7 @@ export async function GET(request: Request) {
     try {
         logDebug(`Analyzing profile for: ${username}`);
 
-        let githubToken = (session?.user as any)?.accessToken;
+        let githubToken: string | null | undefined = (session?.user as { accessToken?: string | null })?.accessToken;
         let tokenSource = "session";
 
         if (!githubToken && session?.user?.id) {
@@ -45,7 +71,7 @@ export async function GET(request: Request) {
 
         logDebug(`Using token from ${tokenSource}`);
 
-        const headers: any = {
+        const headers: Record<string, string> = {
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "DevRoast-AI"
         };
@@ -54,10 +80,10 @@ export async function GET(request: Request) {
             headers["Authorization"] = `Bearer ${githubToken}`;
         }
 
-        const isSelfAnalysis = (session?.user as any)?.github_username?.toLowerCase() === username.toLowerCase() ||
+        const isSelfAnalysis = (session?.user as { github_username?: string })?.github_username?.toLowerCase() === username.toLowerCase() ||
             session?.user?.name?.toLowerCase() === username.toLowerCase();
 
-        const reposUrl = (isSelfAnalysis && githubToken)
+        const reposUrl = (isSelfAnalysis && !!githubToken)
             ? `${GITHUB_API_BASE}/user/repos?type=all&per_page=100&sort=updated`
             : `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=updated`;
 
@@ -74,22 +100,22 @@ export async function GET(request: Request) {
             }, { status });
         }
 
-        const userData = await userRes.json();
+        const userData = (await userRes.json()) as GitHubUser;
 
         // Fetch repos and events in parallel
         const [reposRes, eventsRes] = await Promise.all([
             fetch(reposUrl, { headers }).catch(e => {
-                logDebug(`Repos fetch failed: ${e.message}`);
+                logDebug(`Repos fetch failed: ${e instanceof Error ? e.message : String(e)}`);
                 return null;
             }),
             fetch(`${GITHUB_API_BASE}/users/${username}/events/public?per_page=30`, { headers }).catch(e => {
-                logDebug(`Events fetch failed: ${e.message}`);
+                logDebug(`Events fetch failed: ${e instanceof Error ? e.message : String(e)}`);
                 return null;
             })
         ]);
 
-        const reposData = (reposRes && reposRes.ok) ? await reposRes.json() : [];
-        const eventsData = (eventsRes && eventsRes.ok) ? await eventsRes.json() : [];
+        const reposData = (reposRes && reposRes.ok) ? (await reposRes.json() as GitHubRepo[]) : [];
+        const eventsData = (eventsRes && eventsRes.ok) ? (await eventsRes.json() as { type: string }[]) : [];
 
         const safeRepos = Array.isArray(reposData) ? reposData : [];
         const safeEvents = Array.isArray(eventsData) ? eventsData : [];
@@ -99,25 +125,25 @@ export async function GET(request: Request) {
         }
 
         // Compute derived metrics safely
-        const totalStars = safeRepos.reduce((acc: number, repo: any) => acc + (repo.stargazers_count || 0), 0);
-        const totalForks = safeRepos.reduce((acc: number, repo: any) => acc + (repo.forks_count || 0), 0);
-        const totalWatchers = safeRepos.reduce((acc: number, repo: any) => acc + (repo.watchers_count || 0), 0);
+        const totalStars = safeRepos.reduce((acc: number, repo: GitHubRepo) => acc + (repo.stargazers_count || 0), 0);
+        const totalForks = safeRepos.reduce((acc: number, repo: GitHubRepo) => acc + (repo.forks_count || 0), 0);
+        const totalWatchers = safeRepos.reduce((acc: number, repo: GitHubRepo) => acc + (repo.watchers_count || 0), 0);
 
         const languages = safeRepos
-            .map((r: any) => r.language)
-            .filter(Boolean)
+            .map((r: GitHubRepo) => r.language)
+            .filter((lang): lang is string => Boolean(lang))
             .reduce((acc: Record<string, number>, lang: string) => {
                 acc[lang] = (acc[lang] || 0) + 1;
                 return acc;
             }, {});
 
         const topLanguages = Object.entries(languages)
-            .sort((a: any, b: any) => b[1] - a[1])
+            .sort((a, b) => b[1] - a[1])
             .slice(0, 5)
             .map(([lang]) => lang);
 
-        const repositoriesWithNoDescription = safeRepos.filter((r: any) => !r.description).length;
-        const hasReadme = safeRepos.some((r: any) => r.name && r.name.toLowerCase() === username.toLowerCase());
+        const repositoriesWithNoDescription = safeRepos.filter((r: GitHubRepo) => !r.description).length;
+        const hasReadme = safeRepos.some((r: GitHubRepo) => r.name && r.name.toLowerCase() === username.toLowerCase());
 
         const totalRepos = safeRepos.length;
         const createdAt = userData.created_at ? new Date(userData.created_at) : new Date();
@@ -144,12 +170,13 @@ export async function GET(request: Request) {
 
         return NextResponse.json(rawMetrics);
 
-    } catch (error: any) {
-        logDebug(`Critical Error: ${error.message}`);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        logDebug(`Critical Error: ${message}`);
         console.error("Critical GitHub Fetch Error:", error);
         return NextResponse.json({
             error: "Failed to fetch GitHub data",
-            details: error.message
+            details: message
         }, { status: 500 });
     }
 }

@@ -57,8 +57,8 @@ export async function calculateJobMatch(jobDescription: string) {
             success: true,
             result: matchResult
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Job Match Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: error instanceof Error ? error.message : "Neural link failed" };
     }
 }

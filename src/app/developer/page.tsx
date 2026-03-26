@@ -13,7 +13,6 @@ import {
     Database, 
     Layers, 
     Cpu, 
-    ExternalLink, 
     TerminalSquare,
     Briefcase,
     Zap,
@@ -123,7 +122,7 @@ export default function DeveloperProfilePage() {
                             className="text-5xl md:text-8xl font-black tracking-tighter mb-4"
                         />
                         <div className="text-2xl md:text-3xl font-bold text-zinc-400 mb-8 italic">
-                            Full Stack Architect <span className="text-zinc-800">//</span> Performance Engineer
+                            Full Stack Architect <span className="text-zinc-800">{"//"}</span> Performance Engineer
                         </div>
                         <p className="text-lg md:text-xl text-zinc-500 leading-relaxed max-w-3xl mb-12">
                             Specializing in modern JavaScript ecosystems, high-performance frontend architectures, and scalable real-time systems. Building the future, one node at a time.
@@ -179,7 +178,7 @@ export default function DeveloperProfilePage() {
                     <div className="flex items-center gap-4 mb-12">
                         <div className="h-0.5 flex-1 bg-white/5" />
                         <h2 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 flex items-center gap-3">
-                            <TerminalSquare className="w-4 h-4" /> Neural_Stack_Infrastructure
+                            <TerminalSquare className="w-4 h-4" /> {"Neural_Stack_Infrastructure"}
                         </h2>
                         <div className="h-0.5 flex-1 bg-white/5" />
                     </div>
@@ -207,7 +206,7 @@ export default function DeveloperProfilePage() {
                    <div className="flex items-center gap-4 mb-12">
                         <div className="h-0.5 flex-1 bg-white/5" />
                         <h2 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 flex items-center gap-3">
-                            <Briefcase className="w-4 h-4" /> Artifact_Deployment_Logs
+                            <Briefcase className="w-4 h-4" /> {"Artifact_Deployment_Logs"}
                         </h2>
                         <div className="h-0.5 flex-1 bg-white/5" />
                     </div>
@@ -250,7 +249,7 @@ export default function DeveloperProfilePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-24">
                     <section>
                         <h2 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 mb-12 flex items-center gap-3">
-                            <Trophy className="w-4 h-4 text-accent" /> Professional_Evolution
+                            <Trophy className="w-4 h-4 text-accent" /> {"Professional_Evolution"}
                         </h2>
                         <div className="space-y-8">
                             {experience.map((ex, idx) => (
@@ -266,7 +265,7 @@ export default function DeveloperProfilePage() {
 
                     <section>
                         <h2 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 mb-12 flex items-center gap-3">
-                            <Star className="w-4 h-4 text-secondary" /> Core_Integrity_Matrix
+                            <Star className="w-4 h-4 text-secondary" /> {"Core_Integrity_Matrix"}
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <StrengthBadge text="Scalable Architecture" />
@@ -282,7 +281,7 @@ export default function DeveloperProfilePage() {
                                <Shield className="w-16 h-16 text-secondary" />
                            </div>
                            <p className="text-sm font-bold text-zinc-400 leading-relaxed italic relative z-10">
-                               "Design is not just what it looks like and feels like. Design is how it works. And performance is the invisible soul of design."
+                               &quot;Design is not just what it looks like and feels like. Design is how it works. And performance is the invisible soul of design.&quot;
                            </p>
                         </div>
                     </section>
@@ -335,7 +334,7 @@ function StrengthBadge({ text }: { text: string }) {
     );
 }
 
-function Shield(props: any) {
+function Shield(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

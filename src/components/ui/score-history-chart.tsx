@@ -7,7 +7,13 @@ interface ScoreHistoryChartProps {
     data: { date: string; score: number; label: string; type: string }[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface CustomTooltipProps {
+    active?: boolean;
+    payload?: Array<{ payload: { label: string }; color: string; value: number }>;
+    label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
         return (
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-4 shadow-2xl">
@@ -25,7 +31,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function ScoreHistoryChart({ data }: ScoreHistoryChartProps) {
     const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    useEffect(() => {
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
+    }, []);
     if (!mounted) return <div className="h-80 flex items-center justify-center text-zinc-600">Loading chart...</div>;
 
     return (

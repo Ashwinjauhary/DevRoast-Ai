@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { 
-    Code2, Loader2, AlertTriangle, Info, XCircle, Save, 
+    Code2, Loader2, AlertTriangle, Info, XCircle, 
     ChevronDown, Check, Play, Zap, AlertCircle, Trophy 
 } from "lucide-react";
 import { 
@@ -16,6 +16,13 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 const LANGUAGES = ["JavaScript", "TypeScript", "Python", "Java", "C++", "Go", "Rust", "PHP", "Ruby", "Swift", "Kotlin", "SQL"];
+
+interface ReviewIssue {
+    severity: "error" | "warning";
+    line: string;
+    message: string;
+    suggestion: string;
+}
 
 const SEVERITY_STYLES = {
     error: { icon: XCircle, text: "text-red-400", bg: "bg-red-500/10 border-red-500/20", label: "ERROR" },
@@ -30,7 +37,7 @@ export default function CodeReviewPage() {
     
     // Streaming state
     const [roast, setRoast] = useState<string[]>([]);
-    const [issues, setIssues] = useState<any[]>([]);
+    const [issues, setIssues] = useState<ReviewIssue[]>([]);
     const [fix, setFix] = useState("");
 
     async function handleReview() {
@@ -71,13 +78,13 @@ export default function CodeReviewPage() {
                         const delta = data.choices?.[0]?.delta?.content || "";
                         fullText += delta;
                         parseStream(fullText);
-                    } catch (e) {
+                    } catch {
                         // Sometimes chunks are fragmented
                     }
                 }
             }
-        } catch (err: any) {
-            toast.error(err.message || "Something went wrong.");
+        } catch (err: unknown) {
+            toast.error(err instanceof Error ? err.message : "Something went wrong.");
         } finally {
             setLoading(false);
         }
@@ -101,7 +108,7 @@ export default function CodeReviewPage() {
                 const [sev, rest] = line.split("|").map(s => s.trim().replace(/^\* /, ""));
                 const [lineInfo, msg, sugg] = (rest || "").split(":").map(s => s.trim());
                 return {
-                    severity: sev?.toLowerCase() === "error" ? "error" : "warning",
+                    severity: (sev?.toLowerCase() === "error" ? "error" : "warning") as "error" | "warning",
                     line: lineInfo?.replace("Line ", "") || "?",
                     message: msg || "",
                     suggestion: sugg || ""
@@ -213,7 +220,7 @@ export default function CodeReviewPage() {
                                             className="flex gap-4 group"
                                         >
                                             <span className="text-primary font-black mt-1 group-hover:scale-125 transition-transform">»</span>
-                                            <p className="text-zinc-300 text-lg font-light italic leading-snug">"{point}"</p>
+                                            <p className="text-zinc-300 text-lg font-light italic leading-snug">&quot;{point}&quot;</p>
                                         </motion.div>
                                     ))}
                                 </div>

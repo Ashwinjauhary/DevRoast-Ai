@@ -1,23 +1,61 @@
 import { getPortfolioData } from "@/app/dashboard/portfolio/actions";
+import { JobCompatibilityResult } from "@/lib/job-compatibility";
 import { notFound } from "next/navigation";
 import { Github, ExternalLink, Code2, Briefcase, Activity, Zap, Box, Brain, Cpu, Database, Layout, ShieldCheck, Mail, Send, Terminal, Award } from "lucide-react";
 import { JobCompatibilityChart } from "@/components/ui/job-compatibility-chart";
 import { NeuralBg } from "@/components/ui/neural-bg";
 import { ShareIdentity } from "@/components/ui/share-identity";
-import { PremiumCard } from "@/components/ui/premium-card";
 import { CertificatesList } from "@/components/ui/certificates-list";
 import { LiveIndicator } from "@/components/ui/live-indicator";
 import { TypingText } from "@/components/ui/typing-text";
 
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 type Props = {
-    params: { username: string }
+    params: Promise<{ username: string }>
 };
 
+interface HeroData {
+    tagline: string;
+    about: string;
+    vibe?: { title: string; description: string };
+    roast?: string;
+    achievements?: { label: string; value: string }[];
+    roadmap?: (string | { goal: string; phase: string })[];
+    techStack?: Record<string, string[]>;
+    dnaStats?: { icon: string; label: string; value: string }[];
+    status?: string;
+    contactEmail?: string;
+}
+
+interface ProjectData {
+    title: string;
+    description: string;
+    techStacks: string[];
+    url?: string;
+    liveUrl?: string;
+    impact?: string;
+}
+
+interface CertificateData {
+    id: string;
+    title: string;
+    file_url: string;
+    created_at: string;
+}
+
+interface PortfolioData {
+    username: string;
+    hero: HeroData;
+    skills: string[];
+    projects: ProjectData[];
+    certificates: CertificateData[];
+    template: string;
+    experience?: string | { summary: string };
+}
+
 export async function generateMetadata(
-    { params }: Props,
-    parent: ResolvingMetadata
+    { params }: Props
 ): Promise<Metadata> {
     const p = await params;
     const username = p.username;
@@ -48,23 +86,22 @@ export default async function PublicPortfolioPage({ params }: Props) {
         notFound();
     }
 
-    const { portfolio, compatibility } = res;
+    const { portfolio, compatibility } = res as unknown as { portfolio: PortfolioData; compatibility: JobCompatibilityResult | null };
 
-    const heroData = portfolio.hero as any;
-    const hero = { tagline: heroData.tagline, about: heroData.about };
-    const vibe = heroData.vibe || {};
-    const roast = heroData.roast || "";
-    const achievements = heroData.achievements || [];
-    const roadmap = heroData.roadmap || [];
-    const techStack = heroData.techStack || null;
-    const dnaStats = heroData.dnaStats || [];
-    const status = heroData.status || "Synchronized";
-    const contactEmail = heroData.contactEmail || `hello+${username}@${username}.dev`;
+    const hero = portfolio.hero;
+    const vibe = hero.vibe || { title: "", description: "" };
+    const roast = hero.roast || "";
+    const achievements = hero.achievements || [];
+    const roadmap = hero.roadmap || [];
+    const techStack = hero.techStack || null;
+    const dnaStats = hero.dnaStats || [];
+    const status = hero.status || "Synchronized";
+    const contactEmail = hero.contactEmail || `hello+${username}@${username}.dev`;
     
-    const skills = (portfolio as any).skills as string[] || [];
-    const projects = (portfolio as any).projects as any[] || [];
-    const certificates = (portfolio as any).certificates as any[] || [];
-    const template = (portfolio as any).template as string || "crucible";
+    const skills = portfolio.skills || [];
+    const projects = portfolio.projects || [];
+    const certificates = portfolio.certificates || [];
+    const template = portfolio.template || "crucible";
 
     return (
         <div className={`min-h-screen selection:bg-primary/30 ${
@@ -126,7 +163,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                     <aside className="w-80 border-r-2 border-dashed border-white/20 h-screen sticky top-0 p-8 space-y-12 shrink-0 hidden md:block bg-blue-950/20 backdrop-blur-sm">
                         <div className="absolute top-0 right-0 h-full w-px bg-white/5 -mr-4" />
                         <div className="absolute top-0 left-0 w-full h-12 border-b border-white/10 flex items-center px-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.5em]">
-                            X-Axis Tracking // 001-999
+                            {"X-Axis Tracking // 001-999"}
                         </div>
                         <div className="pt-12 space-y-12">
                             <div className="space-y-4">
@@ -146,7 +183,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                 </div>
                             </div>
                             <div className="space-y-6">
-                                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/30 border-l-2 border-blue-400 pl-4">System_Manifest</h3>
+                                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/30 border-l-2 border-blue-400 pl-4">{"System_Manifest"}</h3>
                                 <div className="flex flex-col gap-3">
                                     {skills.map(skill => (
                                         <div key={skill} className="flex justify-between items-center text-[10px] bg-white/5 px-2 py-1.5 border-l-2 border-transparent hover:border-blue-400 transition-all">
@@ -188,7 +225,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                             </div>
                             <div className="text-[11px] font-mono text-emerald-500/60 font-medium tracking-widest hidden lg:flex items-center gap-2">
                                 <Activity className="w-3 h-3 animate-pulse" />
-                                DEVROAST SHELL V2.1.0 // {username}
+                                {"DEVROAST SHELL V2.1.0 // "}{username}
                             </div>
                         </div>
                     )}
@@ -261,7 +298,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                     template === 'prism' ? 'text-white/60 font-light' : 
                                     template === 'aura' ? 'text-violet-200/80 font-light italic' : 'text-zinc-400'
                                 }`}>
-                                    {template === 'hacker' && <span className="text-emerald-500/50 mr-2 mb-4 block text-xs tracking-widest">// START ENCRYPTED BIO</span>}
+                                    {template === 'hacker' && <span className="text-emerald-500/50 mr-2 mb-4 block text-xs tracking-widest">{"// START ENCRYPTED BIO"}</span>}
                                     {template === 'hacker' ? (
                                         <TypingText text={hero?.about} speed={20} delay={hero?.tagline?.length * 40 + 500} />
                                     ) : hero?.about}
@@ -297,13 +334,13 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                         <span className={`shrink-0 px-2 py-0.5 rounded text-[10px] font-black uppercase ${
                                             template === 'cyberpunk' ? 'bg-black text-white' : 'bg-current/10'
                                         }`}>Roast</span>
-                                        <p className={`${template === 'cyberpunk' ? 'text-xs md:text-sm' : 'text-xs font-mono'}`}>"{roast}"</p>
+                                        <p className={`${template === 'cyberpunk' ? 'text-xs md:text-sm' : 'text-xs font-mono'}`}>&quot;{roast}&quot;</p>
                                     </div>
                                 )}
 
                                 {achievements.length > 0 && (
                                     <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        {achievements.map((item: any, i: number) => (
+                                        {achievements.map((item: { label: string; value: string }, i: number) => (
                                             <div key={i} className={`p-4 rounded-2xl border ${
                                                 template === 'neon' ? 'bg-white/2 border-white/5' :
                                                 template === 'minimalist' ? 'bg-zinc-50 border-zinc-100' :
@@ -327,7 +364,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                 {/* DNA Stats Section */}
                                 {dnaStats.length > 0 && (
                                     <div className="mt-12 flex flex-wrap gap-4">
-                                        {dnaStats.map((stat: any, i: number) => (
+                                        {dnaStats.map((stat: { icon: string; label: string; value: string }, i: number) => (
                                             <div key={i} className={`flex items-center gap-3 px-4 py-2 border rounded-xl transition-all hover:scale-105 ${
                                                 template === 'neon' ? 'bg-primary/5 border-primary/20 text-primary' :
                                                 template === 'hacker' ? 'border-emerald-500/20 text-emerald-400' :
@@ -355,8 +392,8 @@ export default async function PublicPortfolioPage({ params }: Props) {
                             {/* CYBERPUNK SIDEBAR SKILLS */}
                             {template === 'cyberpunk' && (
                                 <aside className="md:col-span-4 self-start space-y-8 relative z-20 md:pl-8 border-l-4 border-black/5">
-                                    <div className="bg-black p-4 text-white -rotate-2 transform shadow-[8px_8px_0px_rgba(0,0,0,0.1)]">
-                                        <h3 className="font-black italic uppercase tracking-tighter text-xl underline decoration-4 decoration-[#facc15]">Vitals //</h3>
+                                    <div className="bg-black p-4 text-white -rotate-2 transform shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+                                        <h3 className="font-black italic uppercase tracking-tighter text-xl underline decoration-4 decoration-[#facc15]">{"Vitals //"}</h3>
                                         <div className="mt-4 space-y-2 text-xs">
                                             {skills.map(s => (
                                                 <div key={s} className="flex justify-between items-center border-b border-white/20 pb-1">
@@ -395,10 +432,10 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                         <h3 className={`text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-2 ${
                                             template === 'cyberpunk' ? 'text-black opacity-40' : 'text-zinc-600'
                                         }`}>
-                                            <Cpu className="w-3 h-3" /> Engineering_Matrix // Tech Depth
+                                            <Cpu className="w-3 h-3" /> {"Engineering_Matrix // Tech Depth"}
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                            {Object.entries(techStack).map(([category, items]: [string, any]) => (
+                                            {Object.entries(techStack).map(([category, items]) => (
                                                 <div key={category} className={`p-6 border flex flex-col gap-4 group transition-all ${
                                                     template === 'neon' ? 'bg-white/2 border-white/5 rounded-[2rem]' :
                                                     template === 'hacker' ? 'border-emerald-500/10 rounded-sm bg-emerald-500/2' :
@@ -433,9 +470,9 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                     <div className={`mt-24 space-y-8 ${template === 'cyberpunk' ? 'md:col-span-12' : ''}`}>
                                         <h3 className={`text-[10px] font-black uppercase tracking-[0.4em] ${
                                             template === 'cyberpunk' ? 'text-black opacity-40' : 'text-zinc-600'
-                                        }`}>Growth_Roadmap // 2026-2027</h3>
+                                        }`}>{"Growth_Roadmap // 2026-2027"}</h3>
                                         <div className="grid gap-4">
-                                            {roadmap.map((step: any, i: number) => {
+                                            {roadmap.map((step, i: number) => {
                                                 const title = typeof step === 'string' ? step : (step.goal || step.phase || "Objective Data");
                                                 const subtitle = typeof step === 'object' ? (step.phase && step.goal ? step.phase : "") : "";
                                                 
@@ -502,7 +539,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                             portfolio.experience.startsWith('{') ? (
                                                 (() => {
                                                     try {
-                                                        const parsed = JSON.parse(portfolio.experience);
+                                                        const parsed = JSON.parse(portfolio.experience as string) as { summary?: string };
                                                         return parsed.summary || portfolio.experience;
                                                     } catch {
                                                         return portfolio.experience;
@@ -510,7 +547,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                                 })()
                                             ) : portfolio.experience
                                         ) : (
-                                            (portfolio.experience as any)?.summary || JSON.stringify(portfolio.experience)
+                                            (portfolio.experience as { summary?: string })?.summary || JSON.stringify(portfolio.experience)
                                         )}
                                 </p>
                             </div>
@@ -559,7 +596,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                   'flex flex-col gap-12'
                                 }
                             `}>
-                                {projects.map((project: any, index: number) => {
+                                {projects.map((project, index: number) => {
                                     return (
                                         <div
                                             key={index}

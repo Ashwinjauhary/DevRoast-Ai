@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-// @ts-ignore
-import ForceGraph3D from "react-force-graph-3d";
+import ForceGraph3D, { type ForceGraphMethods, type NodeObject, type LinkObject } from "react-force-graph-3d";
 import * as THREE from "three";
 
 const mockGraphData = {
@@ -25,13 +24,28 @@ const mockGraphData = {
     ]
 };
 
-export function StackVisualizer({ data }: { data?: any }) {
-    const fgRef = useRef<any>(null);
+interface GraphNode {
+    id: string;
+    group: number;
+    val: number;
+}
+
+interface GraphLink {
+    source: string;
+    target: string;
+}
+
+export interface GraphData {
+    nodes: GraphNode[];
+    links: GraphLink[];
+}
+
+export function StackVisualizer({ data }: { data?: GraphData }) {
+    const fgRef = useRef<ForceGraphMethods<NodeObject<GraphNode>, LinkObject<GraphNode, { source: string; target: string; }>>>(undefined);
     const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
         const updateDimensions = () => {
             const container = document.getElementById("stack-container");
             if (container) {
@@ -42,11 +56,15 @@ export function StackVisualizer({ data }: { data?: any }) {
             }
         };
 
-        updateDimensions();
-        setTimeout(updateDimensions, 100);
+        // Use setTimeout to avoid synchronous setState inside effect
+        const timer = setTimeout(() => {
+            setMounted(true);
+            updateDimensions();
+        }, 0);
         window.addEventListener("resize", updateDimensions);
 
         return () => {
+            clearTimeout(timer);
             window.removeEventListener("resize", updateDimensions);
         };
     }, []);
@@ -55,9 +73,11 @@ export function StackVisualizer({ data }: { data?: any }) {
         if (mounted && fgRef.current) {
             // Configure forces to prevent overlap and increase spacing
             // Heavy clustering for a massive "Neural Core" aesthetic
-            fgRef.current.d3Force("charge").strength(-80);
-            fgRef.current.d3Force("link").distance(40);
-            fgRef.current.d3Force("collide", (d: any) => Math.sqrt(d.val || 10) * 12);
+            if (fgRef.current) {
+                (fgRef.current.d3Force("charge") as unknown as { strength: (val: number) => void }).strength(-80);
+                (fgRef.current.d3Force("link") as unknown as { distance: (val: number) => void }).distance(40);
+                (fgRef.current.d3Force("collide") as unknown as (fn: (d: GraphNode) => number) => void)((d: GraphNode) => Math.sqrt(d.val || 10) * 12);
+            }
             
             // Auto rotate camera
             let angle = 0;
@@ -97,14 +117,15 @@ export function StackVisualizer({ data }: { data?: any }) {
                 backgroundColor="#050505"
                 showNavInfo={false}
                 
-                nodeColor={(node: any) => colors[node.group % colors.length]}
+                nodeColor={(node) => colors[(node as GraphNode).group % colors.length]}
                 linkColor={() => "#222222"}
                 
                 // Node Aesthetics
-                nodeThreeObject={(node: any) => {
-                    const groupIndex = (node && typeof node.group === 'number' && !isNaN(node.group)) ? node.group : 0;
+                nodeThreeObject={(node) => {
+                    const gNode = node as GraphNode;
+                    const groupIndex = (gNode && typeof gNode.group === 'number' && !isNaN(gNode.group)) ? gNode.group : 0;
                     const color = colors[Math.abs(groupIndex) % colors.length] || colors[0];
-                    const size = Math.sqrt((node && node.val) || 10) * 4;
+                    const size = Math.sqrt((gNode && gNode.val) || 10) * 4;
                     
                     const group = new THREE.Group();
                     

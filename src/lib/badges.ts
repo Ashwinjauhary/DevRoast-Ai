@@ -29,17 +29,24 @@ export const ALL_BADGES: BadgeDefinition[] = [
     { id: "licensed", name: "Licensed to Code", description: "Ran a license compliance check", icon: "⚖️", color: "text-indigo-400" },
 ];
 
+export interface AnalysisItem {
+    id: string;
+    score: number;
+    analysis_type: string;
+    result_json: unknown;
+}
+
 export function computeEarnedBadges(data: {
-    analyses: any[];
-    chats: any[];
-    portfolios: any[];
+    analyses: AnalysisItem[];
+    chats: { id: string }[];
+    portfolios: { id: string }[];
     existingBadges: string[];
 }): string[] {
     const { analyses, chats, portfolios, existingBadges } = data;
     const newBadges = new Set<string>(existingBadges);
 
     const repoAnalyses = analyses.filter(a => a.analysis_type === 'repository');
-    const scores = analyses.map(a => a.score).filter(Boolean);
+    const scores = analyses.map(a => a.score).filter(s => typeof s === 'number');
     const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
     const minScore = scores.length > 0 ? Math.min(...scores) : 10;
 
@@ -76,7 +83,7 @@ export function computeEarnedBadges(data: {
     // Explorer - 5+ different languages (from result_json)
     const langs = new Set<string>();
     repoAnalyses.forEach(a => {
-        const json = a.result_json as any;
+        const json = a.result_json as { mainLanguage?: string } | null;
         if (json?.mainLanguage) langs.add(json.mainLanguage);
     });
     if (langs.size >= 5) newBadges.add("explorer");

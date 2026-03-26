@@ -6,7 +6,7 @@ export const DEFAULT_MODEL = "Meta-Llama-3.3-70B-Instruct";
 /**
  * Hybrid AI JSON Generator: Multi-Groq (Primary) -> Multi-SambaNova (Fallback)
  */
-async function generateJsonResponse(prompt: string, attempt: number = 0, engineType: 'groq' | 'sambanova' = 'groq'): Promise<any> {
+async function generateJsonResponse<T = unknown>(prompt: string, attempt: number = 0, engineType: 'groq' | 'sambanova' = 'groq'): Promise<T> {
     const groqKeys = (process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
     const sambaKeys = (process.env.SAMBANOVA_API_KEYS || process.env.SAMBANOVA_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
 
@@ -40,14 +40,15 @@ async function generateJsonResponse(prompt: string, attempt: number = 0, engineT
                 const content = data.choices?.[0]?.message?.content;
                 if (content) {
                     console.log("[AI] Groq success!");
-                    return parseAIJson(content);
+                    return parseAIJson(content) as T;
                 }
             }
             
             console.warn(`[AI] Groq Key ${attempt + 1} failed (Status: ${response.status}). Trying next Groq key...`);
             return generateJsonResponse(prompt, attempt + 1, 'groq');
-        } catch (error: any) {
-            console.error(`[AI] Groq Exception on Key ${attempt + 1}: ${error.message}. Trying next Groq key...`);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            console.error(`[AI] Groq Exception on Key ${attempt + 1}: ${errorMessage}. Trying next Groq key...`);
             return generateJsonResponse(prompt, attempt + 1, 'groq');
         }
     }
@@ -83,10 +84,11 @@ async function generateJsonResponse(prompt: string, attempt: number = 0, engineT
         const data = await response.json();
         const content = data.choices?.[0]?.message?.content;
         if (!content) throw new Error("Empty response from SambaNova");
-        return parseAIJson(content);
+        return parseAIJson(content) as T;
 
-    } catch (error: any) {
-        console.warn(`[AI] SambaNova Key ${attempt + 1} error: ${error.message}. Retrying...`);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        console.warn(`[AI] SambaNova Key ${attempt + 1} error: ${errorMessage}. Retrying...`);
         return generateJsonResponse(prompt, attempt + 1, 'sambanova');
     }
 }
@@ -131,7 +133,30 @@ async function generateTextResponse(prompt: string, attempt: number = 0, engineT
     } catch { return generateTextResponse(prompt, attempt + 1, 'sambanova'); }
 }
 
-function parseAIJson(content: string): any {
+export interface ProfileAnalysis {
+  score: number;
+  roastLines: string[];
+  categories: {
+    Repositories: number;
+    Community: number;
+    Profile: number;
+  };
+  suggestions: string[];
+}
+
+export interface RepoAnalysis {
+  score: number;
+  roastLines: string[];
+  eli5Lines: string[];
+  categories: {
+    Architecture: number;
+    Performance: number;
+    Maintenance: number;
+  };
+  suggestions: string[];
+}
+
+function parseAIJson(content: string): unknown {
     let clean = content.trim();
     if (clean.startsWith("```json")) clean = clean.replace(/^```json\n?/, "").replace(/\n?```$/, "");
     else if (clean.startsWith("```")) clean = clean.replace(/^```\n?/, "").replace(/\n?```$/, "");
@@ -146,7 +171,7 @@ function parseAIJson(content: string): any {
     }
 }
 
-export async function generateProfileAnalysis(metrics: any) {
+export async function generateProfileAnalysis(metrics: Record<string, unknown>): Promise<ProfileAnalysis> {
     const prompt = `
 YOU ARE A BRUTAL, ELITE SENIOR DEVELOPER. Your job is to perform a "Developer Integrity Audit" on a GitHub profile. 
 Be accurate, data-driven, and savage. Do not give participation trophies.
@@ -174,10 +199,10 @@ Return ONLY a valid JSON object with the following structure:
 
 CRITICAL: Roast lines MUST explain specific numbers. If total_stars is low despite high total_repos, roast them for "Hidden Mediocrity" or "Empty Shell Architecture".
 `;
-    return generateJsonResponse(prompt);
+    return generateJsonResponse<ProfileAnalysis>(prompt);
 }
 
-export async function generateRepoAnalysis(repoData: any) {
+export async function generateRepoAnalysis(repoData: Record<string, unknown>): Promise<RepoAnalysis> {
     const prompt = `
 YOU ARE A BRUTAL SENIOR ARCHITECT. Audit this specific repository for engineering integrity.
 Be precise, technically accurate, and savage.
@@ -207,23 +232,23 @@ Return ONLY a valid JSON object:
 
 CRITICAL: If the code is just boilerplate or empty, score it below 3/10 and roast the dev for wasting server bandwidth.
 `;
-    return generateJsonResponse(prompt);
+    return generateJsonResponse<RepoAnalysis>(prompt);
 }
 
-export async function generateReadme(repoData: any): Promise<string> {
+export async function generateReadme(repoData: Record<string, unknown>): Promise<string> {
     const prompt = `You are a senior developer. Generate a complete, professional, and visually stunning README.md for a GitHub repository based on the following metadata. Use emoji, badges, and great formatting. Include: title, description, features, getting started, tech stack, contributing, license. Return ONLY the raw markdown text, nothing else.
-
-Repository Data:
-${JSON.stringify(repoData, null, 2)}`;
-
-    return generateTextResponse(prompt);
-}
-
-export async function generateResumePoints(githubUsername: string, analyses: any[]): Promise<string[]> {
+ 
+ Repository Data:
+ ${JSON.stringify(repoData, null, 2)}`;
+ 
+     return generateTextResponse(prompt);
+ }
+ 
+ export async function generateResumePoints(githubUsername: string, analyses: Record<string, unknown>[]): Promise<string[]> {
     const prompt = `You are a professional tech recruiter and resume writer. Based on the following developer profile data for GitHub user "${githubUsername}", generate 6 powerful, quantified resume bullet points. Each bullet should start with a strong action verb and include specifics. Return JSON: { "bullets": string[] }
 
 Analysis Data: ${JSON.stringify(analyses.slice(0, 5))}`;
-    const result = await generateJsonResponse(prompt);
+    const result = await generateJsonResponse<{ bullets: string[] }>(prompt);
     return result.bullets || [];
 }
 
@@ -237,7 +262,7 @@ ${code}`;
 
 export async function generateInterviewQuestions(weaknesses: string[], techStack: string[]): Promise<{ question: string; hint: string; difficulty: 'easy' | 'medium' | 'hard' }[]> {
     const prompt = `You are a senior tech interviewer at a top FAANG company. Based on the developer's weak areas (${weaknesses.join(', ')}) and their tech stack (${techStack.join(', ')}), generate 8 interview questions. Return JSON: { "questions": [ { "question": string, "hint": string, "difficulty": "easy" | "medium" | "hard" } ] }`;
-    const result = await generateJsonResponse(prompt);
+    const result = await generateJsonResponse<{ questions: { question: string; hint: string; difficulty: 'easy' | 'medium' | 'hard' }[] }>(prompt);
     return result.questions || [];
 }
 
@@ -245,7 +270,7 @@ export async function generateBranchName(description: string): Promise<string[]>
     const prompt = `You are a senior developer. Generate 3 professional Git branch names for the following task. Follow conventions: feature/, fix/, chore/, refactor/. Use kebab-case. Return JSON: { "branches": string[] }
 
 Task: ${description}`;
-    const result = await generateJsonResponse(prompt);
+    const result = await generateJsonResponse<{ branches: string[] }>(prompt);
     return result.branches || [];
 }
 
@@ -259,7 +284,7 @@ ${diff.slice(0, 3000)}`;
 
 export async function recommendOpenSource(skills: string[], stack: string[]): Promise<{ name: string; owner: string; description: string; why: string; difficulty: string; url: string }[]> {
     const prompt = `You are an open source mentor. Based on a developer's skills (${skills.join(', ')}) and stack (${stack.join(', ')}), recommend 5 real, popular GitHub repositories they should contribute to. Return JSON: { "repos": [ { "name": string, "owner": string, "description": string, "why": string, "difficulty": "beginner" | "intermediate" | "advanced", "url": string } ] }`;
-    const result = await generateJsonResponse(prompt);
+    const result = await generateJsonResponse<{ repos: { name: string; owner: string; description: string; why: string; difficulty: string; url: string }[] }>(prompt);
     return result.repos || [];
 }
 

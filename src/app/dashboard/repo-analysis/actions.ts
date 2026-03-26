@@ -17,7 +17,16 @@ async function getHeaders() {
     };
 }
 
-export async function autoFixRepositoryCode(owner: string, repo: string, analysis: any) {
+interface RepoAnalysisResult {
+    suggestions: string[];
+}
+
+interface GitHubTreeItem {
+    path: string;
+    type: string;
+}
+
+export async function autoFixRepositoryCode(owner: string, repo: string, analysis: RepoAnalysisResult) {
     try {
         const headers = await getHeaders();
 
@@ -30,12 +39,11 @@ export async function autoFixRepositoryCode(owner: string, repo: string, analysi
             if (repoRes.ok) {
                 const repoData = await repoRes.json();
                 defaultBranch = repoData.default_branch || "main";
-                if (!headers) throw new Error("GitHub access token required for this action.");
                 const treeRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`, { headers });
                 if (treeRes.ok) {
                     const treeData = await treeRes.json();
                     if (treeData.tree) {
-                        fileTree = treeData.tree.filter((item: any) => item.type === "blob").map((item: any) => item.path).join("\n");
+                        fileTree = (treeData.tree as GitHubTreeItem[]).filter(item => item.type === "blob").map(item => item.path).join("\n");
                     }
                 }
             }
@@ -49,15 +57,16 @@ Output ONLY a raw JSON array of the literal string file paths. NO markdown block
 Flaws: ${JSON.stringify(analysis.suggestions)}
 File Tree: \n${fileTree.substring(0, 3000)}`;
 
-        let selectedFilesText = await getSambaNovaResponse(fileSelectionPrompt);
-        if (selectedFilesText.startsWith("\`\`\`json")) selectedFilesText = selectedFilesText.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
-        else if (selectedFilesText.startsWith("\`\`\`")) selectedFilesText = selectedFilesText.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
+        const selectedFilesText = await getSambaNovaResponse(fileSelectionPrompt);
+        let cleanSelection = selectedFilesText.trim();
+        if (cleanSelection.startsWith("\`\`\`json")) cleanSelection = cleanSelection.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
+        else if (cleanSelection.startsWith("\`\`\`")) cleanSelection = cleanSelection.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
 
         let filesToFix: string[] = [];
         try {
-            filesToFix = JSON.parse(selectedFilesText.trim());
+            filesToFix = JSON.parse(cleanSelection);
             if (!Array.isArray(filesToFix)) filesToFix = [];
-        } catch (e) {
+        } catch {
             console.error("AI returned malformed file list:", selectedFilesText);
             throw new Error("The AI failed to identify the correct files to fix. Try again.");
         }
@@ -88,16 +97,15 @@ Do NOT output anything other than the raw Markdown intended for the issue body. 
 
 Original Code:\n\n${currentContent}`;
 
-                let issueBody = await getSambaNovaResponse(issuePrompt);
-
-                // Clean up any markdown blocks the AI might have stubbornly added wrapper-wise
-                if (issueBody.startsWith("\`\`\`markdown")) issueBody = issueBody.replace(/^\`\`\`markdown\n?/, "").replace(/\n?\`\`\`$/, "");
-                else if (issueBody.startsWith("\`\`\`")) issueBody = issueBody.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
+                const issueBody = await getSambaNovaResponse(issuePrompt);
+                let cleanIssueBody = issueBody.trim();
+                if (cleanIssueBody.startsWith("\`\`\`markdown")) cleanIssueBody = cleanIssueBody.replace(/^\`\`\`markdown\n?/, "").replace(/\n?\`\`\`$/, "");
+                else if (cleanIssueBody.startsWith("\`\`\`")) cleanIssueBody = cleanIssueBody.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
 
                 // 5. Create a GitHub Issue
                 const issueData = {
                     title: `Auto-Fix: Resolve Refactoring & Architecture flaws in ${filePath.split('/').pop()}`,
-                    body: issueBody,
+                    body: cleanIssueBody,
                     labels: ["enhancement", "ai-generated"]
                 };
 
@@ -115,12 +123,13 @@ Original Code:\n\n${currentContent}`;
         }
 
         if (filesRewritten === 0) {
-            throw new Error("Attempted to create issues, but the GitHub API rejected them. (Is the issue tracker enabled on this repo?)");
+            throw new Error("Attempted to create issues, but the GitHub API rejected them.");
         }
 
         return { success: true, message: `Successfully opened ${filesRewritten} Auto-Fix issues in the repository!` };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "An unexpected error occurred.";
         console.error("AutoFix Repository Error:", error);
-        return { success: false, error: error.message || "An unexpected error occurred." };
+        return { success: false, error: message };
     }
 }

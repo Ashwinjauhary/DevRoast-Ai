@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import { createApiKey, deleteApiKey } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
 import { AnimatedText } from "@/components/ui/animated-text";
-import { Key, Loader2, CheckCircle2, AlertCircle, Copy, Trash2, Plus, ArrowLeft, Eye } from "lucide-react";
+import { Key, Loader2, CheckCircle2, Copy, Trash2, Plus, ArrowLeft, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";

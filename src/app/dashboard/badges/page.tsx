@@ -22,7 +22,7 @@ export default async function BadgesPage() {
 
     if (!dbUser) redirect("/auth/signin");
 
-    const existingBadgeIds = dbUser.badges.map((b: any) => b.badge_id);
+    const existingBadgeIds = dbUser.badges.map((b: { badge_id: string }) => b.badge_id);
     const earnedIds = computeEarnedBadges({
         analyses: dbUser.analyses,
         chats: dbUser.chats,

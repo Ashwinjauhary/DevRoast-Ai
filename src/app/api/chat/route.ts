@@ -80,7 +80,10 @@ export async function POST(req: Request) {
         // Save to Database if user is authenticated
         const session = await auth();
         if (session?.user?.id) {
-            const lastUserMessage = messages.slice().reverse().find((m: any) => m.role === "user")?.content || "Unknown query";
+            const lastUserMessage = (messages as { role: string; content: string }[])
+                .slice()
+                .reverse()
+                .find(m => m.role === "user")?.content || "Unknown query";
             await prisma.chat.create({
                 data: {
                     user_id: session.user.id,
@@ -92,8 +95,9 @@ export async function POST(req: Request) {
         }
 
         return NextResponse.json({ message: aiMessage });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("AI Chat Error:", error);
-        return NextResponse.json({ error: "Failed to communicate with AI Mentor" }, { status: 500 });
+        const message = error instanceof Error ? error.message : "Failed to communicate with AI Mentor";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

@@ -6,8 +6,7 @@
 // server page wrapper if needed. Current layout title template covers this.
 
 import { signIn } from "next-auth/react";
-import { Github, Play, TerminalSquare, AlertCircle, Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Github, AlertCircle, TerminalSquare, Shield } from "lucide-react";
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";

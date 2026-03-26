@@ -10,13 +10,37 @@ import { CommitFixerWidget } from "@/components/ui/commit-fixer-widget";
 import { fetchRepositories } from "@/app/dashboard/repositories/actions";
 import { GitHubConnectCard } from "@/components/dashboard/github-connect-card";
 
+interface Analysis {
+    id?: string;
+    analysis_type: string;
+    target: string;
+    score?: number;
+    result_json: unknown;
+}
+
+interface PortfolioProject {
+    title: string;
+    techStacks?: string[];
+}
+
+interface Portfolio {
+    projects: PortfolioProject[];
+}
+
+interface DashboardUser {
+    id: string;
+    github_username: string | null;
+    analyses: Analysis[];
+    portfolios: Portfolio[];
+}
+
 export default async function DashboardPage() {
     const session = await auth();
     if (!session?.user?.id) {
         redirect("/auth/signin");
     }
 
-    const dbUser = await (prisma as any).user.findUnique({
+    const dbUser = (await prisma.user.findUnique({
         where: { id: session.user.id },
         include: {
             _count: {
@@ -30,12 +54,12 @@ export default async function DashboardPage() {
                 take: 1
             }
         }
-    });
+    })) as unknown as DashboardUser;
 
-    const githubUsername = dbUser?.github_username || (session?.user as any)?.github_username;
+    const githubUsername = dbUser?.github_username || (session?.user as { github_username?: string })?.github_username;
     
     // Filter for personal analyses (own profile or own repos)
-    const personalAnalyses = dbUser?.analyses?.filter((a: any) => {
+    const personalAnalyses = dbUser?.analyses?.filter((a: Analysis) => {
         if (!githubUsername) return false;
         if (a.analysis_type === 'profile') {
             return a.target.toLowerCase() === githubUsername.toLowerCase();
@@ -47,29 +71,29 @@ export default async function DashboardPage() {
     }) || [];
 
     // Separate and sort for prioritization
-    const repoAnalyses = personalAnalyses.filter((a: any) => a.analysis_type === 'repository');
-    const profileAnalyses = personalAnalyses.filter((a: any) => a.analysis_type === 'profile');
+    const repoAnalyses = personalAnalyses.filter((a: Analysis) => a.analysis_type === 'repository');
+    const profileAnalyses = personalAnalyses.filter((a: Analysis) => a.analysis_type === 'profile');
 
     const topRepos = [...repoAnalyses].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 5);
     const topProfile = [...profileAnalyses].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 1);
 
     // Get Curation from Portfolio if available
-    const portfolioProjects = (dbUser as any)?.portfolios?.[0]?.projects || [];
-    const portfolioProjectNames = new Set(portfolioProjects.map((p: any) => p.title.toLowerCase()));
+    const portfolioProjects = dbUser?.portfolios?.[0]?.projects || [];
+    const portfolioProjectNames = new Set(portfolioProjects.map((p: PortfolioProject) => p.title.toLowerCase()));
 
     // Fallback: If less than 5 analyzed repos, fetch from GitHub to fill the grid
     const hasPortfolio = portfolioProjects.length > 0;
     const baseCount = hasPortfolio ? portfolioProjects.length : topRepos.length;
-    let extraRepos: any[] = [];
-    const hasGitHubToken = !!(session?.user as any)?.accessToken;
+    let extraRepos: Array<{ name: string; full_name: string; fork: boolean; size?: number; language?: string | null }> = [];
+    const hasGitHubToken = !!(session?.user as { accessToken?: string })?.accessToken;
 
     if (baseCount < 5 && hasGitHubToken) {
         try {
             const githubReposResult = await fetchRepositories();
             if (githubReposResult.success) {
-                const analyzedTargets = new Set(repoAnalyses.map((a: any) => a.target.toLowerCase()));
+                const analyzedTargets = new Set(repoAnalyses.map((a: Analysis) => a.target.toLowerCase()));
                 extraRepos = (githubReposResult.data || [])
-                    .filter((r: any) => {
+                    .filter((r: { name: string; full_name: string; fork: boolean; size?: number }) => {
                         const name = r.name.toLowerCase();
                         return !analyzedTargets.has(r.full_name.toLowerCase()) && 
                                !r.fork && 
@@ -81,7 +105,7 @@ export default async function DashboardPage() {
                                !name.includes('smartwatch');
                     })
                     // Weight: Size (Concept) + Language diversity indication
-                    .sort((a: any, b: any) => (b.size || 0) - (a.size || 0))
+                    .sort((a, b) => (b.size || 0) - (a.size || 0))
                     .slice(0, 5 - baseCount);
             }
         } catch (e) {
@@ -91,10 +115,10 @@ export default async function DashboardPage() {
 
     // Combine for graph data — Prioritize Portfolio selection if it exists
     const topAnalyses = portfolioProjects.length > 0 
-        ? portfolioProjects.map((p: any) => ({ 
+        ? portfolioProjects.map((p: PortfolioProject) => ({ 
             analysis_type: 'repository', 
             target: p.title, 
-            result_json: { name: p.title, languages_breakdown: { [p.techStacks?.[0] || 'Unknown']: 100 } } 
+            result_json: { name: p.title, languages_breakdown: { [p.techStacks?.[0] || 'Unknown']: 100 } } as const 
           }))
         : [...topRepos, ...topProfile];
 
@@ -103,7 +127,7 @@ export default async function DashboardPage() {
     const scoreStatus = parseFloat(devScore) >= 7 ? "Excellent" : parseFloat(devScore) >= 4 ? "Needs Improvement" : "Not Analyzed Successfully";
     
     // Stats
-    const personalReposAnalyzed = personalAnalyses.filter((a: any) => a.analysis_type === 'repository').length;
+    const personalReposAnalyzed = personalAnalyses.filter((a: Analysis) => a.analysis_type === 'repository').length;
     const totalRoasts = personalAnalyses.length;
 
     // Build Graph Data from Top 5 Analyses
@@ -112,8 +136,15 @@ export default async function DashboardPage() {
 
     nodesMap.set("User", { id: "User", group: 0, val: 30 });
 
-    topAnalyses.forEach((analysis: any) => {
-        const data = analysis.result_json as any;
+    topAnalyses.forEach((analysis: Analysis) => {
+        const data = analysis.result_json as { 
+            name?: string; 
+            repo?: string; 
+            languages_breakdown?: Record<string, number>;
+            dependencyHealth?: { name: string };
+            categories?: Record<string, number>;
+            top_languages?: string[];
+        };
         if (!data) return;
 
         if (analysis.analysis_type === 'repository') {
@@ -179,7 +210,7 @@ export default async function DashboardPage() {
     });
 
     // Handle Extra (Un-analyzed) Repos
-    extraRepos.forEach((repo: any) => {
+    extraRepos.forEach((repo) => {
         const repoName = repo.name;
         if (!nodesMap.has(repoName)) {
             nodesMap.set(repoName, { id: repoName, group: 1, val: 20 });

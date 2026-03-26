@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { generateReadmeAction } from "./actions";
 import { PremiumCard } from "@/components/ui/premium-card";
-import { FileText, Copy, Download, Loader2, CheckCircle } from "lucide-react";
+import { FileText, Copy, Download, Loader2 } from "lucide-react";
 
 export default function ReadmeGeneratorPage() {
     const [input, setInput] = useState("");

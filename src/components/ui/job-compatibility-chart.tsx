@@ -4,7 +4,13 @@ import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import { Info, Target, Zap, ShieldCheck, Activity } from "lucide-react";
 
-export function JobCompatibilityChart({ data }: { data: any }) {
+export interface Archetype {
+    name: string;
+    matchPercentage: number;
+    reasoning: string;
+}
+
+export function JobCompatibilityChart({ data }: { data: { archetypes: Archetype[] } }) {
     if (!data || !data.archetypes) return null;
 
     return (
@@ -31,7 +37,7 @@ export function JobCompatibilityChart({ data }: { data: any }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                 <div className="space-y-8 font-mono">
-                    {data.archetypes.map((archetype: any, i: number) => {
+                    {data.archetypes.map((archetype: Archetype, i: number) => {
                         const match = archetype.matchPercentage || 0;
                         return (
                             <motion.div 
@@ -41,7 +47,7 @@ export function JobCompatibilityChart({ data }: { data: any }) {
                                 transition={{ delay: i * 0.1 }}
                                 className="space-y-3 relative group/item cursor-help"
                                 onClick={() => toast(
-                                    (t) => (
+                                    () => (
                                         <div className="space-y-2">
                                             <p className="font-black text-[10px] uppercase tracking-widest text-primary">Deep Intel: {archetype.name}</p>
                                             <p className="text-xs text-zinc-300 leading-relaxed">{archetype.reasoning}</p>
@@ -100,7 +106,7 @@ export function JobCompatibilityChart({ data }: { data: any }) {
                             AI Synthesis Result
                         </h4>
                         <div className="space-y-4">
-                            {data.archetypes.filter((a: any) => a.matchPercentage > 60).slice(0, 2).map((archetype: any, i: number) => (
+                            {data.archetypes.filter((a: Archetype) => a.matchPercentage > 60).slice(0, 2).map((archetype: Archetype, i: number) => (
                                 <motion.div 
                                     key={i}
                                     initial={{ opacity: 0, y: 10 }}

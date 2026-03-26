@@ -6,7 +6,14 @@ import { Github, GitBranch, Calendar, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface HistoryListProps {
-    analyses: any[];
+    analyses: Array<{ 
+        id: string; 
+        analysis_type: string; 
+        score: number; 
+        target: string; 
+        result_json: unknown; 
+        created_at: Date | string 
+    }>;
 }
 
 export function HistoryList({ analyses }: HistoryListProps) {
@@ -62,7 +69,7 @@ export function HistoryList({ analyses }: HistoryListProps) {
 
                             <div className="flex-1">
                                 <p className="text-sm text-zinc-500 italic font-medium line-clamp-3 bg-white/2 p-4 rounded-2xl border border-white/5 group-hover:bg-white/4 transition-colors">
-                                    "{((run.result_json as any)?.roastLines?.[0]) || "The silence is deafening. No roast logs found."}"
+                                    &quot;{((run.result_json as { roastLines?: string[] })?.roastLines?.[0]) || "The silence is deafening. No roast logs found."}&quot;
                                 </p>
                             </div>
 

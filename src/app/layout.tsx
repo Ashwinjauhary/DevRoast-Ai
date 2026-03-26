@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     siteName: "DevRoast AI",
     images: [
       {
-        url: "/og-image.png",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "DevRoast AI - The Brutal AI Code Reviewer",
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DevRoast AI - Roast Your GitHub Profile",
     description: "Is your code actually good or are you just lucky? Let DevRoast AI rip apart your GitHub and tell you the truth.",
-    images: ["/og-image.png"],
+    images: ["/logo.png"],
     creator: "@AshwinJauhary",
   },
   robots: {

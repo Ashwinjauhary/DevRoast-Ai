@@ -17,7 +17,7 @@ export default function ResumeEnhancerPage() {
     const [latex, setLatex] = useState("");
     const [loading, setLoading] = useState(false);
     const [contextLoading, setContextLoading] = useState(true);
-    const [view, setView] = useState<"edit" | "preview">("preview");
+    const [view, setView] = useState<"edit">("edit");
     const [template, setTemplate] = useState("modern");
     const [copied, setCopied] = useState(false);
     const [userContext, setUserContext] = useState<{
@@ -192,123 +192,37 @@ export default function ResumeEnhancerPage() {
                             <div className="flex items-center justify-between px-6 py-3 bg-zinc-900/50 border border-white/5 rounded-3xl">
                                 <div className="flex gap-6">
                                     <button 
-                                        onClick={() => setView("preview")}
-                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'preview' ? 'text-primary' : 'text-zinc-500 hover:text-zinc-300'}`}
-                                    >
-                                        <Eye className="w-3.5 h-3.5" />
-                                        ATS Preview
-                                    </button>
-                                    <button 
                                         onClick={() => setView("edit")}
-                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'edit' ? 'text-primary' : 'text-zinc-500 hover:text-zinc-300'}`}
+                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors text-primary`}
                                     >
                                         <Code className="w-3.5 h-3.5" />
-                                        Elite Code
+                                        LaTeX Source Code
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[10px] font-mono text-zinc-600 uppercase">Verification: Passed</span>
+                                    <span className="text-[10px] font-mono text-zinc-600 uppercase">Compiled Successfully</span>
                                 </div>
                             </div>
 
                             <div className="relative group">
                                 <AnimatePresence mode="wait">
-                                    {view === "edit" ? (
-                                        <motion.div
-                                            key="edit"
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            className="relative"
-                                        >
-                                            <textarea
-                                                value={latex}
-                                                onChange={(e) => setLatex(e.target.value)}
-                                                className="w-full h-[700px] bg-black border border-white/10 rounded-[3rem] p-10 font-mono text-sm text-zinc-400 focus:outline-none focus:border-primary/40 leading-relaxed shadow-3xl overflow-y-auto custom-scrollbar"
-                                            />
-                                            <div className="absolute top-8 right-10 p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-500">
-                                                <PencilLine className="w-4 h-4" />
-                                            </div>
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            key="preview"
-                                            initial={{ opacity: 0, scale: 0.98 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.98 }}
-                                            className="w-full h-[700px] bg-white text-zinc-900 rounded-[3rem] p-12 overflow-y-auto shadow-2xl relative custom-scrollbar-light"
-                                        >
-                                            <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)', backgroundSize: '30px 30px' }} />
-                                            
-                                            <div className={`max-w-3xl mx-auto space-y-12 relative z-10 ${template === 'executive' ? 'font-serif' : 'font-sans'}`}>
-                                                {/* ELITE HEADER */}
-                                                <div className="text-center space-y-3 pb-8">
-                                                    <h1 className="text-5xl font-black tracking-tight uppercase leading-tight text-zinc-900">{userContext?.name}</h1>
-                                                    <p className="text-sm font-black text-zinc-600 uppercase tracking-[0.2em] border-y border-zinc-100 py-1">
-                                                        Software Engineer | Global Technical Impact
-                                                    </p>
-                                                    <div className="flex justify-center gap-4 text-[11px] text-zinc-500 font-bold uppercase tracking-widest pt-2">
-                                                       <span>{userContext?.email}</span>
-                                                       <span>|</span>
-                                                       <span>github.com/{userContext?.username}</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-12">
-                                                    {/* PROFESSIONAL SUMMARY */}
-                                                    <div className="space-y-4">
-                                                        <div className="space-y-1">
-                                                            <h2 className="text-xl font-black tracking-widest text-zinc-900">PROFESSIONAL SUMMARY</h2>
-                                                            <div className="h-[2px] bg-zinc-900 w-full" />
-                                                        </div>
-                                                        <p className="text-sm text-zinc-700 leading-relaxed font-medium">
-                                                            High-impact Software Engineer with a focus on scalable systems and technical excellence. 
-                                                            Demonstrated ability to architect robust solutions across multiple domains, leveraging 
-                                                            AI-driven workflows and modern tech stacks to deliver premium products.
-                                                        </p>
-                                                    </div>
-
-                                                    {/* CORE TECHNICAL SKILLS */}
-                                                    <div className="space-y-4">
-                                                        <div className="space-y-1">
-                                                            <h2 className="text-xl font-black tracking-widest text-zinc-900">CORE TECHNICAL SKILLS</h2>
-                                                            <div className="h-[2px] bg-zinc-900 w-full" />
-                                                        </div>
-                                                        <div className="grid grid-cols-1 gap-2">
-                                                            <p className="text-sm text-zinc-800"><span className="font-black uppercase text-[10px] tracking-widest mr-2">Top Technologies:</span> {userContext?.topRepos?.map((r) => r.lang).filter(Boolean).slice(0, 5).join(", ")}</p>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* ENGINEERING PROJECTS */}
-                                                    <div className="space-y-6">
-                                                        <div className="space-y-1">
-                                                            <h2 className="text-xl font-black tracking-widest text-zinc-900">ENGINEERING PROJECTS</h2>
-                                                            <div className="h-[2px] bg-zinc-900 w-full" />
-                                                        </div>
-                                                        <div className="space-y-8">
-                                                            {userContext?.projects?.map((p, i) => (
-                                                                <div key={i} className="space-y-2">
-                                                                    <div className="flex justify-between items-center">
-                                                                        <h3 className="text-base font-black uppercase tracking-tight">{p.name}</h3>
-                                                                        <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
-                                                                    </div>
-                                                                    <ul className="text-sm space-y-1.5 list-disc list-inside text-zinc-700 leading-snug">
-                                                                        <li>{p.desc}</li>
-                                                                        <li className="list-none pt-1"><span className="italic text-zinc-500 font-serif">{p.tech}</span></li>
-                                                                    </ul>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div className="pt-20 text-center opacity-20">
-                                                    <p className="text-[10px] text-zinc-900 font-black tracking-[0.5em] uppercase">Built with DevRoast AI • Neural Resume Architect</p>
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
+                                    <motion.div
+                                        key="edit"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        className="relative"
+                                    >
+                                        <textarea
+                                            value={latex}
+                                            onChange={(e) => setLatex(e.target.value)}
+                                            className="w-full h-[700px] bg-black border border-white/10 rounded-[3rem] p-10 font-mono text-sm text-zinc-400 focus:outline-none focus:border-primary/40 leading-relaxed shadow-3xl overflow-y-auto custom-scrollbar"
+                                        />
+                                        <div className="absolute top-8 right-10 p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-500">
+                                            <PencilLine className="w-4 h-4" />
+                                        </div>
+                                    </motion.div>
                                 </AnimatePresence>
                             </div>
                         </div>

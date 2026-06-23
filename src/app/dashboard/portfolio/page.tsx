@@ -87,6 +87,17 @@ export default function PortfolioGeneratorPage() {
         { id: "hacker", name: "Source Code", desc: "Green on black, terminal aesthetic.", color: "emerald-400" },
         { id: "prism", name: "Glass Prism", desc: "Glassmorphism, vibrant gradients.", color: "fuchsia-400" },
         { id: "aura", name: "Crystal Aura", desc: "Soft, glowing, ethereal design.", color: "violet-400" },
+        { id: "glass3d", name: "Glassmorphic 3D", desc: "Glassy backgrounds with 3D depth.", color: "cyan-400" },
+        { id: "bento", name: "Bento Box", desc: "Apple-inspired, grid-based layout.", color: "slate-200" },
+        { id: "aurora", name: "Aurora Mesh", desc: "Premium animated gradient blobs.", color: "indigo-400" },
+        { id: "clay", name: "Claymorphism", desc: "Friendly, soft, inflated 3D elements.", color: "amber-300" },
+        { id: "spatial", name: "Spatial", desc: "Translucent, deep-blurred glass.", color: "purple-400" },
+        { id: "neo", name: "Neo-Brutalism", desc: "Thick borders, flat vibrant colors.", color: "orange-400" },
+        { id: "swiss", name: "Swiss Style", desc: "Massive typography, strict alignment.", color: "red-500" },
+        { id: "fluid", name: "Fluid Gradient", desc: "Liquid, smooth flowing gradients.", color: "sky-400" },
+        { id: "dark_minimal", name: "Dark Minimalist", desc: "Pitch black, high contrast.", color: "zinc-300" },
+        { id: "synthwave", name: "Synthwave", desc: "80s retro-futuristic, neon grids.", color: "pink-500" },
+
     ];
 
     const handleGenerate = async () => {
@@ -243,6 +254,16 @@ export default function PortfolioGeneratorPage() {
                             template === 'minimalist' ? 'bg-white text-black' :
                             template === 'blueprint' ? 'bg-blue-500 text-white' :
                             template === 'hacker' ? 'bg-emerald-500/20 text-emerald-400' :
+                            template === 'glass3d' ? 'bg-cyan-500/20 text-cyan-400' :
+                            template === 'bento' ? 'bg-slate-200 text-slate-800' :
+                            template === 'aurora' ? 'bg-indigo-500/20 text-indigo-400' :
+                            template === 'clay' ? 'bg-amber-300 text-amber-900' :
+                            template === 'spatial' ? 'bg-purple-500/20 text-purple-400' :
+                            template === 'neo' ? 'bg-orange-400 text-black' :
+                            template === 'swiss' ? 'bg-red-500 text-white' :
+                            template === 'fluid' ? 'bg-sky-500/20 text-sky-400' :
+                            template === 'dark_minimal' ? 'bg-zinc-800 text-zinc-300' :
+                            template === 'synthwave' ? 'bg-pink-500/20 text-pink-400' :
                             'bg-zinc-800 text-zinc-400'
                         }`}>
                             {templates.find(t => t.id === template)?.name}

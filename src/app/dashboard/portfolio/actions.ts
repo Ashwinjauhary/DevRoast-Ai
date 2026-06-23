@@ -197,7 +197,42 @@ export async function generatePortfolioData(template: string = "crucible") {
         }));
 
         // 4. AI Generation
-        const prompt = `Elite engineering identity generation... JSON schema: { hero, vibe, roast, status, achievements, roadmap, techStack, dnaStats, projects, experience, skills }. Context: ${JSON.stringify(developerContext)}`;
+        const prompt = `Elite engineering identity generation based on the following developer context. You MUST return ONLY valid JSON matching this exact structure, with no markdown formatting or conversational text:
+{
+  "hero": {
+    "tagline": "A short punchy tagline",
+    "about": "A paragraph about the developer"
+  },
+  "vibe": { "title": "Career Archetype", "description": "Short description" },
+  "roast": "A brutally honest 1 sentence roast of their code",
+  "status": "Current status (e.g. 'Building Scalable Apps')",
+  "achievements": [ { "label": "Label", "value": "Value" } ],
+  "roadmap": [ { "phase": "Phase 1", "goal": "Goal description" } ],
+  "techStack": {
+    "frontend": ["React", "Next.js"],
+    "backend": ["Node.js"],
+    "infrastructure": ["Docker"],
+    "devTools": ["Git"]
+  },
+  "dnaStats": [ { "label": "Stat", "value": "Value", "icon": "Zap or Brain or Box" } ],
+  "projects": [
+    {
+      "title": "Project Name",
+      "description": "Short description",
+      "techStacks": ["React", "TS"],
+      "impact": "Measurable impact",
+      "url": "GitHub URL",
+      "liveUrl": "Live URL or empty string"
+    }
+  ],
+  "experience": {
+    "summary": "A cohesive paragraph summarizing their professional synopsis and impact",
+    "specialties": ["Skill 1"]
+  },
+  "skills": ["Skill 1", "Skill 2"]
+}
+
+Context: ${JSON.stringify(developerContext)}`;
 
         const portfolioData = await generateJsonResponse<PortfolioAIOutput>(prompt);
 

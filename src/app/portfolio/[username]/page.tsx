@@ -1,4 +1,6 @@
 import { getPortfolioData } from "@/app/dashboard/portfolio/actions";
+import BentoLayout from "./templates/BentoLayout";
+import SwissLayout from "./templates/SwissLayout";
 import { JobCompatibilityResult } from "@/lib/job-compatibility";
 import { notFound } from "next/navigation";
 import { Github, ExternalLink, Code2, Briefcase, Activity, Zap, Box, Brain, Cpu, Database, Layout, ShieldCheck, Mail, Send, Terminal, Award } from "lucide-react";
@@ -102,6 +104,14 @@ export default async function PublicPortfolioPage({ params }: Props) {
     const projects = Array.isArray(portfolio?.projects) ? portfolio.projects : [];
     const certificates = Array.isArray(portfolio?.certificates) ? portfolio.certificates : [];
     const template = portfolio?.template || "crucible";
+
+    if (template === 'bento') {
+        return <BentoLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+    
+    if (template === 'swiss') {
+        return <SwissLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
 
     return (
         <div className={`min-h-screen selection:bg-primary/30 ${

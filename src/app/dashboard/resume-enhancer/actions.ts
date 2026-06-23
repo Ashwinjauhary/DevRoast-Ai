@@ -159,8 +159,10 @@ STRICT ARCHITECTURAL RULES:
 4. SKILLS:
    \\noindent \\textbf{Category}: Skill 1, Skill 2, Skill 3...
 
-CRITICAL POLISH:
-- Use \\textbf{} for all metrics and key technical terms inside bullet points.
+CRITICAL POLISH & LATEX RULES (STRICTLY ENFORCED):
+- ABSOLUTELY NO MARKDOWN. NEVER use **text** for bolding. It breaks the LaTeX compiler.
+- You MUST use \\textbf{text} for all bolding, metrics, and key technical terms.
+- ESCAPE ALL special LaTeX characters: &, %, $, #, _ must be written as \\&, \\%, \\$, \\#, \\_.
 - Ensure the outcome is the hero of every bullet.
 - Content must be dense, professional, and zero-fluff.
 - Use a single page layout (0.6in margins).

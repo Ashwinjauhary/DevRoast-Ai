@@ -183,8 +183,16 @@ BEGIN 1000% PERFECT LATEX:`;
         const latex = await getAIResponse(prompt);
         
         let cleanedLatex = latex.trim();
-        if (cleanedLatex.startsWith("```")) {
-            cleanedLatex = cleanedLatex.replace(/^```(latex|tex)?\n?/, "").replace(/\n?```$/, "");
+        
+        // Robust extraction: strip all conversational fluff before \documentclass and after \end{document}
+        const match = cleanedLatex.match(/\\documentclass[\s\S]*?\\end\{document\}/);
+        if (match) {
+            cleanedLatex = match[0];
+        } else {
+            // Fallback just in case
+            if (cleanedLatex.startsWith("```")) {
+                cleanedLatex = cleanedLatex.replace(/^```(latex|tex)?\n?/, "").replace(/\n?```$/, "");
+            }
         }
 
         return { success: true, latex: cleanedLatex };

@@ -91,12 +91,9 @@ export async function GET(request: Request) {
             headers["Authorization"] = `Bearer ${githubToken}`;
         }
 
-        const isSelfAnalysis = (session?.user as { github_username?: string })?.github_username?.toLowerCase() === username.toLowerCase() ||
-            session?.user?.name?.toLowerCase() === username.toLowerCase();
-
-        const reposUrl = (isSelfAnalysis && !!githubToken)
-            ? `${GITHUB_API_BASE}/user/repos?type=all&per_page=100&sort=updated`
-            : `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=updated`;
+        // We always use the public endpoint to ensure 1000% accuracy with what's shown on the user's public GitHub profile page.
+        // Private repos skew the metrics and confuse the user because they don't match the UI numbers.
+        const reposUrl = `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=updated`;
 
         logDebug(`Fetching data from GitHub...`);
         

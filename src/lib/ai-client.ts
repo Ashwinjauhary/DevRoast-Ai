@@ -178,7 +178,7 @@ METRICS TO ANALYZE:
 ${JSON.stringify(metrics, null, 2)}
 
 SCORING ALGORITHM (Internal Guidelines):
-- REPOSITORIES (Weight 40%): Use total_repos (public + private). Look at total_stars relative to impact. Mention private_repos if they exist ("Private Operations"). High repo count with zero stars should be roasted for "Vaporware Production".
+- REPOSITORIES (Weight 40%): Use public_repos (Do NOT invent numbers). Look at total_stars relative to impact. High repo count with low stars should be roasted for "Vaporware Production".
 - COMMUNITY (Weight 30%): Look at followers vs following ratio. If following > followers, they are a "Social Climber" (Max 4/10). Look at total_stars and total_forks across ALL repos.
 - PROFILE (Weight 30%): has_profile_readme, account_age_days, bio/location. recent_events_count (Activity check).
 
@@ -195,7 +195,7 @@ Return ONLY a valid JSON object with the following structure:
   "suggestions": [3 actionable, real steps to not be a liability]
 }
 
-CRITICAL: Roast lines MUST explain specific numbers. If total_stars is low despite high total_repos, roast them for "Hidden Mediocrity" or "Empty Shell Architecture".
+CRITICAL: Roast lines MUST use the EXACT numbers provided in the metrics. Do NOT hallucinate or round different numbers of repositories or stars. If public_repos is 85, say 85. If total_stars is 38, say 38. Use public_repos for repository counts.
 `;
     return generateJsonResponse<ProfileAnalysis>(prompt);
 }

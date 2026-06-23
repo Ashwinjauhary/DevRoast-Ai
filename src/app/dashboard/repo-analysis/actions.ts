@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -57,7 +57,7 @@ Output ONLY a raw JSON array of the literal string file paths. NO markdown block
 Flaws: ${JSON.stringify(analysis.suggestions)}
 File Tree: \n${fileTree.substring(0, 3000)}`;
 
-        const selectedFilesText = await getSambaNovaResponse(fileSelectionPrompt);
+        const selectedFilesText = await getAIResponse(fileSelectionPrompt);
         let cleanSelection = selectedFilesText.trim();
         if (cleanSelection.startsWith("\`\`\`json")) cleanSelection = cleanSelection.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
         else if (cleanSelection.startsWith("\`\`\`")) cleanSelection = cleanSelection.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
@@ -97,7 +97,7 @@ Do NOT output anything other than the raw Markdown intended for the issue body. 
 
 Original Code:\n\n${currentContent}`;
 
-                const issueBody = await getSambaNovaResponse(issuePrompt);
+                const issueBody = await getAIResponse(issuePrompt);
                 let cleanIssueBody = issueBody.trim();
                 if (cleanIssueBody.startsWith("\`\`\`markdown")) cleanIssueBody = cleanIssueBody.replace(/^\`\`\`markdown\n?/, "").replace(/\n?\`\`\`$/, "");
                 else if (cleanIssueBody.startsWith("\`\`\`")) cleanIssueBody = cleanIssueBody.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");

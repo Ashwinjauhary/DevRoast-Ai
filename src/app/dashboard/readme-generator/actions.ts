@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { generateReadme } from "@/lib/sambanova";
+import { generateReadme } from "@/lib/ai-client";
 
 const GITHUB_API = "https://api.github.com";
 

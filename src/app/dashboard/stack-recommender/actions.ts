@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { recommendTechStack } from "@/lib/sambanova";
+import { recommendTechStack } from "@/lib/ai-client";
 
 export async function recommendStack(goal: string, currentStack: string) {
     const session = await auth();

@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 
 export async function reviewCode(code: string, language: string) {
     const session = await auth();
@@ -31,32 +32,10 @@ export async function reviewCode(code: string, language: string) {
         ${code}
     `;
 
-    const keys = (process.env.SAMBANOVA_API_KEYS || process.env.SAMBANOVA_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
-    const key = keys[0];
-
     try {
-        const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${key}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "Meta-Llama-3.1-405B-Instruct",
-                messages: [
-                    { role: "system", content: "You are DevRoast AI. Your tone is arrogant, genius, and brutally honest." },
-                    { role: "user", content: prompt }
-                ],
-                stream: true,
-                temperature: 0.2,
-            }),
-        });
-
-        if (!response.ok) throw new Error("SambaNova API failure");
-
-        return response;
+        const result = await getAIResponse(prompt);
+        return { content: result };
     } catch (err: unknown) {
-        return { error: err instanceof Error ? err.message : "SambaNova review failed" };
+        return { error: err instanceof Error ? err.message : "AI review failed" };
     }
 }
-

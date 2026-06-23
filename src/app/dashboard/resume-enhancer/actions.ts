@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 import { prisma } from "@/lib/prisma";
 import { fetchRepositories } from "@/app/dashboard/repositories/actions";
 
@@ -114,7 +114,7 @@ export async function generateResumeLatex(customPrompt: string = "", template: s
             brutalist: "Monospace accents, industrial dividers, bold impact."
         };
 
-        // 5. SambaNova Prompt
+        // 5. AI Prompt
         const prompt = `You are the world's leading 10/10 Engineer Resume Architect. Generate a MASTERPIECE LaTeX document. 
 The user is unhappy with "cheap" looking results. Use ONLY the highest level of professional LaTeX engineering.
 
@@ -168,7 +168,7 @@ CRITICAL POLISH:
 
 BEGIN 1000% PERFECT LATEX:`;
 
-        const latex = await getSambaNovaResponse(prompt);
+        const latex = await getAIResponse(prompt);
         
         let cleanedLatex = latex.trim();
         if (cleanedLatex.startsWith("```")) {

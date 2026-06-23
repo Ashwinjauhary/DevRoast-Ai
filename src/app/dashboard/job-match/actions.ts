@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 
 export async function calculateJobMatch(jobDescription: string) {
     const session = await auth();
@@ -46,7 +46,7 @@ export async function calculateJobMatch(jobDescription: string) {
         }
         `;
 
-        const responseText = await getSambaNovaResponse(matchPrompt);
+        const responseText = await getAIResponse(matchPrompt);
         let cleaned = responseText.trim();
         if (cleaned.startsWith("```json")) cleaned = cleaned.replace(/^```json\n?/, "").replace(/\n?```$/, "");
         else if (cleaned.startsWith("```")) cleaned = cleaned.replace(/^```\n?/, "").replace(/\n?```$/, "");

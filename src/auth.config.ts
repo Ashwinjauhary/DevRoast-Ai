@@ -7,13 +7,11 @@ export const authConfig = {
         GitHub({
             clientId: process.env.AUTH_GITHUB_ID,
             clientSecret: process.env.AUTH_GITHUB_SECRET,
-            allowDangerousEmailAccountLinking: true,
-            authorization: { params: { scope: "read:user user:email repo delete_repo" } }
+            authorization: { params: { scope: "read:user user:email repo" } }
         }),
         Google({
             clientId: process.env.AUTH_GOOGLE_ID,
             clientSecret: process.env.AUTH_GOOGLE_SECRET,
-            allowDangerousEmailAccountLinking: true,
         }),
     ],
     pages: {

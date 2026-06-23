@@ -1,4 +1,4 @@
-import { getSambaNovaResponse } from "./ai-repo-fixer";
+import { getAIResponse } from "./ai-repo-fixer";
 
 export interface JobCompatibilityResult {
     archetypes: Array<{
@@ -32,7 +32,7 @@ Developer Context:
 ${JSON.stringify(developerContext, null, 2)}`;
 
     try {
-        let aiResponse = await getSambaNovaResponse(prompt);
+        let aiResponse = await getAIResponse(prompt);
         // Clean markdown
         if (aiResponse.startsWith("\`\`\`json")) aiResponse = aiResponse.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
         else if (aiResponse.startsWith("\`\`\`")) aiResponse = aiResponse.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");

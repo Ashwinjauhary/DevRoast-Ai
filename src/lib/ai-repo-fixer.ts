@@ -1,75 +1,57 @@
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const MODEL = "llama-3.3-70b-versatile";
+
 /**
- * Hybrid AI System: Grok -> Groq -> SambaNova (Key Cycling)
+ * Get all available Groq API keys from environment
  */
-export async function getSambaNovaResponse(prompt: string, attempt: number = 0): Promise<string> {
-    const groqKey = process.env.GROQ_API_KEY;
+function getGroqKeys(): string[] {
+    return (process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || "")
+        .split(",")
+        .map(k => k.trim())
+        .filter(Boolean);
+}
 
-    // --- Phase 1: Groq (Primary) ---
-    if (attempt === 0 && groqKey) {
-        console.log(`[AI-FIXER] Attempting Groq Primary...`);
-        try {
-            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: { 
-                    "Authorization": `Bearer ${groqKey}`, 
-                    "Content-Type": "application/json" 
-                },
-                body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile",
-                    messages: [
-                        { role: "system", content: "Expert developer specialized in high-performance engineering." },
-                        { role: "user", content: prompt }
-                    ],
-                    temperature: 0.2,
-                    max_tokens: 4000,
-                }),
-            });
+/**
+ * Groq-Only AI Text Response with multi-key rotation.
+ * Used by dependency-auditor, job-compatibility, and other non-JSON tasks.
+ */
+export async function getAIResponse(prompt: string, attempt: number = 0): Promise<string> {
+    const keys = getGroqKeys();
 
-            if (response.ok) {
-                const data = await response.json();
-                const content = data.choices?.[0]?.message?.content;
-                if (content) {
-                    console.log("[AI-FIXER] Groq success!");
-                    return content;
-                }
-            }
-            console.warn(`[AI-FIXER] Groq failed (${response.status}). Falling back to SambaNova...`);
-        } catch {
-            console.warn(`[AI-FIXER] Groq error. Falling back...`);
-        }
-    }
+    if (keys.length === 0) throw new Error("No GROQ_API_KEYS configured.");
+    if (attempt >= keys.length) throw new Error("All Groq keys exhausted.");
 
-    // --- Phase 2: SambaNova Cycling ---
-    const keys = (process.env.SAMBANOVA_API_KEYS || process.env.SAMBANOVA_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
-
-    if (keys.length === 0) throw new Error("No API keys found.");
-    if (attempt >= keys.length) throw new Error("All AI keys exhausted.");
-
-    const currentKey = keys[attempt];
-    console.log(`[AI-FIXER] SambaNova Attempt ${attempt + 1}/${keys.length}...`);
+    const key = keys[attempt];
 
     try {
-        const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
+        const response = await fetch(GROQ_API_URL, {
             method: "POST",
-            headers: { "Authorization": `Bearer ${currentKey}`, "Content-Type": "application/json" },
+            headers: {
+                "Authorization": `Bearer ${key}`,
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
-                model: "Meta-Llama-3.3-70B-Instruct",
-                messages: [{ role: "system", content: "Expert dev." }, { role: "user", content: prompt }],
+                model: MODEL,
+                messages: [
+                    { role: "system", content: "Expert developer specialized in high-performance engineering." },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.2,
                 max_tokens: 4000,
-                temperature: 0.1,
             }),
         });
 
-        if (!response.ok) {
-            console.warn(`[AI-FIXER] SambaNova Key ${attempt + 1} failed (${response.status})`);
-            await new Promise(r => setTimeout(r, 500));
-            return getSambaNovaResponse(prompt, attempt + 1);
+        if (response.ok) {
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (content) return content;
         }
 
-        const data = await response.json();
-        return data.choices?.[0]?.message?.content || "";
-
-    } catch {
-        return getSambaNovaResponse(prompt, attempt + 1);
+        console.warn(`[AI-FIXER] Key ${attempt + 1}/${keys.length} failed (${response.status}). Rotating...`);
+        return getAIResponse(prompt, attempt + 1);
+    } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : "Unknown error";
+        console.warn(`[AI-FIXER] Key ${attempt + 1} error: ${msg}. Rotating...`);
+        return getAIResponse(prompt, attempt + 1);
     }
 }

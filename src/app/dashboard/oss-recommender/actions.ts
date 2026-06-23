@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { recommendOpenSource } from "@/lib/sambanova";
+import { recommendOpenSource } from "@/lib/ai-client";
 
 export async function getOssRecommendations(skills: string[], stack: string[]) {
     const session = await auth();

@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { checkLicenseCompliance } from "@/lib/sambanova";
+import { checkLicenseCompliance } from "@/lib/ai-client";
 
 const GITHUB_API = "https://api.github.com";
 

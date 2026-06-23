@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { generateRepoAnalysis } from "@/lib/sambanova";
+import { generateRepoAnalysis } from "@/lib/ai-client";
 import { scanForSecrets } from "@/lib/secrets";
+import { rateLimit } from "@/lib/rate-limit";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -11,6 +12,16 @@ export async function GET(request: Request) {
     const org = searchParams.get("org");
 
     if (!org) return NextResponse.json({ error: "org parameter required" }, { status: 400 });
+
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized. Please sign in to use this feature." }, { status: 401 });
+    }
+
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const rateLimitResult = await rateLimit(ip, 20, 60 * 1000); // 20 requests per minute
+    if (!rateLimitResult.success) {
+        return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+    }
 
     try {
         const token = (session?.user as { accessToken?: string })?.accessToken;

@@ -1,136 +1,134 @@
-export const DEFAULT_MODEL = "Meta-Llama-3.3-70B-Instruct";
+export const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 /**
- * Hybrid AI JSON Generator: Groq (Primary) -> SambaNova (Fallback)
+ * Get all available Groq API keys from environment
  */
+function getGroqKeys(): string[] {
+    return (process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || "")
+        .split(",")
+        .map(k => k.trim())
+        .filter(Boolean);
+}
+
 /**
- * Hybrid AI JSON Generator: Multi-Groq (Primary) -> Multi-SambaNova (Fallback)
+ * Groq-Only AI JSON Generator with multi-key rotation.
+ * Cycles through all available Groq keys on failure before giving up.
  */
-async function generateJsonResponse<T = unknown>(prompt: string, attempt: number = 0, engineType: 'groq' | 'sambanova' = 'groq'): Promise<T> {
-    const groqKeys = (process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
-    const sambaKeys = (process.env.SAMBANOVA_API_KEYS || process.env.SAMBANOVA_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
+async function generateJsonResponse<T = unknown>(prompt: string, attempt: number = 0): Promise<T> {
+    const keys = getGroqKeys();
 
-    if (engineType === 'groq') {
-        if (attempt >= groqKeys.length) {
-            console.warn(`[AI] All Groq keys exhausted (${groqKeys.length}). Falling back to SambaNova...`);
-            return generateJsonResponse(prompt, 0, 'sambanova');
-        }
-
-        const currentKey = groqKeys[attempt];
-        console.log(`[AI] Groq Attempt ${attempt + 1}/${groqKeys.length}...`);
-
-        try {
-            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: { 
-                    "Authorization": `Bearer ${currentKey}`, 
-                    "Content-Type": "application/json" 
-                },
-                body: JSON.stringify({
-                    stream: false,
-                    model: "llama-3.3-70b-versatile",
-                    messages: [{ role: "system", content: prompt + "\n\nCRITICAL: Respond ONLY with a valid JSON object. No markdown." }],
-                    response_format: { type: "json_object" },
-                    temperature: 0.1,
-                }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const content = data.choices?.[0]?.message?.content;
-                if (content) {
-                    console.log("[AI] Groq success!");
-                    return parseAIJson(content) as T;
-                }
-            }
-            
-            console.warn(`[AI] Groq Key ${attempt + 1} failed (Status: ${response.status}). Trying next Groq key...`);
-            return generateJsonResponse(prompt, attempt + 1, 'groq');
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : "Unknown error";
-            console.error(`[AI] Groq Exception on Key ${attempt + 1}: ${errorMessage}. Trying next Groq key...`);
-            return generateJsonResponse(prompt, attempt + 1, 'groq');
-        }
+    if (keys.length === 0) {
+        throw new Error("CRITICAL: No GROQ_API_KEYS configured in environment.");
     }
 
-    // --- SambaNova Logic ---
-    if (attempt >= sambaKeys.length) {
-        throw new Error(`CRITICAL AI FAILURE: All keys exhausted (Groq: ${groqKeys.length}, SambaNova: ${sambaKeys.length})`);
+    if (attempt >= keys.length) {
+        throw new Error(`AI FAILURE: All ${keys.length} Groq keys exhausted.`);
     }
 
-    const currentKey = sambaKeys[attempt];
-    console.log(`[AI] SambaNova Attempt ${attempt + 1}/${sambaKeys.length}...`);
+    const currentKey = keys[attempt];
 
     try {
-        const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
+        const response = await fetch(GROQ_API_URL, {
             method: "POST",
-            headers: { 
-                "Authorization": `Bearer ${currentKey}`, 
-                "Content-Type": "application/json" 
+            headers: {
+                "Authorization": `Bearer ${currentKey}`,
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 stream: false,
                 model: DEFAULT_MODEL,
-                messages: [{ role: "system", content: prompt + "\n\nOutput only raw JSON. No markdown blocks." }],
+                messages: [{ role: "system", content: prompt + "\n\nCRITICAL: Respond ONLY with a valid JSON object. No markdown." }],
+                response_format: { type: "json_object" },
                 temperature: 0.1,
             }),
         });
 
-        if (!response.ok) {
-            console.warn(`[AI] SambaNova Key ${attempt + 1} failed (${response.status}). Retrying next...`);
-            return generateJsonResponse(prompt, attempt + 1, 'sambanova');
+        if (response.ok) {
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (content) {
+                return parseAIJson(content) as T;
+            }
         }
 
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content;
-        if (!content) throw new Error("Empty response from SambaNova");
-        return parseAIJson(content) as T;
-
+        console.warn(`[AI] Groq Key ${attempt + 1}/${keys.length} failed (Status: ${response.status}). Rotating...`);
+        return generateJsonResponse(prompt, attempt + 1);
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        console.warn(`[AI] SambaNova Key ${attempt + 1} error: ${errorMessage}. Retrying...`);
-        return generateJsonResponse(prompt, attempt + 1, 'sambanova');
+        console.error(`[AI] Groq Key ${attempt + 1} exception: ${errorMessage}. Rotating...`);
+        return generateJsonResponse(prompt, attempt + 1);
     }
 }
 
 /**
- * Shared Text Generator for Markdown/Non-JSON tasks
+ * Groq-Only Text Generator with multi-key rotation.
+ * Used for Markdown/non-JSON tasks (README generation, etc.)
  */
-async function generateTextResponse(prompt: string, attempt: number = 0, engineType: 'groq' | 'sambanova' = 'groq'): Promise<string> {
-    const groqKeys = (process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
-    const sambaKeys = (process.env.SAMBANOVA_API_KEYS || process.env.SAMBANOVA_API_KEY || "").split(",").map(k => k.trim()).filter(Boolean);
+async function generateTextResponse(prompt: string, attempt: number = 0): Promise<string> {
+    const keys = getGroqKeys();
 
-    if (engineType === 'groq') {
-        if (attempt >= groqKeys.length) return generateTextResponse(prompt, 0, 'sambanova');
-        const key = groqKeys[attempt];
-        try {
-            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "user", content: prompt }], temperature: 0.5 }),
-            });
-            if (res.ok) {
-                const data = await res.json();
-                return data.choices?.[0]?.message?.content || "";
-            }
-            return generateTextResponse(prompt, attempt + 1, 'groq');
-        } catch { return generateTextResponse(prompt, attempt + 1, 'groq'); }
-    }
+    if (keys.length === 0) return "# Error\n\nNo AI API keys configured.";
+    if (attempt >= keys.length) return "# Error\n\nAll AI keys exhausted.";
 
-    if (attempt >= sambaKeys.length) return "# Error\n\nAll AI engines failed.";
-    const key = sambaKeys[attempt];
+    const key = keys[attempt];
     try {
-        const res = await fetch("https://api.sambanova.ai/v1/chat/completions", {
+        const res = await fetch(GROQ_API_URL, {
             method: "POST",
             headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ model: DEFAULT_MODEL, messages: [{ role: "user", content: prompt }], temperature: 0.5 }),
+            body: JSON.stringify({
+                model: DEFAULT_MODEL,
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.5,
+            }),
         });
         if (res.ok) {
             const data = await res.json();
             return data.choices?.[0]?.message?.content || "";
         }
-        return generateTextResponse(prompt, attempt + 1, 'sambanova');
-    } catch { return generateTextResponse(prompt, attempt + 1, 'sambanova'); }
+        return generateTextResponse(prompt, attempt + 1);
+    } catch {
+        return generateTextResponse(prompt, attempt + 1);
+    }
+}
+
+/**
+ * Groq-Only Streaming Text Generator with multi-key rotation.
+ * Used for streaming responses (code review, etc.)
+ */
+export async function generateStreamResponse(
+    messages: { role: string; content: string }[],
+    attempt: number = 0
+): Promise<Response> {
+    const keys = getGroqKeys();
+
+    if (keys.length === 0) throw new Error("No GROQ_API_KEYS configured.");
+    if (attempt >= keys.length) throw new Error("All Groq keys exhausted for streaming.");
+
+    const key = keys[attempt];
+    try {
+        const response = await fetch(GROQ_API_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${key}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                model: DEFAULT_MODEL,
+                messages,
+                stream: true,
+                temperature: 0.2,
+            }),
+        });
+
+        if (response.ok) return response;
+
+        console.warn(`[AI-Stream] Key ${attempt + 1} failed (${response.status}). Rotating...`);
+        return generateStreamResponse(messages, attempt + 1);
+    } catch {
+        return generateStreamResponse(messages, attempt + 1);
+    }
 }
 
 export interface ProfileAnalysis {

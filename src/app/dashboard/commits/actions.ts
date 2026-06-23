@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -147,7 +147,7 @@ export async function suggestCommitFixes(commits: GitHubCommit[]) {
     const prompt = `You are a strict Open-Source Maintainer enforcing 'Conventional Commits'. Review the commits. JSON: { "fixedCommits": [ { "sha": string, "suggested": string } ] }\n\nLogs:\n${unformattedLogs}`;
 
     try {
-        const aiResponse = await getSambaNovaResponse(prompt);
+        const aiResponse = await getAIResponse(prompt);
         // Clean markdown
         let clean = aiResponse.trim();
         if (clean.startsWith("\`\`\`json")) clean = clean.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");

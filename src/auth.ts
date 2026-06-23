@@ -27,18 +27,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 });
 
                 if (!user) {
-                    const hashedPassword = await bcrypt.hash(credentials.password as string, 10);
-                    const newUser = await prisma.user.create({
-                        data: {
-                            email: credentials.email as string,
-                            password: hashedPassword,
-                        }
-                    });
-                    return {
-                        id: newUser.id,
-                        name: newUser.name,
-                        email: newUser.email,
-                    };
+                    // Do not auto-register users anymore.
+                    // Registration should be a separate explicit flow or blocked.
+                    return null;
                 }
 
                 if (!user.password) return null;

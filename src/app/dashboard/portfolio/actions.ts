@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { calculateJobCompatibility } from "@/lib/job-compatibility";
@@ -195,10 +195,10 @@ export async function generatePortfolioData(template: string = "crucible") {
             created_at: cert.created_at
         }));
 
-        // 4. SambaNova AI Generation
+        // 4. AI Generation
         const prompt = `Elite engineering identity generation... JSON schema: { hero, vibe, roast, status, achievements, roadmap, techStack, dnaStats, projects, experience, skills }. Context: ${JSON.stringify(developerContext)}`;
 
-        const aiResponse = await getSambaNovaResponse(prompt);
+        const aiResponse = await getAIResponse(prompt);
         let clean = aiResponse.trim();
         if (clean.startsWith("\`\`\`json")) clean = clean.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
         else if (clean.startsWith("\`\`\`")) clean = clean.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
@@ -375,7 +375,7 @@ export async function generateLinkedInCaption(username: string, roast: string, s
     try {
         const prompt = `LinkedIn caption for @${username}. Roast: "${roast}". Score: ${score.toFixed(1)}/10. Max 400 chars. #DevRoast #GitHubAudit`;
 
-        const caption = await getSambaNovaResponse(prompt);
+        const caption = await getAIResponse(prompt);
         return { success: true, caption: caption.trim() };
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Caption generation failed";

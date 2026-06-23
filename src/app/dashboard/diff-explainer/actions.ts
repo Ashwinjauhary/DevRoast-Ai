@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { explainDiff } from "@/lib/sambanova";
+import { explainDiff } from "@/lib/ai-client";
 
 export async function explainGitDiff(diff: string) {
     const session = await auth();

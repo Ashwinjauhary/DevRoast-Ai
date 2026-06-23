@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { generateProfileAnalysis } from "@/lib/sambanova";
+import { generateProfileAnalysis } from "@/lib/ai-client";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -58,7 +58,7 @@ export async function performDuel(user1: string, user2: string) {
             generateProfileAnalysis(data2) as Promise<Analysis>
         ]);
 
-        // SambaNova decides the winner based on the technical depth and roast quality
+        // AI decides the winner based on the technical depth and roast quality
         const duelPrompt = `
         YOU ARE THE GRAND MASTER OF THE NEURAL COLISEUM. 
         TWO DEVELOPERS ARE DUELING FOR TECHNICAL SUPREMACY.
@@ -86,8 +86,8 @@ export async function performDuel(user1: string, user2: string) {
         }
         `;
 
-        const { getSambaNovaResponse } = await import("@/lib/ai-repo-fixer");
-        const duelResultText = await getSambaNovaResponse(duelPrompt);
+        const { getAIResponse } = await import("@/lib/ai-repo-fixer");
+        const duelResultText = await getAIResponse(duelPrompt);
         
         let cleaned = duelResultText.trim();
         if (cleaned.startsWith("```json")) cleaned = cleaned.replace(/^```json\n?/, "").replace(/\n?```$/, "");

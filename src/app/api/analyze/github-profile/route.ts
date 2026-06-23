@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 const GITHUB_API_BASE = "https://api.github.com";
 
@@ -41,6 +42,16 @@ export async function GET(request: Request) {
 
     if (!username) {
         return NextResponse.json({ error: "Username is required" }, { status: 400 });
+    }
+
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized. Please sign in to use this feature." }, { status: 401 });
+    }
+
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const rateLimitResult = await rateLimit(ip, 30, 60 * 1000); // 30 requests per minute
+    if (!rateLimitResult.success) {
+        return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
     try {

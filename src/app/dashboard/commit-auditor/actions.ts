@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { auditCommitMessages } from "@/lib/sambanova";
+import { auditCommitMessages } from "@/lib/ai-client";
 
 const GITHUB_API = "https://api.github.com";
 

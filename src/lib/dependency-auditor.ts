@@ -1,4 +1,4 @@
-import { getSambaNovaResponse } from "./ai-repo-fixer";
+import { getAIResponse } from "./ai-repo-fixer";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -45,7 +45,7 @@ ${manifestContent}
 `;
 
     try {
-        let aiResponse = await getSambaNovaResponse(prompt);
+        let aiResponse = await getAIResponse(prompt);
         // Clean markdown
         if (aiResponse.startsWith("\`\`\`json")) aiResponse = aiResponse.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
         else if (aiResponse.startsWith("\`\`\`")) aiResponse = aiResponse.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");

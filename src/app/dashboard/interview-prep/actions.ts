@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { generateInterviewQuestions } from "@/lib/sambanova";
+import { generateInterviewQuestions } from "@/lib/ai-client";
 
 export async function getInterviewQuestions(weaknesses: string[], techStack: string[]) {
     const session = await auth();

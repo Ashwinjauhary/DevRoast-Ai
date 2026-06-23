@@ -41,7 +41,7 @@ export default function PrivacyPage() {
                         <ul className="list-disc list-inside mt-4 space-y-2 text-zinc-400">
                             <li><span className="text-white">Account Information</span>: Email, name, and profile picture from OAuth providers.</li>
                             <li><span className="text-white">GitHub Data</span>: Public profile metadata and activity stats.</li>
-                            <li><span className="text-white">AI Interactions</span>: Code snippets and chat logs processed by Groq/SambaNova.</li>
+                            <li><span className="text-white">AI Interactions</span>: Code snippets and chat logs processed by Groq.</li>
                         </ul>
                     </section>
 

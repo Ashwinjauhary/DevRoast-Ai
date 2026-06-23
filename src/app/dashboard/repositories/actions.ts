@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getSambaNovaResponse } from "@/lib/ai-repo-fixer";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 import { scanForSecrets } from "@/lib/secrets";
 import { revalidatePath } from "next/cache";
 
@@ -242,7 +242,7 @@ Current README Context: ${currentReadme.substring(0, 2000)}...
 
         // 4. Generate new short description via AI
         const descriptionPrompt = `Based on the repository context (including its file structure and README), write a beautiful, detailed, medium-length description for this project (around 2 to 3 sentences). Make it highly engaging, attractive, and explain what the code actually does. CRITICAL RESTRICTION: The total output MUST BE STRICTLY UNDER 300 characters. Output ONLY the raw description text, no quotes, no conversational filler. \n\n${repoContext}`;
-        let newDescription = await getSambaNovaResponse(descriptionPrompt);
+        let newDescription = await getAIResponse(descriptionPrompt);
 
         // Enforce the 350 character limit hard to prevent HTTP 422 Validation Failed errors from GitHub.
         newDescription = newDescription.trim();
@@ -325,7 +325,7 @@ Avoid adding arbitrary "To Do" sections if there aren't any clear to dos.
 Output ONLY the raw markdown text. Do not wrap it in a code block. Do not include conversational filler.
 Context:\n\n${repoContext}`;
 
-        let newReadme = await getSambaNovaResponse(readmePrompt);
+        let newReadme = await getAIResponse(readmePrompt);
 
         // Strip markdown if needed
         if (newReadme.startsWith("\`\`\`markdown")) {
@@ -392,7 +392,7 @@ export async function autoFixAnyRepository(owner: string, repo: string) {
 Output ONLY a raw JSON array of the literal string file paths. NO markdown blocks.
 File Tree: \n${fileTree.substring(0, 3000)}`;
 
-        const selectedFilesTextRaw = await getSambaNovaResponse(fileSelectionPrompt);
+        const selectedFilesTextRaw = await getAIResponse(fileSelectionPrompt);
         
         // Robust Extraction of JSON array
         let filesToFix: string[] = [];
@@ -438,7 +438,7 @@ Do NOT output anything other than the raw Markdown intended for the issue body. 
 
 Original Code:\n\n${scanResult.cleanText}`;
 
-                let issueBody = await getSambaNovaResponse(issuePrompt);
+                let issueBody = await getAIResponse(issuePrompt);
 
                 // Clean up any potential markdown code blocks wrapping the content
                 issueBody = issueBody.replace(/^```[a-z]*\n/i, '').replace(/\n```$/i, '').trim();

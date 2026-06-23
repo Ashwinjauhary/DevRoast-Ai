@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { generateBranchName } from "@/lib/sambanova";
+import { generateBranchName } from "@/lib/ai-client";
 
 export async function getBranchNames(description: string) {
     const session = await auth();

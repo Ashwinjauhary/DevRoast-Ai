@@ -160,13 +160,19 @@ STRICT ARCHITECTURAL RULES:
    \\noindent \\textbf{Category}: Skill 1, Skill 2, Skill 3...
 
 CRITICAL POLISH & LATEX RULES (STRICTLY ENFORCED):
-- ABSOLUTELY NO MARKDOWN. NEVER use **text** for bolding. It breaks the LaTeX compiler.
-- You MUST use \\textbf{text} for all bolding, metrics, and key technical terms.
-- ESCAPE ALL special LaTeX characters: &, %, $, #, _ must be written as \\&, \\%, \\$, \\#, \\_.
+- ABSOLUTELY NO MARKDOWN. NEVER use **text** or *text* for bolding or italics. It breaks the LaTeX compiler.
+- You MUST use \\textbf{text} for all bolding, and \\textit{text} for italics.
+- EXTREMELY IMPORTANT: EVERY open brace '{' MUST have a corresponding close brace '}'. Do NOT leave unclosed \\textbf{ or \\href{ commands. A single missing '}' will break the entire document!
+- ESCAPE ALL special LaTeX characters: 
+  - Ampersand '&' must be '\\&'
+  - Percent '%' must be '\\%'
+  - Dollar '$' must be '\\$'
+  - Hash '#' must be '\\#'
+  - Underscore '_' must be '\\_'
+  - Tilde '~' must be '\\textasciitilde{}'
+  - Caret '^' must be '\\textasciicircum{}'
 - Ensure the outcome is the hero of every bullet.
 - Content must be dense, professional, and zero-fluff.
-- Use a single page layout (0.6in margins).
-- No section headers should be orphaned at the bottom of a page.
 - FILL THE ENTIRE PAGE. Do NOT leave the page mostly empty. 
 - If the user has only a few projects, generate 5-6 extremely detailed, heavy bullet points per project. 
 - EXPAND deeply on the technical implementation details, system design, and architecture to demonstrate extreme seniority. 

@@ -5,16 +5,14 @@ export async function POST(req: Request) {
         const { latex } = await req.json();
         if (!latex) return NextResponse.json({ error: "No latex provided" }, { status: 400 });
 
-        const formData = new URLSearchParams();
-        formData.append('text', latex);
+        const formData = new FormData();
+        const fileBlob = new Blob([latex], { type: 'text/plain' });
+        formData.append('file', fileBlob, 'main.tex');
         formData.append('command', 'pdflatex');
 
         const response = await fetch('https://latexonline.cc/compile', {
             method: 'POST',
             body: formData,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
         });
 
         if (!response.ok) {

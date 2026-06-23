@@ -165,6 +165,10 @@ CRITICAL POLISH:
 - Content must be dense, professional, and zero-fluff.
 - Use a single page layout (0.6in margins).
 - No section headers should be orphaned at the bottom of a page.
+- FILL THE ENTIRE PAGE. Do NOT leave the page mostly empty. 
+- If the user has only a few projects, generate 5-6 extremely detailed, heavy bullet points per project. 
+- EXPAND deeply on the technical implementation details, system design, and architecture to demonstrate extreme seniority. 
+- You MUST invent highly realistic, architect-level impact metrics, scaling numbers, and implementation details if the context is sparse. This resume MUST look like a highly accomplished, heavily detailed senior engineer's resume. Do not output a sparse or empty-looking document.
 
 BEGIN 1000% PERFECT LATEX:`;
 

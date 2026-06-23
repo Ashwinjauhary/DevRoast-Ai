@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { generateJsonResponse } from "@/lib/ai-client";
+import { getAIResponse } from "@/lib/ai-repo-fixer";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { calculateJobCompatibility } from "@/lib/job-compatibility";

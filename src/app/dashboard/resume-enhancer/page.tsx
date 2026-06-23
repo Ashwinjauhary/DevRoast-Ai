@@ -17,7 +17,7 @@ export default function ResumeEnhancerPage() {
     const [latex, setLatex] = useState("");
     const [loading, setLoading] = useState(false);
     const [contextLoading, setContextLoading] = useState(true);
-    const [view, setView] = useState<"edit">("edit");
+    const [view, setView] = useState<"edit" | "preview">("preview");
     const [template, setTemplate] = useState("modern");
     const [copied, setCopied] = useState(false);
     const [userContext, setUserContext] = useState<{
@@ -52,7 +52,7 @@ export default function ResumeEnhancerPage() {
         setLoading(false);
         if (res.success && res.latex) {
             setLatex(res.latex);
-            setView("edit");
+            setView("preview");
         } else {
             toast.error(res.error || "Failed to generate resume.");
         }
@@ -81,6 +81,36 @@ export default function ResumeEnhancerPage() {
             </div>
         );
     }
+
+    const parseLatexToAtsText = (latexCode: string) => {
+        if (!latexCode) return "";
+        let body = latexCode.includes("\\begin{document}") ? latexCode.split("\\begin{document}")[1] : latexCode;
+        body = body.includes("\\end{document}") ? body.split("\\end{document}")[0] : body;
+
+        return body
+            .replace(/\\textbf{([^}]*)}/g, "$1")
+            .replace(/\\textit{([^}]*)}/g, "$1")
+            .replace(/\\underline{([^}]*)}/g, "$1")
+            .replace(/\\href{([^}]*)}{([^}]*)}/g, "$2 ($1)")
+            .replace(/\\section{([^}]*)}/g, "\n\n=== $1 ===\n")
+            .replace(/\\item\s*/g, "• ")
+            .replace(/\\begin{[^}]+}/g, "")
+            .replace(/\\end{[^}]+}/g, "")
+            .replace(/\\vspace{[^}]+}/g, "")
+            .replace(/\\hfill/g, " ")
+            .replace(/\\noindent/g, "")
+            .replace(/\\[a-zA-Z]+({[^}]*})?/g, "")
+            .replace(/\\\\/g, "\n")
+            .replace(/%.*/g, "")
+            .replace(/\\&/g, "&")
+            .replace(/\\%/g, "%")
+            .replace(/\\\$/g, "$")
+            .replace(/\\#/g, "#")
+            .replace(/\\_/g, "_")
+            .replace(/[{}]/g, "")
+            .replace(/\n\s*\n\s*\n/g, "\n\n")
+            .trim();
+    };
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-6xl mx-auto pb-24">
@@ -192,8 +222,15 @@ export default function ResumeEnhancerPage() {
                             <div className="flex items-center justify-between px-6 py-3 bg-zinc-900/50 border border-white/5 rounded-3xl">
                                 <div className="flex gap-6">
                                     <button 
+                                        onClick={() => setView("preview")}
+                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'preview' ? 'text-primary' : 'text-zinc-500 hover:text-zinc-300'}`}
+                                    >
+                                        <Eye className="w-3.5 h-3.5" />
+                                        ATS Bot View
+                                    </button>
+                                    <button 
                                         onClick={() => setView("edit")}
-                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors text-primary`}
+                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'edit' ? 'text-primary' : 'text-zinc-500 hover:text-zinc-300'}`}
                                     >
                                         <Code className="w-3.5 h-3.5" />
                                         LaTeX Source Code
@@ -207,22 +244,47 @@ export default function ResumeEnhancerPage() {
 
                             <div className="relative group">
                                 <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key="edit"
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        className="relative"
-                                    >
-                                        <textarea
-                                            value={latex}
-                                            onChange={(e) => setLatex(e.target.value)}
-                                            className="w-full h-[700px] bg-black border border-white/10 rounded-[3rem] p-10 font-mono text-sm text-zinc-400 focus:outline-none focus:border-primary/40 leading-relaxed shadow-3xl overflow-y-auto custom-scrollbar"
-                                        />
-                                        <div className="absolute top-8 right-10 p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-500">
-                                            <PencilLine className="w-4 h-4" />
-                                        </div>
-                                    </motion.div>
+                                    {view === "edit" ? (
+                                        <motion.div
+                                            key="edit"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="relative"
+                                        >
+                                            <textarea
+                                                value={latex}
+                                                onChange={(e) => setLatex(e.target.value)}
+                                                className="w-full h-[700px] bg-black border border-white/10 rounded-[3rem] p-10 font-mono text-sm text-zinc-400 focus:outline-none focus:border-primary/40 leading-relaxed shadow-3xl overflow-y-auto custom-scrollbar"
+                                            />
+                                            <div className="absolute top-8 right-10 p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-500">
+                                                <PencilLine className="w-4 h-4" />
+                                            </div>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="preview"
+                                            initial={{ opacity: 0, scale: 0.98 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.98 }}
+                                            className="w-full h-[700px] bg-white text-zinc-900 rounded-[3rem] p-12 overflow-y-auto shadow-2xl relative custom-scrollbar-light"
+                                        >
+                                            <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#000 1.5px, transparent 1.5px)', backgroundSize: '30px 30px' }} />
+                                            
+                                            <div className={`max-w-3xl mx-auto space-y-8 relative z-10 font-mono`}>
+                                                <div className="flex items-center justify-between border-b border-black/10 pb-4">
+                                                    <h2 className="text-xl font-black uppercase tracking-widest text-zinc-900">ATS Bot Extraction</h2>
+                                                    <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full uppercase tracking-wider">Parsing Successful</span>
+                                                </div>
+                                                <pre className="whitespace-pre-wrap text-sm text-zinc-800 leading-relaxed font-medium">
+                                                    {parseLatexToAtsText(latex)}
+                                                </pre>
+                                                <div className="pt-10 text-center opacity-40 border-t border-black/10">
+                                                    <p className="text-[10px] text-zinc-900 font-black tracking-[0.5em] uppercase mt-4">Simulated Applicant Tracking System V2.1</p>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </AnimatePresence>
                             </div>
                         </div>

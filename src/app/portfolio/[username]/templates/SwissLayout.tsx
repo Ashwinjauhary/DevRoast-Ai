@@ -1,7 +1,9 @@
-import { Github, Briefcase, Code2, Award, Zap, Brain, Box } from "lucide-react";
+import { Github, Briefcase, Code2, Award, Zap, Brain, Box, ExternalLink, Mail } from "lucide-react";
 import { PortfolioTemplateProps } from "../types";
 import { JobCompatibilityChart } from "@/components/ui/job-compatibility-chart";
+import { LiveIndicator } from "@/components/ui/live-indicator";
 import { CertificatesList } from "@/components/ui/certificates-list";
+import Link from "next/link";
 
 export default function SwissLayout({ portfolio, compatibility }: PortfolioTemplateProps) {
     const { username, hero, skills, projects, certificates, experience } = portfolio;
@@ -11,24 +13,36 @@ export default function SwissLayout({ portfolio, compatibility }: PortfolioTempl
         <div className="min-h-screen bg-[#e30513] text-white font-sans selection:bg-black selection:text-white">
             <div className="max-w-7xl mx-auto border-l-[16px] border-white min-h-screen pl-8 py-24 md:pl-16 space-y-32">
                 
-                <header>
-                    <div className="bg-black text-white px-4 py-2 inline-flex items-center gap-2 font-bold mb-8 uppercase tracking-widest text-sm">
-                        <Github className="w-4 h-4" />
-                        <span>@{username}</span>
-                    </div>
-                    
-                    <h1 className="text-7xl md:text-[120px] font-black uppercase tracking-tighter leading-[0.85] mb-12">
-                        {hero?.tagline}
-                    </h1>
-                    
-                    <div className="grid md:grid-cols-12 gap-8 items-start">
-                        <p className="md:col-span-8 text-3xl font-bold max-w-3xl leading-tight">
-                            {hero?.about}
-                        </p>
-                        <div className="md:col-span-4 bg-white text-black p-8 shadow-[12px_12px_0_#000]">
-                            <h2 className="text-xl font-black uppercase mb-2">Architectural Profile</h2>
-                            <p className="font-bold">{hero?.vibe?.title || 'Engineer'}</p>
-                            <p className="text-sm mt-2 font-medium">{hero?.vibe?.description}</p>
+                <header className="border-b-[12px] border-white pb-12 mb-20">
+                    <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
+                        <div className="flex items-center gap-6">
+                            <img 
+                                src={`https://ui-avatars.com/api/?name=${username}&background=000000&color=ffffff&size=120&bold=true`} 
+                                alt={username} 
+                                className="w-24 h-24 grayscale contrast-125 object-cover border-4 border-white"
+                            />
+                            <div>
+                                <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[0.8] mb-2 text-white">
+                                    {hero?.tagline}
+                                </h1>
+                                <div className="flex items-center gap-4 text-white">
+                                    <div className="inline-flex items-center gap-2 font-bold text-lg">
+                                        <Github className="w-6 h-6" />
+                                        <span>@{username}</span>
+                                    </div>
+                                    <LiveIndicator status={hero?.status || "Online"} template="swiss" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex gap-4">
+                            <Link href={`https://github.com/${username}`} target="_blank" className="p-3 bg-white text-black hover:bg-black hover:text-white transition-colors">
+                                <Github className="w-8 h-8" />
+                            </Link>
+                            {hero?.contactEmail && (
+                                <Link href={`mailto:${hero.contactEmail}`} className="p-3 bg-white text-black hover:bg-black hover:text-white transition-colors">
+                                    <Mail className="w-8 h-8" />
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </header>
@@ -76,7 +90,14 @@ export default function SwissLayout({ portfolio, compatibility }: PortfolioTempl
                                     <div className="h-64 bg-white border-8 border-black mb-6 shadow-[12px_12px_0_#000] group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:shadow-[20px_20px_0_#000] transition-all flex items-center justify-center">
                                         <Code2 className="w-16 h-16 text-black opacity-20" />
                                     </div>
-                                    <h3 className="text-3xl font-black uppercase mb-4">{project.title}</h3>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-3xl font-black uppercase mb-4">{project.title}</h3>
+                                        {(project.liveUrl || project.url) && (
+                                            <Link href={project.liveUrl || project.url || '#'} target="_blank" className="bg-white p-2 text-black hover:bg-black hover:text-white transition-colors">
+                                                <ExternalLink className="w-6 h-6" />
+                                            </Link>
+                                        )}
+                                    </div>
                                     <p className="text-xl font-bold leading-snug bg-black text-white p-4">
                                         {project.description}
                                     </p>

@@ -1,6 +1,9 @@
-import { Github, Briefcase, Code2, Award, Zap, Brain, Box } from "lucide-react";
+import { Github, Briefcase, Code2, Award, Zap, Brain, Box, Mail, ExternalLink } from "lucide-react";
 import { PortfolioTemplateProps } from "../types";
 import { JobCompatibilityChart } from "@/components/ui/job-compatibility-chart";
+import { LiveIndicator } from "@/components/ui/live-indicator";
+import { CertificatesList } from "@/components/ui/certificates-list";
+import Link from "next/link";
 
 export default function SynthwaveLayout({ portfolio, compatibility }: PortfolioTemplateProps) {
     const { username, hero, skills, projects, certificates, experience } = portfolio;
@@ -17,38 +20,61 @@ export default function SynthwaveLayout({ portfolio, compatibility }: PortfolioT
             <div className="relative z-10 max-w-5xl mx-auto px-6 py-20 space-y-32">
                 
                 {/* Hero */}
-                <header className="text-center space-y-12">
-                    <div className="inline-flex items-center gap-2 px-6 py-2 bg-black/50 border-2 border-cyan-400 text-cyan-400 shadow-[0_0_10px_#00ffff,inset_0_0_10px_#00ffff] font-black uppercase tracking-widest text-sm backdrop-blur-md">
-                        <Github className="w-5 h-5" />
-                        <span>SYS.OP // {username}</span>
-                    </div>
-                    
-                    <h1 className="text-5xl md:text-8xl font-black uppercase tracking-widest drop-shadow-[0_0_15px_#ff007f] text-transparent bg-clip-text bg-gradient-to-b from-pink-400 to-purple-600 italic">
-                        {hero?.tagline}
-                    </h1>
-                    
-                    <p className="text-xl md:text-2xl font-mono text-cyan-400 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_0_8px_#00ffff]">
-                        &gt; {hero?.about} <span className="animate-pulse">_</span>
-                    </p>
-
-                    {(hero?.vibe?.title || hero?.roast) && (
-                        <div className="grid md:grid-cols-2 gap-8 mt-16 text-left">
-                            {hero?.vibe?.title && (
-                                <div className="bg-black/60 border-2 border-purple-500 p-8 shadow-[0_0_20px_rgba(168,85,247,0.4),inset_0_0_10px_rgba(168,85,247,0.2)] backdrop-blur-md">
-                                    <h2 className="text-purple-400 text-sm font-black uppercase tracking-widest mb-4 font-mono">:: Profile</h2>
-                                    <p className="text-3xl font-black uppercase text-purple-300 drop-shadow-[0_0_10px_#a855f7] italic">{hero.vibe.title}</p>
-                                    <p className="text-purple-200 mt-4 font-mono">{hero.vibe.description}</p>
-                                </div>
-                            )}
-                            {hero?.roast && (
-                                <div className="bg-black/60 border-2 border-pink-500 p-8 shadow-[0_0_20px_rgba(236,72,153,0.4),inset_0_0_10px_rgba(236,72,153,0.2)] backdrop-blur-md">
-                                    <h2 className="text-pink-400 text-sm font-black uppercase tracking-widest mb-4 font-mono">:: System_Scan</h2>
-                                    <p className="text-xl font-mono text-pink-300">"{hero.roast}"</p>
-                                </div>
-                            )}
+                <header className="relative z-10 pt-20 pb-12 flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between gap-12 text-center md:text-left border-b-2 border-[#ff00ff] bg-black/60 backdrop-blur-sm p-12 rounded-t-3xl">
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-[#00ffff] blur-xl opacity-50 rounded-full animate-pulse" />
+                            <img 
+                                src={`https://ui-avatars.com/api/?name=${username}&background=ff00ff&color=ffffff&size=120&bold=true`} 
+                                alt={username} 
+                                className="w-24 h-24 rounded-full border-4 border-[#00ffff] relative z-10 shadow-[0_0_20px_#00ffff]"
+                            />
                         </div>
-                    )}
+                        <div>
+                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-4">
+                                <LiveIndicator status={hero?.status || "Online"} template="synthwave" />
+                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-black/50 border border-[#00ffff] text-[#00ffff] font-mono text-sm tracking-widest uppercase shadow-[0_0_10px_rgba(0,255,255,0.3)]">
+                                    <Github className="w-4 h-4" />
+                                    <span>@{username}</span>
+                                </div>
+                            </div>
+                            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-b from-[#ff00ff] to-[#00ffff] drop-shadow-[0_0_15px_rgba(255,0,255,0.8)] mb-4">
+                                {hero?.tagline}
+                            </h1>
+                            <p className="text-xl md:text-2xl font-mono text-[#00ffff] max-w-2xl leading-relaxed drop-shadow-[0_0_5px_#00ffff]">
+                                {hero?.about}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex gap-4">
+                        <Link href={`https://github.com/${username}`} target="_blank" className="p-4 bg-black/50 border border-[#ff00ff] text-[#ff00ff] hover:bg-[#ff00ff] hover:text-white transition-all shadow-[0_0_15px_rgba(255,0,255,0.4)] hover:shadow-[0_0_25px_rgba(255,0,255,0.8)]">
+                            <Github className="w-6 h-6" />
+                        </Link>
+                        {hero?.contactEmail && (
+                            <Link href={`mailto:${hero.contactEmail}`} className="p-4 bg-black/50 border border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,255,0.4)] hover:shadow-[0_0_25px_rgba(0,255,255,0.8)]">
+                                <Mail className="w-6 h-6" />
+                            </Link>
+                        )}
+                    </div>
                 </header>
+
+                {(hero?.vibe?.title || hero?.roast) && (
+                    <div className="grid md:grid-cols-2 gap-8 mt-16 text-left">
+                        {hero?.vibe?.title && (
+                            <div className="bg-black/60 border-2 border-purple-500 p-8 shadow-[0_0_20px_rgba(168,85,247,0.4),inset_0_0_10px_rgba(168,85,247,0.2)] backdrop-blur-md">
+                                <h2 className="text-purple-400 text-sm font-black uppercase tracking-widest mb-4 font-mono">:: Profile</h2>
+                                <p className="text-3xl font-black uppercase text-purple-300 drop-shadow-[0_0_10px_#a855f7] italic">{hero.vibe.title}</p>
+                                <p className="text-purple-200 mt-4 font-mono">{hero.vibe.description}</p>
+                            </div>
+                        )}
+                        {hero?.roast && (
+                            <div className="bg-black/60 border-2 border-pink-500 p-8 shadow-[0_0_20px_rgba(236,72,153,0.4),inset_0_0_10px_rgba(236,72,153,0.2)] backdrop-blur-md">
+                                <h2 className="text-pink-400 text-sm font-black uppercase tracking-widest mb-4 font-mono">:: System_Scan</h2>
+                                <p className="text-xl font-mono text-pink-300">"{hero.roast}"</p>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Achievements */}
                 {achievements.length > 0 && (
@@ -101,14 +127,22 @@ export default function SynthwaveLayout({ portfolio, compatibility }: PortfolioT
                         </h2>
                         <div className="grid md:grid-cols-2 gap-8">
                             {projects.map((project, i) => (
-                                <div key={i} className="bg-black/60 border-2 border-cyan-500 p-8 shadow-[0_0_20px_rgba(0,255,255,0.2)] flex flex-col group hover:shadow-[0_0_30px_rgba(0,255,255,0.4)] transition-all backdrop-blur-md">
-                                    <h3 className="text-2xl font-black uppercase mb-4 text-cyan-300 drop-shadow-[0_0_5px_#00ffff]">{project.title}</h3>
-                                    <p className="text-lg font-mono text-cyan-100/70 mb-8 flex-1">
+                                <div key={i} className="bg-black/60 border-2 border-[#ff00ff] p-8 shadow-[0_0_15px_rgba(255,0,255,0.3)] hover:shadow-[0_0_30px_rgba(255,0,255,0.6)] hover:-translate-y-2 transition-all group flex flex-col relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#00ffff] opacity-10 blur-[50px] group-hover:opacity-20 transition-opacity" />
+                                    <div className="flex justify-between items-start mb-6">
+                                        <h3 className="text-3xl font-black italic uppercase text-[#00ffff] pr-4 drop-shadow-[0_0_5px_#00ffff]">{project.title}</h3>
+                                        {(project.liveUrl || project.url) && (
+                                            <Link href={project.liveUrl || project.url || '#'} target="_blank" className="w-12 h-12 bg-black/50 border border-[#ff00ff] text-[#ff00ff] hover:bg-[#ff00ff] hover:text-white flex items-center justify-center transition-all shrink-0">
+                                                <ExternalLink className="w-6 h-6" />
+                                            </Link>
+                                        )}
+                                    </div>
+                                    <p className="text-lg font-mono text-zinc-300 mb-8 flex-1 leading-relaxed">
                                         {project.description}
                                     </p>
-                                    <div className="flex flex-wrap gap-2 mt-auto">
+                                    <div className="flex flex-wrap gap-2 relative z-10">
                                         {project.techStacks?.slice(0, 3).map(tech => (
-                                            <span key={tech} className="bg-cyan-500/10 border border-cyan-500/50 px-2 py-1 text-xs font-mono uppercase text-cyan-400">
+                                            <span key={tech} className="bg-black border border-[#00ffff] text-[#00ffff] px-3 py-1 font-mono text-xs uppercase tracking-widest shadow-[0_0_5px_rgba(0,255,255,0.3)]">
                                                 {tech}
                                             </span>
                                         ))}

@@ -1,7 +1,9 @@
-import { Github, Briefcase, Code2, Award, Zap, Brain, Box } from "lucide-react";
+import { Github, Briefcase, Code2, Award, Zap, Brain, Box, Mail, ExternalLink } from "lucide-react";
 import { PortfolioTemplateProps } from "../types";
 import { JobCompatibilityChart } from "@/components/ui/job-compatibility-chart";
+import { LiveIndicator } from "@/components/ui/live-indicator";
 import { CertificatesList } from "@/components/ui/certificates-list";
+import Link from "next/link";
 
 export default function NeoBrutalismLayout({ portfolio, compatibility }: PortfolioTemplateProps) {
     const { username, hero, skills, projects, certificates, experience } = portfolio;
@@ -15,19 +17,39 @@ export default function NeoBrutalismLayout({ portfolio, compatibility }: Portfol
                 <header className="relative">
                     <div className="absolute top-12 left-8 md:-left-12 w-full h-full bg-[#ff90e8] border-4 border-black shadow-[16px_16px_0_#000] -z-10 transform rotate-1" />
                     
-                    <div className="bg-white border-4 border-black p-8 md:p-16 shadow-[16px_16px_0_#000] transform -rotate-1 hover:rotate-0 transition-transform duration-300">
-                        <div className="inline-flex items-center gap-2 px-6 py-2 bg-[#ffeb3b] border-4 border-black shadow-[6px_6px_0_#000] font-black uppercase tracking-widest text-sm mb-12 transform -rotate-2">
-                            <Github className="w-5 h-5" />
-                            <span>@{username}</span>
+                    {/* Header Profile */}
+                <div className="bg-[#bbf7d0] border-4 border-black p-8 shadow-[12px_12px_0_#000] rotate-1 relative z-10 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+                    <img 
+                        src={`https://ui-avatars.com/api/?name=${username}&background=000000&color=ffffff&size=150&bold=true`} 
+                        alt={username} 
+                        className="w-32 h-32 border-4 border-black shadow-[8px_8px_0_#000]"
+                    />
+                    <div className="flex-1">
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-4">
+                            <LiveIndicator status={hero?.status || "Online"} template="neo_brutalism" />
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white font-bold border-2 border-black">
+                                <Github className="w-5 h-5" />
+                                <span>@{username}</span>
+                            </div>
                         </div>
-                        
-                        <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-[0.9] mb-8 drop-shadow-[4px_4px_0_#ff90e8]">
+                        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 leading-none">
                             {hero?.tagline}
                         </h1>
-                        
-                        <p className="text-2xl md:text-3xl font-bold max-w-3xl leading-snug bg-[#00e5ff] border-4 border-black p-6 shadow-[8px_8px_0_#000] inline-block transform rotate-1">
+                        <p className="text-xl font-bold bg-white inline-block border-2 border-black px-4 py-2 transform -rotate-1 shadow-[4px_4px_0_#000]">
                             {hero?.about}
                         </p>
+                    </div>
+                    <div className="flex flex-col gap-4 w-full md:w-auto">
+                        <Link href={`https://github.com/${username}`} target="_blank" className="bg-black text-white px-6 py-4 font-bold border-4 border-black shadow-[6px_6px_0_#000] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2">
+                            <Github className="w-6 h-6" /> GitHub
+                        </Link>
+                        {hero?.contactEmail && (
+                            <Link href={`mailto:${hero.contactEmail}`} className="bg-[#fef08a] text-black px-6 py-4 font-bold border-4 border-black shadow-[6px_6px_0_#000] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2">
+                                <Mail className="w-6 h-6" /> Contact
+                            </Link>
+                        )}
+                    </div>
+                </div>
 
                         {(hero?.vibe?.title || hero?.roast) && (
                             <div className="grid md:grid-cols-2 gap-8 mt-16">
@@ -46,7 +68,6 @@ export default function NeoBrutalismLayout({ portfolio, compatibility }: Portfol
                                 )}
                             </div>
                         )}
-                    </div>
                 </header>
 
                 {/* Achievements */}
@@ -104,17 +125,20 @@ export default function NeoBrutalismLayout({ portfolio, compatibility }: Portfol
                         </h2>
                         <div className="grid md:grid-cols-2 gap-12">
                             {projects.map((project, i) => (
-                                <div key={i} className="bg-white border-4 border-black p-8 shadow-[16px_16px_0_#000] flex flex-col group relative">
-                                    <div className="absolute top-4 right-4 bg-[#b2ff59] border-4 border-black w-12 h-12 rounded-full flex items-center justify-center font-black text-xl shadow-[4px_4px_0_#000] group-hover:rotate-180 transition-transform">
-                                        {i + 1}
+                                <div key={i} className="bg-white border-4 border-black p-8 shadow-[12px_12px_0_#000] flex flex-col transition-transform hover:-translate-y-2 relative"
+                                     style={{ transform: `rotate(${i % 2 === 0 ? '-1deg' : '2deg'})` }}>
+                                    <div className="flex justify-between items-start mb-6">
+                                        <h3 className="text-3xl font-black uppercase pr-4">{project.title}</h3>
+                                        {(project.liveUrl || project.url) && (
+                                            <Link href={project.liveUrl || project.url || '#'} target="_blank" className="w-12 h-12 bg-[#fef08a] border-4 border-black flex items-center justify-center shadow-[4px_4px_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all shrink-0">
+                                                <ExternalLink className="w-6 h-6 text-black" />
+                                            </Link>
+                                        )}
                                     </div>
-                                    <h3 className="text-3xl font-black uppercase mb-6 pr-16">{project.title}</h3>
-                                    <p className="text-xl font-bold leading-snug mb-8 flex-1">
-                                        {project.description}
-                                    </p>
-                                    <div className="flex flex-wrap gap-2 mt-auto">
+                                    <p className="text-xl font-bold mb-8 flex-1">{project.description}</p>
+                                    <div className="flex flex-wrap gap-2">
                                         {project.techStacks?.slice(0, 3).map(tech => (
-                                            <span key={tech} className="bg-[#ffeb3b] border-2 border-black px-3 py-1 text-sm font-black uppercase shadow-[2px_2px_0_#000]">
+                                            <span key={tech} className="bg-[#bfdbfe] border-2 border-black px-3 py-1 font-black text-sm uppercase">
                                                 {tech}
                                             </span>
                                         ))}

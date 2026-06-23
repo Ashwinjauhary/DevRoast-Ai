@@ -17,9 +17,11 @@ export default function ResumeEnhancerPage() {
     const [latex, setLatex] = useState("");
     const [loading, setLoading] = useState(false);
     const [contextLoading, setContextLoading] = useState(true);
-    const [view, setView] = useState<"edit" | "preview">("preview");
+    const [view, setView] = useState<"edit" | "preview" | "pdf">("pdf");
     const [template, setTemplate] = useState("modern");
     const [copied, setCopied] = useState(false);
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+    const [compilingPdf, setCompilingPdf] = useState(false);
     const [userContext, setUserContext] = useState<{
         name: string;
         username: string | undefined;
@@ -52,7 +54,8 @@ export default function ResumeEnhancerPage() {
         setLoading(false);
         if (res.success && res.latex) {
             setLatex(res.latex);
-            setView("preview");
+            setView("pdf");
+            compilePdf(res.latex);
         } else {
             toast.error(res.error || "Failed to generate resume.");
         }
@@ -63,6 +66,28 @@ export default function ResumeEnhancerPage() {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
         toast.success("LaTeX code copied to clipboard!");
+    };
+
+    const compilePdf = async (latexCode: string) => {
+        if (!latexCode) return;
+        setCompilingPdf(true);
+        try {
+            const res = await fetch('/api/compile-pdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ latex: latexCode })
+            });
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                setPdfUrl(url);
+            } else {
+                toast.error("LaTeX Compilation Failed. Check syntax.");
+            }
+        } catch (e) {
+            toast.error("Failed to compile PDF.");
+        }
+        setCompilingPdf(false);
     };
 
     const handleDownload = () => {
@@ -222,6 +247,13 @@ export default function ResumeEnhancerPage() {
                             <div className="flex items-center justify-between px-6 py-3 bg-zinc-900/50 border border-white/5 rounded-3xl">
                                 <div className="flex gap-6">
                                     <button 
+                                        onClick={() => { setView("pdf"); if (!pdfUrl) compilePdf(latex); }}
+                                        className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'pdf' ? 'text-primary' : 'text-zinc-500 hover:text-zinc-300'}`}
+                                    >
+                                        <FileText className="w-3.5 h-3.5" />
+                                        Live PDF
+                                    </button>
+                                    <button 
                                         onClick={() => setView("preview")}
                                         className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'preview' ? 'text-primary' : 'text-zinc-500 hover:text-zinc-300'}`}
                                     >
@@ -257,9 +289,34 @@ export default function ResumeEnhancerPage() {
                                                 onChange={(e) => setLatex(e.target.value)}
                                                 className="w-full h-[700px] bg-black border border-white/10 rounded-[3rem] p-10 font-mono text-sm text-zinc-400 focus:outline-none focus:border-primary/40 leading-relaxed shadow-3xl overflow-y-auto custom-scrollbar"
                                             />
-                                            <div className="absolute top-8 right-10 p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-zinc-500">
-                                                <PencilLine className="w-4 h-4" />
-                                            </div>
+                                            <button onClick={() => compilePdf(latex)} className="absolute top-8 right-10 p-2.5 rounded-xl bg-primary/20 border border-primary/40 text-primary hover:bg-primary/40 transition-colors flex items-center gap-2">
+                                                <FileText className="w-4 h-4" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">Compile to PDF</span>
+                                            </button>
+                                        </motion.div>
+                                    ) : view === "pdf" ? (
+                                        <motion.div
+                                            key="pdf"
+                                            initial={{ opacity: 0, scale: 0.98 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.98 }}
+                                            className="w-full h-[700px] bg-white rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col"
+                                        >
+                                            {compilingPdf && (
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900/10 backdrop-blur-md z-20">
+                                                    <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
+                                                    <p className="text-xs font-black uppercase tracking-widest text-zinc-800">Compiling LaTeX PDF Server-Side...</p>
+                                                </div>
+                                            )}
+                                            {pdfUrl && !compilingPdf && (
+                                                <iframe src={pdfUrl} className="w-full flex-1 border-none" title="Resume PDF" />
+                                            )}
+                                            {!pdfUrl && !compilingPdf && (
+                                                <div className="flex-1 flex flex-col items-center justify-center text-zinc-500">
+                                                    <FileText className="w-12 h-12 mb-4 opacity-50" />
+                                                    <p className="text-xs font-black uppercase tracking-widest">PDF Not Compiled</p>
+                                                </div>
+                                            )}
                                         </motion.div>
                                     ) : (
                                         <motion.div

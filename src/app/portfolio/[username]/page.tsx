@@ -88,20 +88,20 @@ export default async function PublicPortfolioPage({ params }: Props) {
 
     const { portfolio, compatibility } = res as unknown as { portfolio: PortfolioData; compatibility: JobCompatibilityResult | null };
 
-    const hero = portfolio.hero;
-    const vibe = hero.vibe || { title: "", description: "" };
-    const roast = hero.roast || "";
-    const achievements = hero.achievements || [];
-    const roadmap = hero.roadmap || [];
-    const techStack = hero.techStack || null;
-    const dnaStats = hero.dnaStats || [];
-    const status = hero.status || "Synchronized";
-    const contactEmail = hero.contactEmail || `hello+${username}@${username}.dev`;
+    const hero = portfolio?.hero || {} as any;
+    const vibe = hero?.vibe || { title: "", description: "" };
+    const roast = hero?.roast || "";
+    const achievements = Array.isArray(hero?.achievements) ? hero.achievements : [];
+    const roadmap = Array.isArray(hero?.roadmap) ? hero.roadmap : [];
+    const techStack = typeof hero?.techStack === 'object' ? hero.techStack : null;
+    const dnaStats = Array.isArray(hero?.dnaStats) ? hero.dnaStats : [];
+    const status = hero?.status || "Synchronized";
+    const contactEmail = hero?.contactEmail || `hello+${username}@${username}.dev`;
     
-    const skills = portfolio.skills || [];
-    const projects = portfolio.projects || [];
-    const certificates = portfolio.certificates || [];
-    const template = portfolio.template || "crucible";
+    const skills = Array.isArray(portfolio?.skills) ? portfolio.skills : [];
+    const projects = Array.isArray(portfolio?.projects) ? portfolio.projects : [];
+    const certificates = Array.isArray(portfolio?.certificates) ? portfolio.certificates : [];
+    const template = portfolio?.template || "crucible";
 
     return (
         <div className={`min-h-screen selection:bg-primary/30 ${
@@ -452,7 +452,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                                         }`}>{category}</h4>
                                                     </div>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {items.map((tech: string) => (
+                                                        {(Array.isArray(items) ? items : []).map((tech: string) => (
                                                             <span key={tech} className={`text-[10px] font-bold px-2 py-1 rounded-md border ${
                                                                 template === 'cyberpunk' ? 'text-black bg-[#facc15]/20 border-black/10' : 'text-zinc-500 bg-white/5 border-white/5'
                                                             }`}>
@@ -670,7 +670,7 @@ export default async function PublicPortfolioPage({ params }: Props) {
                                                     )}
                                                 </div>
                                                 <div className="pt-8 flex flex-wrap gap-2">
-                                                    {project.techStacks.map((tech: string) => (
+                                                    {(Array.isArray(project.techStacks) ? project.techStacks : []).map((tech: string) => (
                                                         <span key={tech} className={`px-3 py-1 border text-[9px] font-mono uppercase tracking-widest ${
                                                             template === 'neon' ? 'bg-primary/10 border-primary/30 text-primary rounded-full px-4' : 
                                                             template === 'minimalist' ? 'bg-zinc-50 border-zinc-100 text-zinc-400' : 

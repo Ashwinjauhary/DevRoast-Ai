@@ -41,7 +41,6 @@ export default function GithubAnalysisPage() {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<GithubAnalysis | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [revealed, setRevealed] = useState(true);
     const { data: session } = useSession();
 
     const loggedInGithubUser = (session?.user as SessionUser)?.github_username;
@@ -53,7 +52,6 @@ export default function GithubAnalysisPage() {
 
         setLoading(true);
         setResult(null);
-        setRevealed(false);
 
         try {
             const metricsRes = await fetch(`/api/analyze/github-profile?username=${encodeURIComponent(username)}`);
@@ -131,30 +129,7 @@ export default function GithubAnalysisPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         className="space-y-8"
                     >
-                        {/* Revealed Logic */}
-                        {!revealed ? (
-                            <PremiumCard glowColor="accent" className="py-20 text-center space-y-8 animate-pulse">
-                                <div className="space-y-4">
-                                    <div className="flex justify-center">
-                                        <div className="relative">
-                                            <div className="w-24 h-24 border-4 border-white/5 border-t-accent rounded-full animate-spin" />
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <Sparkles className="w-8 h-8 text-accent animate-bounce" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h2 className="text-3xl font-black tracking-tighter text-white">Neural Sinkhole Detected</h2>
-                                    <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">Awaiting decryption of @{username}&apos;s reputation...</p>
-                                </div>
-                                <Button 
-                                    onClick={() => setRevealed(true)}
-                                    className="bg-accent text-black font-black uppercase tracking-widest px-10 h-14 rounded-2xl hover:bg-accent/80 transition-all hover:scale-105"
-                                >
-                                    Reveal Genetic Roast
-                                </Button>
-                            </PremiumCard>
-                        ) : (
-                            <div className="space-y-8 animate-in zoom-in-95 duration-700">
+                        <div className="space-y-8 animate-in zoom-in-95 duration-700">
 
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                             <div className="space-y-1">
@@ -299,8 +274,7 @@ export default function GithubAnalysisPage() {
                                 </div>
                             </div>
                         </div>
-                            </div>
-                        )}
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

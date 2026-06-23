@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getAIResponse } from "@/lib/ai-repo-fixer";
+import { generateJsonResponse } from "@/lib/ai-client";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { calculateJobCompatibility } from "@/lib/job-compatibility";
@@ -198,12 +198,7 @@ export async function generatePortfolioData(template: string = "crucible") {
         // 4. AI Generation
         const prompt = `Elite engineering identity generation... JSON schema: { hero, vibe, roast, status, achievements, roadmap, techStack, dnaStats, projects, experience, skills }. Context: ${JSON.stringify(developerContext)}`;
 
-        const aiResponse = await getAIResponse(prompt);
-        let clean = aiResponse.trim();
-        if (clean.startsWith("\`\`\`json")) clean = clean.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
-        else if (clean.startsWith("\`\`\`")) clean = clean.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
-
-        const portfolioData = JSON.parse(clean) as PortfolioAIOutput;
+        const portfolioData = await generateJsonResponse<PortfolioAIOutput>(prompt);
 
         // 5. Save to Database
         const portfolio = await prisma.portfolio.upsert({

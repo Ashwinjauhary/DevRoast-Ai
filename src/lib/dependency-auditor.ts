@@ -1,4 +1,4 @@
-import { getAIResponse } from "./ai-repo-fixer";
+import { generateJsonResponse } from "./ai-client";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -45,12 +45,7 @@ ${manifestContent}
 `;
 
     try {
-        let aiResponse = await getAIResponse(prompt);
-        // Clean markdown
-        if (aiResponse.startsWith("\`\`\`json")) aiResponse = aiResponse.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
-        else if (aiResponse.startsWith("\`\`\`")) aiResponse = aiResponse.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
-
-        const result = JSON.parse(aiResponse.trim());
+        const result = await generateJsonResponse<{ healthScore: number, analysis: string }>(prompt);
         return {
             name: manifestName,
             healthScore: result.healthScore,

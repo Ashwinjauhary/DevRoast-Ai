@@ -1,4 +1,4 @@
-import { getAIResponse } from "./ai-repo-fixer";
+import { generateJsonResponse } from "@/lib/ai-client";
 
 export interface JobCompatibilityResult {
     archetypes: Array<{
@@ -32,12 +32,7 @@ Developer Context:
 ${JSON.stringify(developerContext, null, 2)}`;
 
     try {
-        let aiResponse = await getAIResponse(prompt);
-        // Clean markdown
-        if (aiResponse.startsWith("\`\`\`json")) aiResponse = aiResponse.replace(/^\`\`\`json\n?/, "").replace(/\n?\`\`\`$/, "");
-        else if (aiResponse.startsWith("\`\`\`")) aiResponse = aiResponse.replace(/^\`\`\`\n?/, "").replace(/\n?\`\`\`$/, "");
-
-        const result = JSON.parse(aiResponse.trim());
+        const result = await generateJsonResponse<any>(prompt);
         return result;
     } catch (e: unknown) {
         console.error("Job Compatibility Engine failed:", e);

@@ -16,7 +16,7 @@ function getGroqKeys(): string[] {
  * Groq-Only AI JSON Generator with multi-key rotation.
  * Cycles through all available Groq keys on failure before giving up.
  */
-async function generateJsonResponse<T = unknown>(prompt: string, attempt: number = 0): Promise<T> {
+export async function generateJsonResponse<T = unknown>(prompt: string, attempt: number = 0): Promise<T> {
     const keys = getGroqKeys();
 
     if (keys.length === 0) {

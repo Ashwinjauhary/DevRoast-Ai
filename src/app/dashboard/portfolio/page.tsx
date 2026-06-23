@@ -428,7 +428,7 @@ export default function PortfolioGeneratorPage() {
                                     <div className="space-y-4">
                                         <div className="text-zinc-500 uppercase tracking-widest text-xs">Architectural Projects</div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {(isEditing ? editData : portfolio)!.projects.map((p: Project, i: number) => (
+                                            {((isEditing ? editData : portfolio)?.projects || []).map((p: Project, i: number) => (
                                                 <div key={i} className="p-6 bg-zinc-900/50 border border-zinc-800 space-y-4 group">
                                                     <div className="space-y-1">
                                                         <label className="text-[10px] text-zinc-600 uppercase font-black">Project Title</label>
@@ -460,12 +460,12 @@ export default function PortfolioGeneratorPage() {
                                                         {isEditing ? (
                                                             <input 
                                                                 className="w-full bg-black border border-zinc-700 p-2 text-[10px] text-primary"
-                                                                value={p.techStacks.join(", ")}
+                                                                value={(p.techStacks || []).join(", ")}
                                                                 onChange={e => updateProject(i, 'techStacks', e.target.value.split(",").map(t => t.trim()))}
                                                             />
                                                         ) : (
                                                             <div className="flex flex-wrap gap-2">
-                                                                {p.techStacks.map((tech: string) => (
+                                                                {(p.techStacks || []).map((tech: string) => (
                                                                     <span key={tech} className="px-2 py-0.5 bg-zinc-800 text-[9px] text-zinc-500 uppercase font-black">
                                                                         {tech}
                                                                     </span>
@@ -486,13 +486,13 @@ export default function PortfolioGeneratorPage() {
                                                 <textarea 
                                                     rows={2}
                                                     className="w-full bg-black border border-zinc-700 p-2 text-primary focus:border-primary outline-none transition-all resize-none"
-                                                    value={editData?.skills.join(", ") || ""}
+                                                    value={(editData?.skills || []).join(", ")}
                                                     onChange={e => setEditData(prev => prev ? {...prev, skills: e.target.value.split(",").map(s => s.trim())} : null)}
                                                     placeholder="Enter skills separated by commas..."
                                                 />
                                             ) : (
                                                 <div className="flex flex-wrap gap-2">
-                                                    {portfolio?.skills.map((skill: string) => (
+                                                    {(portfolio?.skills || []).map((skill: string) => (
                                                         <span key={skill} className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 text-xs font-black uppercase italic">
                                                             {skill}
                                                         </span>

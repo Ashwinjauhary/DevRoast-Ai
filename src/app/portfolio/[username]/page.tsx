@@ -1,6 +1,14 @@
 import { getPortfolioData } from "@/app/dashboard/portfolio/actions";
 import BentoLayout from "./templates/BentoLayout";
 import SwissLayout from "./templates/SwissLayout";
+import NeoBrutalismLayout from "./templates/NeoBrutalismLayout";
+import SynthwaveLayout from "./templates/SynthwaveLayout";
+import Glass3DLayout from "./templates/Glass3DLayout";
+import AuroraLayout from "./templates/AuroraLayout";
+import ClayLayout from "./templates/ClayLayout";
+import SpatialLayout from "./templates/SpatialLayout";
+import FluidLayout from "./templates/FluidLayout";
+import DarkMinimalLayout from "./templates/DarkMinimalLayout";
 import { JobCompatibilityResult } from "@/lib/job-compatibility";
 import { notFound } from "next/navigation";
 import { Github, ExternalLink, Code2, Briefcase, Activity, Zap, Box, Brain, Cpu, Database, Layout, ShieldCheck, Mail, Send, Terminal, Award } from "lucide-react";
@@ -111,6 +119,39 @@ export default async function PublicPortfolioPage({ params }: Props) {
     
     if (template === 'swiss') {
         return <SwissLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'neo') {
+        return <NeoBrutalismLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    
+    if (template === 'glass3d') {
+        return <Glass3DLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'aurora') {
+        return <AuroraLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'clay') {
+        return <ClayLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'spatial') {
+        return <SpatialLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'fluid') {
+        return <FluidLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'dark_minimal') {
+        return <DarkMinimalLayout portfolio={portfolio as any} compatibility={compatibility} />;
+    }
+
+    if (template === 'synthwave') {
+        return <SynthwaveLayout portfolio={portfolio as any} compatibility={compatibility} />;
     }
 
     return (

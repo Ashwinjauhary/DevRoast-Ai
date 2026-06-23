@@ -78,8 +78,9 @@ export default async function DashboardPage() {
     const topProfile = [...profileAnalyses].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 1);
 
     // Get Curation from Portfolio if available
-    const portfolioProjects = dbUser?.portfolios?.[0]?.projects || [];
-    const portfolioProjectNames = new Set(portfolioProjects.map((p: PortfolioProject) => p.title.toLowerCase()));
+    const rawProjects = dbUser?.portfolios?.[0]?.projects;
+    const portfolioProjects = Array.isArray(rawProjects) ? rawProjects as unknown as PortfolioProject[] : [];
+    const portfolioProjectNames = new Set(portfolioProjects.map((p: PortfolioProject) => p?.title?.toLowerCase() || ''));
 
     // Fallback: If less than 5 analyzed repos, fetch from GitHub to fill the grid
     const hasPortfolio = portfolioProjects.length > 0;
@@ -91,11 +92,11 @@ export default async function DashboardPage() {
         try {
             const githubReposResult = await fetchRepositories();
             if (githubReposResult.success) {
-                const analyzedTargets = new Set(repoAnalyses.map((a: Analysis) => a.target.toLowerCase()));
+                const analyzedTargets = new Set(repoAnalyses.map((a: Analysis) => a.target?.toLowerCase() || ''));
                 extraRepos = (githubReposResult.data || [])
-                    .filter((r: { name: string; full_name: string; fork: boolean; size?: number }) => {
-                        const name = r.name.toLowerCase();
-                        return !analyzedTargets.has(r.full_name.toLowerCase()) && 
+                    .filter((r: { name?: string; full_name?: string; fork?: boolean; size?: number }) => {
+                        const name = r.name?.toLowerCase() || '';
+                        return !analyzedTargets.has(r.full_name?.toLowerCase() || '') && 
                                !r.fork && 
                                !portfolioProjectNames.has(name) &&
                                !name.includes('source') &&
@@ -117,8 +118,8 @@ export default async function DashboardPage() {
     const topAnalyses = portfolioProjects.length > 0 
         ? portfolioProjects.map((p: PortfolioProject) => ({ 
             analysis_type: 'repository', 
-            target: p.title, 
-            result_json: { name: p.title, languages_breakdown: { [p.techStacks?.[0] || 'Unknown']: 100 } } as const 
+            target: p.title || 'Unknown', 
+            result_json: { name: p.title || 'Unknown', languages_breakdown: { [p.techStacks?.[0] || 'Unknown']: 100 } } as const 
           }))
         : [...topRepos, ...topProfile];
 
@@ -154,7 +155,7 @@ export default async function DashboardPage() {
                 linksMap.set(`User-${repoName}`, { source: "User", target: repoName });
             }
 
-            if (data.languages_breakdown) {
+            if (data.languages_breakdown && typeof data.languages_breakdown === 'object') {
                 Object.keys(data.languages_breakdown).forEach(lang => {
                     if (!nodesMap.has(lang)) {
                         nodesMap.set(lang, { id: lang, group: 2, val: 15 });
@@ -177,7 +178,7 @@ export default async function DashboardPage() {
                 }
             }
 
-            if (data.categories) {
+            if (data.categories && typeof data.categories === 'object') {
                 Object.keys(data.categories).forEach(cat => {
                     const catId = `SYS_${cat.toUpperCase().replace(/\s+/g, '_')}`;
                     if (!nodesMap.has(catId)) {
@@ -187,7 +188,7 @@ export default async function DashboardPage() {
             }
         } else if (analysis.analysis_type === 'profile') {
             // ... profile logic ...
-            if (data.top_languages) {
+            if (Array.isArray(data.top_languages)) {
                 data.top_languages.forEach((lang: string) => {
                     if (!nodesMap.has(lang)) {
                         nodesMap.set(lang, { id: lang, group: 2, val: 15 });
@@ -198,7 +199,7 @@ export default async function DashboardPage() {
                     }
                 });
             }
-            if (data.categories) {
+            if (data.categories && typeof data.categories === 'object') {
                 Object.keys(data.categories).forEach(cat => {
                     const catId = `SYS_${cat.toUpperCase().replace(/\s+/g, '_')}`;
                     if (!nodesMap.has(catId)) {

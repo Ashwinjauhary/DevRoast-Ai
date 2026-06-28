@@ -1,7 +1,7 @@
 {
-  "name": "DevRoast AI",
-  "short_name": "DevRoast",
-  "description": "Professional developer roasting and portfolio platform.",
+  "name": "DevRoast AI - Developed by Ashwin Jauhary",
+  "short_name": "DevRoast AI",
+  "description": "DevRoast AI is the world's #1 AI-powered code review and GitHub profile analysis platform. Developed and designed by Ashwin Jauhary.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#0d0d0d",

@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://dev-roast-ai-sand.vercel.app/developer",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: "https://dev-roast-ai-sand.vercel.app/terms",
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -20,6 +26,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    // Add other public pages here if any later
   ];
 }

@@ -13,6 +13,8 @@ import {
   BreadcrumbJsonLd,
   OrganizationJsonLd,
   BrandJsonLd,
+  PersonJsonLd,
+  HowToJsonLd,
 } from "@/components/seo/json-ld";
 import { useState } from "react";
 import Image from "next/image";
@@ -30,6 +32,8 @@ export default function LandingPage() {
       <BreadcrumbJsonLd />
       <OrganizationJsonLd />
       <BrandJsonLd />
+      <PersonJsonLd />
+      <HowToJsonLd />
 
       {/* Immersive Background */}
       <motion.div
@@ -163,7 +167,7 @@ export default function LandingPage() {
           <div className="space-y-8 relative">
             <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[80vw] h-40 bg-primary/20 blur-[100px] rounded-[100%] pointer-events-none" />
 
-            <h1 aria-label="AI Code Reviewer - Architectural Destruction. Elevated Intelligence." className="sr-only">DevRoast AI: The Best AI Code Reviewer &amp; GitHub Profile Analyzer</h1>
+            <h1 aria-label="DevRoast AI - The Best AI Code Reviewer and GitHub Profile Analyzer, developed and designed by Ashwin Jauhary" className="sr-only">DevRoast AI: The World&apos;s #1 AI Code Reviewer &amp; GitHub Profile Analyzer — Developed and Designed by Ashwin Jauhary</h1>
             <AnimatedText
               text="ARCHITECTURAL DESTRUCTION."
               className="text-[11vw] md:text-[8rem] lg:text-[9rem] font-black tracking-tighter leading-[0.85] text-white mix-blend-overlay opacity-90 block"
@@ -399,7 +403,7 @@ export default function LandingPage() {
             <span className="font-black tracking-tighter text-2xl text-white">DevRoast AI</span>
           </div>
           <p className="text-base max-w-md mx-auto leading-relaxed mb-16 font-medium italic">
-            Engineered to destroy egos and elevate codebases. Proceed at your own risk.
+            Developed and designed by Ashwin Jauhary. Engineered to destroy egos and elevate codebases.
           </p>
           <div className="flex flex-wrap justify-center gap-12 text-xs font-black uppercase tracking-[0.3em]">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
